@@ -86,7 +86,8 @@ CK_DEFINE_FUNCTION(CK_RV, C_GetFunctionList)(CK_FUNCTION_LIST_PTR_PTR ppFunction
 
 CK_DEFINE_FUNCTION(CK_RV, C_Initialize)(CK_VOID_PTR pInitArgs)
 {
-	return CKR_FUNCTION_NOT_SUPPORTED;
+	//todo: handle more logic if required
+	return CKR_OK;
 }
 
 

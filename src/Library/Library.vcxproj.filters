@@ -19,6 +19,15 @@
     <Filter Include="Source Files\Functions">
       <UniqueIdentifier>{b5fef905-a314-47c0-b5cb-c34e7294eaad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Abstractions">
+      <UniqueIdentifier>{1c9e0eac-ec11-4506-afa1-0fbfe8706984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Abstractions">
+      <UniqueIdentifier>{be2eae56-b3e3-454b-a8e5-acebed73a7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Abstractions\Interfaces">
+      <UniqueIdentifier>{caa69c4e-aa66-405f-8c53-8bbf8d1efec6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\dllmain.cpp">
@@ -42,6 +51,12 @@
     <ClCompile Include="sources\Functions\slotManagementFunctions.cpp">
       <Filter>Source Files\Functions</Filter>
     </ClCompile>
+    <ClCompile Include="sources\VirtualToken.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\ServiceProxy.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\pkcs11.h">
@@ -52,6 +67,18 @@
     </ClInclude>
     <ClInclude Include="include\pkcs11t.h">
       <Filter>Header Files\Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IPkcs11Token.h">
+      <Filter>Header Files\Abstractions\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IServiceProxyClient.h">
+      <Filter>Header Files\Abstractions\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ServiceProxy.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VirtualToken.h">
+      <Filter>Header Files\Abstractions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

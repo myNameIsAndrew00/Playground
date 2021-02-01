@@ -26,11 +26,17 @@
     <ClCompile Include="sources\Functions\objectManagementFunctions.cpp" />
     <ClCompile Include="sources\Functions\sessionManagementFunctions.cpp" />
     <ClCompile Include="sources\Functions\slotManagementFunctions.cpp" />
+    <ClCompile Include="sources\ServiceProxy.cpp" />
+    <ClCompile Include="sources\VirtualToken.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\IPkcs11Token.h" />
+    <ClInclude Include="include\IServiceProxyClient.h" />
     <ClInclude Include="include\pkcs11.h" />
     <ClInclude Include="include\pkcs11f.h" />
     <ClInclude Include="include\pkcs11t.h" />
+    <ClInclude Include="include\ServiceProxy.h" />
+    <ClInclude Include="include\VirtualToken.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
