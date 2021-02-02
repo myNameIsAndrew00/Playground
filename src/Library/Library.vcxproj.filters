@@ -28,6 +28,12 @@
     <Filter Include="Header Files\Abstractions\Interfaces">
       <UniqueIdentifier>{caa69c4e-aa66-405f-8c53-8bbf8d1efec6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Infrastructure">
+      <UniqueIdentifier>{6490eebd-3e6c-4b2d-aa26-3e080bc8cee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Infrastructure">
+      <UniqueIdentifier>{e672c951-4009-4203-a9f0-2c5dc64218e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\dllmain.cpp">
@@ -57,6 +63,9 @@
     <ClCompile Include="sources\ServiceProxy.cpp">
       <Filter>Source Files\Abstractions</Filter>
     </ClCompile>
+    <ClCompile Include="sources\PipeCommunicationResolver.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\pkcs11.h">
@@ -79,6 +88,15 @@
     </ClInclude>
     <ClInclude Include="include\VirtualToken.h">
       <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TokenActionResult.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IServiceCommunicationResolver.h">
+      <Filter>Header Files\Abstractions\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PipeCommunicationResolver.h">
+      <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

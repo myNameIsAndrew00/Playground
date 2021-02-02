@@ -1,10 +1,11 @@
 #pragma once
-#include <memory>
 
-/*Implement methods used by a client to the service proxy.*/
-class IServiceProxyClient abstract {
-public:
+#include "IServiceCommunicationResolver.h";
 
-};
- 
-using IServiceProxyClientReference = std::shared_ptr<IServiceProxyClient>;
+namespace Abstractions {
+	/*Implement methods used by a client which use the service proxy class*/
+	class IServiceProxyClient abstract { 
+	};
+
+	using IServiceProxyClientReference = std::shared_ptr<IServiceProxyClient>;
+}

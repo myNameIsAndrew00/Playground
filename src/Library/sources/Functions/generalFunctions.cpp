@@ -1,7 +1,11 @@
 
 #pragma once
 #include "../../include/pkcs11.h"  
- 
+#include "../../include/IPkcs11Token.h"
+#include <stdlib.h>
+#include <string.h>
+
+extern Abstractions::IPkcs11TokenReference Token;
 
 CK_FUNCTION_LIST functionList = {
 	{ 2,40 },
@@ -93,13 +97,24 @@ CK_DEFINE_FUNCTION(CK_RV, C_Initialize)(CK_VOID_PTR pInitArgs)
 
 CK_DEFINE_FUNCTION(CK_RV, C_Finalize)(CK_VOID_PTR pReserved)
 {
-	return CKR_FUNCTION_NOT_SUPPORTED;
+	//todo: handle more logic if required
+	return CKR_OK;
 }
 
 
 CK_DEFINE_FUNCTION(CK_RV, C_GetInfo)(CK_INFO_PTR pInfo)
 {
-	return CKR_FUNCTION_NOT_SUPPORTED; 
+	if (NULL == pInfo) return CKR_ARGUMENTS_BAD;
+	 
+	pInfo->cryptokiVersion.major = Abstractions::Major;
+	pInfo->cryptokiVersion.minor = Abstractions::Minor;
+	pInfo->libraryVersion.major = Abstractions::Major;
+	pInfo->libraryVersion.minor = Abstractions::Minor;
+
+	strcpy_s((char*)pInfo->manufacturerID, sizeof(Abstractions::Manufacturer), Abstractions::Manufacturer);
+	strcpy_s((char*)pInfo->libraryDescription, sizeof(Abstractions::Description), Abstractions::Description);
+
+	return CKR_OK;
 }
 
 
