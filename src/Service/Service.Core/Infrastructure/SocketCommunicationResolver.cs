@@ -19,17 +19,22 @@ namespace Service.Core.Infrastructure
     {
         ///Handles maximum number of bytes which can be read from a client at once before keep them in memory
         private const int RECEIVING_BUFFER_SIZE = 4096;
-        
+
         ///Handles the size of a packet header. For now, header are 4 bytes which specifies the size of the packet
         private const int PACKET_HEADER_SIZE = 4;
-        
+
         private TcpListener server;
         private byte[] receivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
 
+
         public IServiceDispatcher Dispatcher { get; }
 
-        public event Func<DispatchResult, byte[]> OnCommunicationCreated;        
-        
+        public event Func<DispatchResult, byte[]> OnCommunicationCreated;
+
+        public event Action<Exception> OnClientConnectionError;
+
+
+
         public SocketCommunicationResolver(string address, int port, IServiceDispatcher dispatcher)
         {
             this.Dispatcher = dispatcher;
@@ -43,10 +48,21 @@ namespace Service.Core.Infrastructure
         {
             server.Start();
 
-            while (true) {
+            while (true)
+            {
                 TcpClient client = server.AcceptTcpClient();
 
-                Task.Run(() => handleClient(client));
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        handleClient(client);
+                    }
+                    catch(Exception exception)
+                    {
+                        OnClientConnectionError?.Invoke(exception);
+                    }
+                });
             }
         }
 
@@ -62,8 +78,8 @@ namespace Service.Core.Infrastructure
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
-               
-                while (readBytesCount < packetSize && 
+
+                while (readBytesCount < packetSize &&
                     (handledBytesCount = clientStream.Read(receivingBuffer, 0, receivingBuffer.Length)) != 0)
                 {
                     memoryStream.Write(receivingBuffer, 0, handledBytesCount);
@@ -74,7 +90,7 @@ namespace Service.Core.Infrastructure
 
                 var returnBytes = OnCommunicationCreated?.Invoke(dispatchResult);
 
-                clientStream.Write(returnBytes, 0, returnBytes.Length);                
+                clientStream.Write(returnBytes, 0, returnBytes.Length);
             }
 
             client.Close();

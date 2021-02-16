@@ -2,6 +2,7 @@
 using Service.Core.Abstractions.Structures;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Pipes;
 using System.Reflection;
 using System.Text;
@@ -25,10 +26,11 @@ namespace Service.Core.Abstractions
         public void Start()
         { 
             resolver.OnCommunicationCreated += onCommunicationCreated;
-
+            resolver.OnClientConnectionError += onClientConnectionError;
             resolver.Listen();           
         }
 
+     
         #region Private
 
         private byte[] onCommunicationCreated(DispatchResult dispatchResult)
@@ -48,7 +50,12 @@ namespace Service.Core.Abstractions
             return executionResult.GetBytes();
         }
 
-       
+        private void onClientConnectionError(Exception exception)
+        {
+            //todo: handle the exception
+            Debug.WriteLine(exception);
+        }
+
 
         #endregion
     }

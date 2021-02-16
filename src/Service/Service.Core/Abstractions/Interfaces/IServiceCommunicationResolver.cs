@@ -12,7 +12,15 @@ namespace Service.Core.Abstractions.Interfaces
     {
         void Listen();
 
+        /// <summary>
+        /// An event which will trigger when a communication with a client is estanblished
+        /// </summary>
         event Func<DispatchResult, byte[]> OnCommunicationCreated;
+
+        /// <summary>
+        /// Occurs when an connection creation fail
+        /// </summary>
+        event Action<Exception> OnClientConnectionError;
 
         IServiceDispatcher Dispatcher { get; }
     }
