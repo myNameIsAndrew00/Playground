@@ -13,12 +13,16 @@ namespace Service.Core.Infrastructure
 {
     /// <summary>
     /// Resolve the communication between client and service using sockets.
-    /// The resolver will listen on port which was provided on construction
+    /// The resolver will listen on port which was provided on construction and will use first 4 bytes in the receiving packet to get the packet size
     /// </summary>
     internal class SocketCommunicationResolver : IServiceCommunicationResolver
     {
+        ///Handles maximum number of bytes which can be read from a client at once before keep them in memory
         private const int RECEIVING_BUFFER_SIZE = 4096;
-
+        
+        ///Handles the size of a packet header. For now, header are 4 bytes which specifies the size of the packet
+        private const int PACKET_HEADER_SIZE = 4;
+        
         private TcpListener server;
         private byte[] receivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
 
@@ -52,16 +56,21 @@ namespace Service.Core.Infrastructure
         private void handleClient(TcpClient client)
         {
             NetworkStream clientStream = client.GetStream();
-            int handledBytesCount;
+            int packetSize = readPacketSize(clientStream);
+            int handledBytesCount = 0;
+            int readBytesCount = 0;
 
-            using (MemoryStream writingStream = new MemoryStream())
-            { 
-                while ((handledBytesCount = clientStream.Read(receivingBuffer, 0, receivingBuffer.Length)) != 0)
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+               
+                while (readBytesCount < packetSize && 
+                    (handledBytesCount = clientStream.Read(receivingBuffer, 0, receivingBuffer.Length)) != 0)
                 {
-                    writingStream.Write(receivingBuffer, 0, handledBytesCount);
+                    memoryStream.Write(receivingBuffer, 0, handledBytesCount);
+                    readBytesCount += handledBytesCount;
                 }
 
-                DispatchResult dispatchResult = Dispatcher.Dispatch(writingStream.ToArray());
+                DispatchResult dispatchResult = Dispatcher.Dispatch(memoryStream.ToArray());
 
                 var returnBytes = OnCommunicationCreated?.Invoke(dispatchResult);
 
@@ -71,7 +80,19 @@ namespace Service.Core.Infrastructure
             client.Close();
             client.Dispose();
         }
- 
+
+        private int readPacketSize(NetworkStream clientStream)
+        {
+            byte[] entirePacketSize = new byte[PACKET_HEADER_SIZE];
+
+            clientStream.Read(entirePacketSize, 0, PACKET_HEADER_SIZE);
+
+            if (BitConverter.IsLittleEndian) Array.Reverse(entirePacketSize);
+
+            return BitConverter.ToInt32(entirePacketSize, 0);
+        }
+
+
 
         #endregion
     }

@@ -12,7 +12,7 @@ namespace Service.Core.Abstractions
     /// A class which can handle received messages from pkcs11 clients
     /// </summary>
     /// <typeparam name="Executor">Executor which handle client requests. For now only one executor is allowed</typeparam>
-    internal class Server<Executor> : IServer
+    internal class Server<Executor> : IPkcs11Server
         where Executor : IServiceExecutor, new()
     { 
         private IServiceCommunicationResolver resolver;
