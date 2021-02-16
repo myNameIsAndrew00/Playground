@@ -1,0 +1,1 @@
+﻿This directory contains classes used as main abstractions for library

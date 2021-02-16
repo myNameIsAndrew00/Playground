@@ -66,6 +66,9 @@
     <ClCompile Include="sources\PipeCommunicationResolver.cpp">
       <Filter>Source Files\Infrastructure</Filter>
     </ClCompile>
+    <ClCompile Include="sources\SocketCommunicationResolver.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\pkcs11.h">
@@ -96,6 +99,9 @@
       <Filter>Header Files\Abstractions\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="include\PipeCommunicationResolver.h">
+      <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SocketCommunicationResolver.h">
       <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
   </ItemGroup>

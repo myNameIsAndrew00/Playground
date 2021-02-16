@@ -1,0 +1,1 @@
+﻿This directory contains classes used exposed by library

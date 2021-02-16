@@ -28,6 +28,7 @@
     <ClCompile Include="sources\Functions\slotManagementFunctions.cpp" />
     <ClCompile Include="sources\PipeCommunicationResolver.cpp" />
     <ClCompile Include="sources\ServiceProxy.cpp" />
+    <ClCompile Include="sources\SocketCommunicationResolver.cpp" />
     <ClCompile Include="sources\VirtualToken.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +40,7 @@
     <ClInclude Include="include\pkcs11t.h" />
     <ClInclude Include="include\PipeCommunicationResolver.h" />
     <ClInclude Include="include\ServiceProxy.h" />
+    <ClInclude Include="include\SocketCommunicationResolver.h" />
     <ClInclude Include="include\TokenActionResult.h" />
     <ClInclude Include="include\VirtualToken.h" />
   </ItemGroup>

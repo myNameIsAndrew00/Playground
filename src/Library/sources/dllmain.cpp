@@ -5,6 +5,7 @@
 #include "../include/VirtualToken.h"
 #include "../include/ServiceProxy.h"
 #include "../include/PipeCommunicationResolver.h"
+#include "../include/SocketCommunicationResolver.h"
 
 using namespace Abstractions;
 using namespace Infrastructure;
@@ -13,7 +14,7 @@ using namespace Infrastructure;
 IPkcs11TokenReference Token = 
     std::make_shared<VirtualToken>(
         std::make_shared<ServiceProxy>( 
-            std::make_shared<PipeCommunicationResolver>()
+            std::make_shared<SocketCommunicationResolver>()
             )
         );
 
