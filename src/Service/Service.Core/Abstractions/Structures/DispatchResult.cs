@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Core.Infrastructure.Structures;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,23 +11,24 @@ namespace Service.Core.Abstractions.Structures
     /// </summary>
     public class DispatchResult
     {
-        public DispatchResult(ServiceAction dispatchedAction, byte[] payload, bool authorized)
+        internal DispatchResult(ServiceActionCode dispatchedAction, byte[] payload, bool requireSession)
         {
             this.DispatchedAction = dispatchedAction;
-            this.Authorized = authorized;
             this.Payload = payload;
+            this.RequireSession = requireSession;
         }
 
-        public DispatchResult(ServiceAction dispatchedAction, byte[] payload, bool authorized, int sesionId)
-        : this(dispatchedAction, payload, authorized)
+        internal DispatchResult(ServiceActionCode dispatchedAction, byte[] payload, Session session, bool requireSession)
+        : this(dispatchedAction, payload, requireSession)
         {
-            this.SessionId = sesionId;
+            this.Session = session;
         }
 
-        public DispatchResult(ServiceAction dispatchedAction, byte[] payload, bool authorized, int sesionId, object optionalData)
-       : this(dispatchedAction, payload, authorized)
+        internal DispatchResult(ServiceActionCode dispatchedAction, byte[] payload, Session session, bool requireSession, object optionalData)
+       : this(dispatchedAction, payload, session, requireSession)
         {
-            this.SessionId = sesionId;
+            this.Session = session;
+            this.OptionalData = optionalData;
         }
 
 
@@ -34,17 +36,16 @@ namespace Service.Core.Abstractions.Structures
         /// <summary>
         /// Action which has been chosed after dispatching
         /// </summary>
-        public ServiceAction DispatchedAction { get; }
+        public ServiceActionCode DispatchedAction { get; }
+
+        public bool RequireSession { get; }
+
+        public bool SessionCheckPass => (Session == null && !RequireSession) || (Session != null);
 
         /// <summary>
         /// A boolean which will specify if the request if authorized
         /// </summary>
-        public bool Authorized { get; }
-
-        /// <summary>
-        /// Id of the session for which has been made the request
-        /// </summary>
-        public int? SessionId { get; }
+        public Session Session { get; }
 
         /// <summary>
         /// Data from request, without session or control byte

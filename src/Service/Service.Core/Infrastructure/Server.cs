@@ -27,16 +27,22 @@ namespace Service.Core.Abstractions
         { 
             resolver.OnCommunicationCreated += onCommunicationCreated;
             resolver.OnClientConnectionError += onClientConnectionError;
+            resolver.OnRequestHandlingError += onRequestHandlingError;
+
             resolver.Listen();           
         }
 
-     
+
+
         #region Private
 
-        private byte[] onCommunicationCreated(DispatchResult dispatchResult)
-        {
+        private IExecutionResult onCommunicationCreated(DispatchResult dispatchResult)
+        {        
             Executor executor = new Executor();
             executor.SetDispatcherResult(dispatchResult);
+
+            if (!dispatchResult.SessionCheckPass)
+                return executor.GetBadSessionResult();
 
             MethodInfo method = typeof(Executor).GetMethod(
                 name: dispatchResult.DispatchedAction.ToString(),
@@ -47,7 +53,7 @@ namespace Service.Core.Abstractions
 
             IExecutionResult executionResult = (IExecutionResult) method.Invoke(executor, null);
 
-            return executionResult.GetBytes();
+            return executionResult;
         }
 
         private void onClientConnectionError(Exception exception)
@@ -56,7 +62,11 @@ namespace Service.Core.Abstractions
             Debug.WriteLine(exception);
         }
 
-
+        private void onRequestHandlingError(Exception exception)
+        {
+            //todo: handle the exception
+            Debug.WriteLine(exception);
+        }
         #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Core.Abstractions.Structures;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,5 +15,7 @@ namespace Service.Core.Abstractions.Interfaces
         /// </summary>
         /// <returns></returns>
         byte[] GetBytes();
+
+        ExecutionResultCode ResultCode { get; }
     }
 }

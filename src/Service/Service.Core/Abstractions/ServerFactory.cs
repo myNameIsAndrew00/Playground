@@ -23,7 +23,7 @@ namespace Service.Core.Abstractions
                    new SocketCommunicationResolver(
                        address: address,
                        port: port,
-                       dispatcher: new FirstByteDispatcher()
+                       dispatcher: new AlphaProtocolDispatcher()
                    )
                );
         }
@@ -43,7 +43,7 @@ namespace Service.Core.Abstractions
                 new SocketCommunicationResolver(
                     address: address,
                     port: port,
-                    dispatcher: new FirstByteDispatcher()
+                    dispatcher: new AlphaProtocolDispatcher()
                 )
                 );
         }

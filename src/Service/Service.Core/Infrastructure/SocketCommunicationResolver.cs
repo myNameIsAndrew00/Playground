@@ -23,19 +23,20 @@ namespace Service.Core.Infrastructure
         ///Handles the size of a packet header. For now, header are 4 bytes which specifies the size of the packet
         private const int PACKET_HEADER_SIZE = 4;
 
+        private const byte ERROR_BYTE = 0x01;
+
         private TcpListener server;
         private byte[] receivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
 
+        public IServiceProtocolDispatcher Dispatcher { get; }
 
-        public IServiceDispatcher Dispatcher { get; }
-
-        public event Func<DispatchResult, byte[]> OnCommunicationCreated;
+        public event Func<DispatchResult, IExecutionResult> OnCommunicationCreated;
 
         public event Action<Exception> OnClientConnectionError;
 
+        public event Action<Exception> OnRequestHandlingError;
 
-
-        public SocketCommunicationResolver(string address, int port, IServiceDispatcher dispatcher)
+        public SocketCommunicationResolver(string address, int port, IServiceProtocolDispatcher dispatcher)
         {
             this.Dispatcher = dispatcher;
 
@@ -86,17 +87,35 @@ namespace Service.Core.Infrastructure
                     readBytesCount += handledBytesCount;
                 }
 
-                DispatchResult dispatchResult = Dispatcher.Dispatch(memoryStream.ToArray());
+                try
+                { 
+                    DispatchResult dispatchResult = Dispatcher.DispatchClientRequest(memoryStream.ToArray());
 
-                var returnBytes = OnCommunicationCreated?.Invoke(dispatchResult);
+                    IExecutionResult executionResult = OnCommunicationCreated?.Invoke(dispatchResult);
+                    byte[] executionResultBytes = Dispatcher.BuildClientResponse(executionResult);
 
-                clientStream.Write(returnBytes, 0, returnBytes.Length);
+                    byte[] returnBytes = buildReturnBytes(executionResultBytes);
+
+                    clientStream.Write(returnBytes, 0, returnBytes.Length);
+                }
+                catch (Exception exception)
+                {
+                    OnRequestHandlingError?.Invoke(exception);
+
+                    //replace this with error byte handling
+                    clientStream.Write(BitConverter.GetBytes(ERROR_BYTE), 0, 1);
+                }
             }
 
             client.Close();
             client.Dispose();
         }
 
+        /// <summary>
+        /// Read the size of the packet from the first 4 PACHET_HEADER_SIZE bytes
+        /// </summary>
+        /// <param name="clientStream">Stream which provided by client</param>
+        /// <returns></returns>
         private int readPacketSize(NetworkStream clientStream)
         {
             byte[] entirePacketSize = new byte[PACKET_HEADER_SIZE];
@@ -106,8 +125,22 @@ namespace Service.Core.Infrastructure
             if (BitConverter.IsLittleEndian) Array.Reverse(entirePacketSize);
 
             return BitConverter.ToInt32(entirePacketSize, 0);
-        }
+        } 
 
+        private byte[] buildReturnBytes(byte[] executionResultBytes)
+        { 
+            int packetSize = executionResultBytes.Length;
+
+            byte[] resultBytes = new byte[sizeof(int) + packetSize];
+            byte[] headerBytes = BitConverter.GetBytes(packetSize);
+
+            if (BitConverter.IsLittleEndian) Array.Reverse(headerBytes);
+
+            headerBytes.CopyTo(resultBytes, 0); 
+            executionResultBytes.CopyTo(resultBytes, sizeof(int));
+
+            return resultBytes;
+        }
 
 
         #endregion
