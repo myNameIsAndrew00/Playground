@@ -16,7 +16,7 @@ namespace Abstractions {
 	private:
 
 		/*Represents a list of clients registered to the service*/
-		std::list<IServiceProxyClientReference> clients;
+		IServiceProxyClientReference client;
 		IServiceCommunicationResolverReference communicationResolver;
 	};
 

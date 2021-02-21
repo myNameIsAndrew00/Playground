@@ -9,5 +9,7 @@ namespace Abstractions {
 		virtual unsigned char* CreateClientRequest(ServiceActionCode code, unsigned char* payload) = 0;
 
 		virtual ServiceExecutionResult ParseServiceResponse(unsigned char* payload) = 0;
+
+		virtual ~IServiceProtocolDispatcher() { }
 	};
 }

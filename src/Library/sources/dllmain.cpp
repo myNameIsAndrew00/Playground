@@ -14,7 +14,7 @@ using namespace Infrastructure;
 IPkcs11TokenReference Token = 
     std::make_shared<VirtualToken>(
         std::make_shared<ServiceProxy>( 
-            std::make_shared<SocketCommunicationResolver>()
+            std::make_shared<SocketCommunicationResolver>("127.0.0.1", 5843)
             )
         );
 

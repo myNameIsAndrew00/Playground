@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sources\AlphaProtocolDispatcher.cpp" />
     <ClCompile Include="sources\dllmain.cpp" />
     <ClCompile Include="sources\Functions\dencryptionFunctions.cpp" />
     <ClCompile Include="sources\Functions\generalFunctions.cpp" />
@@ -32,13 +33,17 @@
     <ClCompile Include="sources\VirtualToken.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AlphaProtocolDispatcher.h" />
     <ClInclude Include="include\IPkcs11Token.h" />
     <ClInclude Include="include\IServiceCommunicationResolver.h" />
+    <ClInclude Include="include\IServiceProtocolDispatcher.h" />
     <ClInclude Include="include\IServiceProxyClient.h" />
     <ClInclude Include="include\pkcs11.h" />
     <ClInclude Include="include\pkcs11f.h" />
     <ClInclude Include="include\pkcs11t.h" />
     <ClInclude Include="include\PipeCommunicationResolver.h" />
+    <ClInclude Include="include\ServiceActionCode.h" />
+    <ClInclude Include="include\ServiceExecutionResult.h" />
     <ClInclude Include="include\ServiceProxy.h" />
     <ClInclude Include="include\SocketCommunicationResolver.h" />
     <ClInclude Include="include\TokenActionResult.h" />
@@ -124,6 +129,7 @@
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,6 +168,7 @@
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

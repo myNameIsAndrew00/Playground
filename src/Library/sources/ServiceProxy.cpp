@@ -9,7 +9,7 @@ ServiceProxy::ServiceProxy(const IServiceCommunicationResolverReference& communi
 
 bool ServiceProxy::Register(const IServiceProxyClientReference& client) {
 
-	this->clients.push_back(client);
+	this->client = client;
 
 	return true;
 }

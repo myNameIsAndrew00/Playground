@@ -34,6 +34,9 @@
     <Filter Include="Source Files\Infrastructure">
       <UniqueIdentifier>{e672c951-4009-4203-a9f0-2c5dc64218e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Abstractions\Structures">
+      <UniqueIdentifier>{1053f2f2-60be-4843-aca8-73520f2dd20a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\dllmain.cpp">
@@ -69,6 +72,9 @@
     <ClCompile Include="sources\SocketCommunicationResolver.cpp">
       <Filter>Source Files\Infrastructure</Filter>
     </ClCompile>
+    <ClCompile Include="sources\AlphaProtocolDispatcher.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\pkcs11.h">
@@ -92,9 +98,6 @@
     <ClInclude Include="include\VirtualToken.h">
       <Filter>Header Files\Abstractions</Filter>
     </ClInclude>
-    <ClInclude Include="include\TokenActionResult.h">
-      <Filter>Header Files\Abstractions</Filter>
-    </ClInclude>
     <ClInclude Include="include\IServiceCommunicationResolver.h">
       <Filter>Header Files\Abstractions\Interfaces</Filter>
     </ClInclude>
@@ -102,6 +105,21 @@
       <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
     <ClInclude Include="include\SocketCommunicationResolver.h">
+      <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TokenActionResult.h">
+      <Filter>Header Files\Abstractions\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ServiceActionCode.h">
+      <Filter>Header Files\Abstractions\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ServiceExecutionResult.h">
+      <Filter>Header Files\Abstractions\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IServiceProtocolDispatcher.h">
+      <Filter>Header Files\Abstractions\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AlphaProtocolDispatcher.h">
       <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
   </ItemGroup>
