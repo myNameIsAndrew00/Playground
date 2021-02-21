@@ -23,6 +23,9 @@ namespace Service.Core.Infrastructure
         ///Handles the size of a packet header. For now, header are 4 bytes which specifies the size of the packet
         private const int PACKET_HEADER_SIZE = 4;
 
+        ///Represents the value which will trigger server to close connection
+        private const int CONNECTION_CLOSE_TRIGGER = -1;
+
         private const byte ERROR_BYTE = 0x01;
 
         private TcpListener server;
@@ -73,37 +76,43 @@ namespace Service.Core.Infrastructure
         private void handleClient(TcpClient client)
         {
             NetworkStream clientStream = client.GetStream();
-            int packetSize = readPacketSize(clientStream);
             int handledBytesCount = 0;
             int readBytesCount = 0;
 
-            using (MemoryStream memoryStream = new MemoryStream())
+            while (true)
             {
+                int packetSize = readPacketSize(clientStream);
 
-                while (readBytesCount < packetSize &&
-                    (handledBytesCount = clientStream.Read(receivingBuffer, 0, receivingBuffer.Length)) != 0)
+                if (packetSize == CONNECTION_CLOSE_TRIGGER) break;
+
+                using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    memoryStream.Write(receivingBuffer, 0, handledBytesCount);
-                    readBytesCount += handledBytesCount;
-                }
 
-                try
-                { 
-                    DispatchResult dispatchResult = Dispatcher.DispatchClientRequest(memoryStream.ToArray());
+                    while (readBytesCount < packetSize &&
+                        (handledBytesCount = clientStream.Read(receivingBuffer, 0, receivingBuffer.Length)) != 0)
+                    {
+                        memoryStream.Write(receivingBuffer, 0, handledBytesCount);
+                        readBytesCount += handledBytesCount;
+                    }
 
-                    IExecutionResult executionResult = OnCommunicationCreated?.Invoke(dispatchResult);
-                    byte[] executionResultBytes = Dispatcher.BuildClientResponse(executionResult);
+                    try
+                    {
+                        DispatchResult dispatchResult = Dispatcher.DispatchClientRequest(memoryStream.ToArray());
 
-                    byte[] returnBytes = buildReturnBytes(executionResultBytes);
+                        IExecutionResult executionResult = OnCommunicationCreated?.Invoke(dispatchResult);
+                        byte[] executionResultBytes = Dispatcher.BuildClientResponse(executionResult);
 
-                    clientStream.Write(returnBytes, 0, returnBytes.Length);
-                }
-                catch (Exception exception)
-                {
-                    OnRequestHandlingError?.Invoke(exception);
+                        byte[] returnBytes = buildReturnBytes(executionResultBytes);
 
-                    //replace this with error byte handling
-                    clientStream.Write(BitConverter.GetBytes(ERROR_BYTE), 0, 1);
+                        clientStream.Write(returnBytes, 0, returnBytes.Length);
+                    }
+                    catch (Exception exception)
+                    {
+                        OnRequestHandlingError?.Invoke(exception);
+
+                        //replace this with error byte handling
+                        clientStream.Write(BitConverter.GetBytes(ERROR_BYTE), 0, 1);
+                    }
                 }
             }
 
