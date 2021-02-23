@@ -21,9 +21,13 @@ bool Infrastructure::SocketCommunicationResolver::InitialiseCommunication()
 	return 0 == connect(this->socket, (struct sockaddr*)&address, sizeof(address));
 }
 
-unsigned char* Infrastructure::SocketCommunicationResolver::ExecuteRequest(unsigned char* payload)
-{
-	return nullptr;
+unsigned char* Infrastructure::SocketCommunicationResolver::ExecuteRequest(unsigned char* payload, const unsigned int payloadLength)
+{ 
+	if (!sendData(payload, payloadLength))
+		//todo: handle communication error here
+		return nullptr;
+	return receiveData();
+	 
 }
 
 bool Infrastructure::SocketCommunicationResolver::FinaliseCurrentCommunication()
@@ -56,6 +60,31 @@ void Infrastructure::SocketCommunicationResolver::initialiseAddress(const char* 
 		initialised = true;
 		freeaddrinfo(addressInfo); 
 	}
+}
+
+bool Infrastructure::SocketCommunicationResolver::sendData(unsigned char* payload, const unsigned int payloadLength)
+{ 
+	unsigned int packetSize = payloadLength + this->headerSize;
+	unsigned char* packet = new unsigned char[packetSize];
+
+	memcpy(packet, &payloadLength, this->headerSize);
+	memcpy(packet + this->headerSize, payload, payloadLength);
+
+	int sentBytesCount = 0;
+	while (packetSize > 0)
+	{
+		sentBytesCount = send(this->socket, (const char*)(packet + sentBytesCount), packetSize, 0);
+		if (sentBytesCount < 0) return false;
+		packetSize -= sentBytesCount;
+	} 
+
+	return true;
+}
+
+unsigned char* Infrastructure::SocketCommunicationResolver::receiveData()
+{
+	//todo: implement receiving according to protocol
+	return nullptr;
 }
 
 

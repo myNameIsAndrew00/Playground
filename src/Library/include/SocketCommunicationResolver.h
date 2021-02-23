@@ -8,14 +8,21 @@ namespace Infrastructure {
 		SOCKET socket;
 		bool initialised;
 
-		void initialiseAddress(const char* const ip, unsigned short port);
+		const unsigned int headerSize = 4;
 
+		void initialiseAddress(const char* const ip, unsigned short port);
+		
+		/*Send data to the service. Return false if an error ocurs*/
+		bool sendData(unsigned char* payload, const unsigned int payloadLength);
+		/*Wait to receive data from service*/
+		unsigned char* receiveData();
+	
 	public: 
 
 		SocketCommunicationResolver(const char* const ip, unsigned short port);
 		
 		bool InitialiseCommunication();
-		unsigned char* ExecuteRequest(unsigned char* payload);
+		unsigned char* ExecuteRequest(unsigned char* payload, const unsigned int payloadLength);
 		bool FinaliseCurrentCommunication();
 
 		~SocketCommunicationResolver();

@@ -5,7 +5,7 @@ bool Infrastructure::PipeCommunicationResolver::InitialiseCommunication()
 	return false;
 }
 
-unsigned char* Infrastructure::PipeCommunicationResolver::ExecuteRequest(unsigned char* payload)
+unsigned char* Infrastructure::PipeCommunicationResolver::ExecuteRequest(unsigned char* payload, const unsigned int payloadLength)
 {
 	return nullptr;
 }

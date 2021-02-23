@@ -5,7 +5,7 @@ namespace Infrastructure {
 	public: 
 		bool InitialiseCommunication();
 
-		unsigned char* ExecuteRequest(unsigned char* payload);
+		unsigned char* ExecuteRequest(unsigned char* payload, const unsigned int payloadLengyh);
 
 		bool FinaliseCurrentCommunication();
 	};
