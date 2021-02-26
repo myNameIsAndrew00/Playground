@@ -37,6 +37,9 @@
     <Filter Include="Header Files\Abstractions\Structures">
       <UniqueIdentifier>{1053f2f2-60be-4843-aca8-73520f2dd20a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Abstractions\Structures">
+      <UniqueIdentifier>{8980f0d7-621b-49fe-a540-78e3de223247}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\dllmain.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="sources\AlphaProtocolDispatcher.cpp">
       <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Bytes.cpp">
+      <Filter>Source Files\Abstractions\Structures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="include\AlphaProtocolDispatcher.h">
       <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bytes.h">
+      <Filter>Header Files\Abstractions\Structures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

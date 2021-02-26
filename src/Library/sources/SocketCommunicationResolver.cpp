@@ -21,13 +21,17 @@ bool Infrastructure::SocketCommunicationResolver::InitialiseCommunication()
 	return 0 == connect(this->socket, (struct sockaddr*)&address, sizeof(address));
 }
 
-unsigned char* Infrastructure::SocketCommunicationResolver::ExecuteRequest(unsigned char* payload, const unsigned int payloadLength)
-{ 
-	if (!sendData(payload, payloadLength))
+Abstractions::Bytes Infrastructure::SocketCommunicationResolver::ExecuteRequest(const Abstractions::Bytes& bytes)
+{  
+	  
+	if (!sendData(bytes.GetBytes(), bytes.GetLength()))
 		//todo: handle communication error here
-		return nullptr;
-	return receiveData();
+		return Abstractions::Bytes(nullptr, 0);
 	 
+	unsigned char* receivedData;
+	unsigned int receivedDataLength = receiveData(&receivedData);
+
+	return Abstractions::Bytes(receivedData, receivedDataLength);
 }
 
 bool Infrastructure::SocketCommunicationResolver::FinaliseCurrentCommunication()
@@ -62,7 +66,7 @@ void Infrastructure::SocketCommunicationResolver::initialiseAddress(const char* 
 	}
 }
 
-bool Infrastructure::SocketCommunicationResolver::sendData(unsigned char* payload, const unsigned int payloadLength)
+bool Infrastructure::SocketCommunicationResolver::sendData(const unsigned char* payload, const unsigned int payloadLength)
 { 
 	unsigned int packetSize = payloadLength + this->headerSize;
 	unsigned char* packet = new unsigned char[packetSize];
@@ -81,10 +85,25 @@ bool Infrastructure::SocketCommunicationResolver::sendData(unsigned char* payloa
 	return true;
 }
 
-unsigned char* Infrastructure::SocketCommunicationResolver::receiveData()
+unsigned int Infrastructure::SocketCommunicationResolver::receiveData(unsigned char** receivedData)
 {
-	//todo: implement receiving according to protocol
-	return nullptr;
+	if (receivedData == nullptr) return 0;
+
+	unsigned int packetSize = 0;
+	if (recv(this->socket, (char*)&packetSize, sizeof(int), 0) < 0) return 0;
+	const unsigned int packetSizeResult = packetSize;
+
+	*receivedData = new unsigned char[packetSize];
+	int receivedBytesCount = 0;
+
+	while (packetSize > 0)
+	{
+		receivedBytesCount = recv(this->socket, (char*)(*receivedData + receivedBytesCount), packetSize, 0);
+		if (receivedBytesCount < 0) return 0;
+		packetSize -= receivedBytesCount;
+	}
+
+	return packetSizeResult;
 }
 
 

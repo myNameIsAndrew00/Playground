@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\AlphaProtocolDispatcher.cpp" />
+    <ClCompile Include="sources\Bytes.cpp" />
     <ClCompile Include="sources\dllmain.cpp" />
     <ClCompile Include="sources\Functions\dencryptionFunctions.cpp" />
     <ClCompile Include="sources\Functions\generalFunctions.cpp" />
@@ -34,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AlphaProtocolDispatcher.h" />
+    <ClInclude Include="include\Bytes.h" />
     <ClInclude Include="include\IPkcs11Token.h" />
     <ClInclude Include="include\IServiceCommunicationResolver.h" />
     <ClInclude Include="include\IServiceProtocolDispatcher.h" />

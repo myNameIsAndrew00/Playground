@@ -1,13 +1,29 @@
 #include "..\include\AlphaProtocolDispatcher.h"
+#include <memory>
 
-unsigned char* Infrastructure::AlphaProtocolDispatcher::CreateClientRequest(Abstractions::ServiceActionCode code, unsigned char* payload)
+Abstractions::Bytes Infrastructure::AlphaProtocolDispatcher::CreateClientRequest(Abstractions::ServiceActionCode code, const Abstractions::Bytes& payload)
 {
-    //todo: implement
-    return nullptr;
+    
+    unsigned char resultLength = payload.GetLength() + 1;
+    unsigned char* result = new unsigned char[resultLength];
+
+    memcpy(result, (char*)&code, 1);
+    
+    if (payload.GetLength())
+        memcpy(result + 1, payload.GetBytes(), payload.GetLength());
+      
+    return Abstractions::Bytes(result, resultLength);
 }
 
-Abstractions::ServiceExecutionResult Infrastructure::AlphaProtocolDispatcher::ParseServiceResponse(unsigned char* payload)
+Abstractions::ServiceExecutionResult Infrastructure::AlphaProtocolDispatcher::ParseServiceResponse(const Abstractions::Bytes& payload)
 {
+    unsigned char dataLength = payload.GetLength() - sizeof(unsigned long);
+    unsigned char* data = new unsigned char[dataLength];
+    unsigned long code = 0;
+
+    memcpy(data, payload.GetBytes() + sizeof(unsigned long), dataLength);
+    memcpy(&code, payload.GetBytes(), sizeof(unsigned long));
+
     //todo: implement
-    return Abstractions::ServiceExecutionResult(nullptr, 0);
+    return Abstractions::ServiceExecutionResult(Abstractions::Bytes(data, dataLength), code);
 }

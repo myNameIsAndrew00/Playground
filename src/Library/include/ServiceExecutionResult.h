@@ -1,12 +1,13 @@
 #pragma once
+#include "Bytes.h"
 
 namespace Abstractions {
 	class ServiceExecutionResult {
 	public:
-		ServiceExecutionResult(unsigned char* const bytes, unsigned long resultCode) : bytes(bytes), resultCode(resultCode) {		
+		ServiceExecutionResult(const Bytes& payload, unsigned long resultCode) : bytes(bytes), resultCode(resultCode) {
 		}
 	private:
-		unsigned char* bytes;
+		Bytes bytes;
 		unsigned long resultCode;
 	};
 }

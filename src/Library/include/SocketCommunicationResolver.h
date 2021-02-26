@@ -13,16 +13,16 @@ namespace Infrastructure {
 		void initialiseAddress(const char* const ip, unsigned short port);
 		
 		/*Send data to the service. Return false if an error ocurs*/
-		bool sendData(unsigned char* payload, const unsigned int payloadLength);
+		bool sendData(const unsigned char* payload, const unsigned int payloadLength);
 		/*Wait to receive data from service*/
-		unsigned char* receiveData();
+		unsigned int receiveData(unsigned char** receivedData);
 	
 	public: 
 
 		SocketCommunicationResolver(const char* const ip, unsigned short port);
 		
 		bool InitialiseCommunication();
-		unsigned char* ExecuteRequest(unsigned char* payload, const unsigned int payloadLength);
+		Abstractions::Bytes ExecuteRequest(const Abstractions::Bytes& bytes);
 		bool FinaliseCurrentCommunication();
 
 		~SocketCommunicationResolver();

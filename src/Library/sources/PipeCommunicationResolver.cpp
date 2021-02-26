@@ -5,9 +5,11 @@ bool Infrastructure::PipeCommunicationResolver::InitialiseCommunication()
 	return false;
 }
 
-unsigned char* Infrastructure::PipeCommunicationResolver::ExecuteRequest(unsigned char* payload, const unsigned int payloadLength)
+Abstractions::Bytes Infrastructure::PipeCommunicationResolver::ExecuteRequest(const Abstractions::Bytes& bytes)
 {
-	return nullptr;
+	Abstractions::Bytes result(nullptr, 0);
+
+	return result;
 }
 
 bool Infrastructure::PipeCommunicationResolver::FinaliseCurrentCommunication()

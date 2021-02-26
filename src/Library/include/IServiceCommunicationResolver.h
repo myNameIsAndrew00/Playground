@@ -1,21 +1,24 @@
 #pragma once
 
 #include <memory>
+#include <utility>
+#include "Bytes.h"
 
 namespace Abstractions {
+
 	/**Represents an instance which will be used to make the communication (send and receive bytes) with the server*/
 	class IServiceCommunicationResolver abstract {
-	public:
+	public: 
+		
 		/*Initialise the communication with the service*/
 		virtual bool InitialiseCommunication() = 0;
 
 		/** 
 		* \brief Execute a request to the server
 		*
-		* \param payload: Payload which will be sent 
-		* \param payloadLength: Length of the payload
+		* \param payload: Payload which will be sent  
 		**/
-		virtual unsigned char* ExecuteRequest(unsigned char* payload, unsigned int payloadLength) = 0;
+		virtual Bytes ExecuteRequest(const Bytes& payload) = 0;
 
 		/*Stop the current communication instance */
 		virtual bool FinaliseCurrentCommunication() = 0;
