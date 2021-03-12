@@ -17,13 +17,13 @@ namespace Service.Core.Abstractions
         /// <param name="address">IP Address used by the server</param>
         /// <param name="port">TCP Port where the server will listen to</param>
         /// <returns>A server instance</returns>
-        public static IServer CreateDefaultSocketServer(string address, int port)
+        public static IPkcs11Server CreateDefaultSocketServer(string address, int port)
         {
             return new Server<ServiceExecutor>(
                    new SocketCommunicationResolver(
                        address: address,
                        port: port,
-                       dispatcher: new FirstByteDispatcher()
+                       dispatcher: new AlphaProtocolDispatcher()
                    )
                );
         }
@@ -36,14 +36,14 @@ namespace Service.Core.Abstractions
         /// <param name="address">IP Address used by the server</param>
         /// <param name="port">TCP Port where the server will listen to</param>
         /// <returns>A server instance</returns>
-        public static IServer CreateSocketServer<Executor>(string address, int port)
+        public static IPkcs11Server CreateSocketServer<Executor>(string address, int port)
             where Executor : IServiceExecutor, new()
         {
             return new Server<Executor>(
                 new SocketCommunicationResolver(
                     address: address,
                     port: port,
-                    dispatcher: new FirstByteDispatcher()
+                    dispatcher: new AlphaProtocolDispatcher()
                 )
                 );
         }

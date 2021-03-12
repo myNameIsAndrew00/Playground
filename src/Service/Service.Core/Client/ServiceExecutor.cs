@@ -18,15 +18,28 @@ namespace Service.Core.Infrastructure
         {
             this.dispatchResult = dispatchResult;
         }
+        public IExecutionResult GetBadSessionResult()
+        {
+            return new BytesResult(ExecutionResultCode.BadArguments);
+        }
 
         public virtual IExecutionResult BeginSession()
         { 
-            return new BytesResult(BitConverter.GetBytes(dispatchResult.SessionId ?? 0));
+            return new BytesResult(new byte[] { dispatchResult.Session.Id }, ExecutionResultCode.Ok);
         }
 
         public virtual IExecutionResult EndSession()
         {
-            return new BytesResult(BitConverter.GetBytes(0));
+            return new BytesResult(ExecutionResultCode.Ok);
         }
+
+        public virtual IExecutionResult Authenticate()
+        {
+            //todo: authenticate
+            this.dispatchResult.Session.Authenticate(null, null);
+
+            return new BytesResult(ExecutionResultCode.Ok);
+        }
+
     }
 }

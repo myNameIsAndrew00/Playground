@@ -2,6 +2,7 @@
 using Service.Core.Abstractions.Structures;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Pipes;
 using System.Reflection;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Service.Core.Abstractions
     /// A class which can handle received messages from pkcs11 clients
     /// </summary>
     /// <typeparam name="Executor">Executor which handle client requests. For now only one executor is allowed</typeparam>
-    internal class Server<Executor> : IServer
+    internal class Server<Executor> : IPkcs11Server
         where Executor : IServiceExecutor, new()
     { 
         private IServiceCommunicationResolver resolver;
@@ -25,16 +26,23 @@ namespace Service.Core.Abstractions
         public void Start()
         { 
             resolver.OnCommunicationCreated += onCommunicationCreated;
+            resolver.OnClientConnectionError += onClientConnectionError;
+            resolver.OnRequestHandlingError += onRequestHandlingError;
 
             resolver.Listen();           
         }
 
+
+
         #region Private
 
-        private byte[] onCommunicationCreated(DispatchResult dispatchResult)
-        {
+        private IExecutionResult onCommunicationCreated(DispatchResult dispatchResult)
+        {        
             Executor executor = new Executor();
             executor.SetDispatcherResult(dispatchResult);
+
+            if (!dispatchResult.SessionCheckPass)
+                return executor.GetBadSessionResult();
 
             MethodInfo method = typeof(Executor).GetMethod(
                 name: dispatchResult.DispatchedAction.ToString(),
@@ -45,11 +53,20 @@ namespace Service.Core.Abstractions
 
             IExecutionResult executionResult = (IExecutionResult) method.Invoke(executor, null);
 
-            return executionResult.GetBytes();
+            return executionResult;
         }
 
-       
+        private void onClientConnectionError(Exception exception)
+        {
+            //todo: handle the exception
+            Debug.WriteLine(exception);
+        }
 
+        private void onRequestHandlingError(Exception exception)
+        {
+            //todo: handle the exception
+            Debug.WriteLine(exception);
+        }
         #endregion
     }
 }
