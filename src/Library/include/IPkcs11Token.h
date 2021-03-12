@@ -11,8 +11,10 @@ namespace Abstractions {
 	static const char Description[] = "Pkcs 11 playground";
 	static const unsigned int Minor = 0x01;
 	static const unsigned int Major = 0x01;
-
-	/*Implements required methods for a pkcs11 token */
+	
+	/// <summary>
+	///  Implements required methods for a pkcs11 token 
+	/// </summary> 
 	class IPkcs11Token abstract {
 	public: 
 		virtual InitialiseResult Initialise() = 0;

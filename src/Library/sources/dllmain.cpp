@@ -6,6 +6,7 @@
 #include "../include/ServiceProxy.h"
 #include "../include/PipeCommunicationResolver.h"
 #include "../include/SocketCommunicationResolver.h"
+#include "../include/AlphaProtocolDispatcher.h"
 
 using namespace Abstractions;
 using namespace Infrastructure;
@@ -14,7 +15,8 @@ using namespace Infrastructure;
 IPkcs11TokenReference Token = 
     std::make_shared<VirtualToken>(
         std::make_shared<ServiceProxy>( 
-            std::make_shared<SocketCommunicationResolver>("127.0.0.1", 5843)
+            std::make_shared<SocketCommunicationResolver>("127.0.0.1", 5123),
+            std::make_shared<AlphaProtocolDispatcher>()
             )
         );
 
@@ -35,3 +37,11 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
+int main() {
+
+    auto initialiseResult = Token->Initialise();
+
+    auto createSessionResult = Token->CreateSession();
+
+    return 0;
+}

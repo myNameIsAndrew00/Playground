@@ -1,18 +1,20 @@
+#include <memory>
+
 #pragma once
 
 namespace Abstractions {
-	/*
-	* Use this class to handle bytes array data
-	*/
+	/// <summary>
+	///  Use this class to handle bytes array data
+	/// </summary>
 	class Bytes {
 	private:
-		unsigned char* byteArray;
+	    unsigned char* byteArray;
 		unsigned int length;
 
-		void copy(unsigned char* byteArray, const unsigned int length);
+		void copy(const unsigned char* byteArray, const unsigned int length);
 	public:
 		Bytes();
-		Bytes(unsigned char* byteArray, const unsigned int length);
+		Bytes(const unsigned char* byteArray, const unsigned int length);
 
 		Bytes(const Bytes&);
 		Bytes(Bytes&&) noexcept;
@@ -22,6 +24,11 @@ namespace Abstractions {
 
 		const unsigned int GetLength() const;
 
+
+		//todo: implement functions like GetReader() -> GetInt(), GetByte(), GetLong()
 		~Bytes();
 	};
+
+	using BytesReference = std::shared_ptr<Bytes>;
+
 }

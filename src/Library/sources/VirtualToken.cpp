@@ -13,13 +13,15 @@ GetIdentifierResult VirtualToken::GetIdentifier() const
 
 InitialiseResult VirtualToken::Initialise()
 {
-	this->serviceProxy->Register(IServiceProxyClientReference(this));
+	bool registerResult = this->serviceProxy->Register(IServiceProxyClientReference(this));
 
-	//todo: implement
+	//todo: handle type of messages
 	return InitialiseResult(InitialiseResult::Code::OkResult, true);
 }
+
 CreateSessionResult Abstractions::VirtualToken::CreateSession() const
 {
+
 	//todo: use the proxy
 	return CreateSessionResult(CreateSessionResult::Code::OkResult, 1L);
 }

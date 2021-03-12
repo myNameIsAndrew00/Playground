@@ -1,6 +1,8 @@
 #include "..\include\Bytes.h"
 #include <memory>
 
+#include <type_traits>
+
 using namespace Abstractions;
 
 Bytes::Bytes()
@@ -8,11 +10,10 @@ Bytes::Bytes()
 {
 }
 
-Bytes::Bytes(unsigned char* byteArray, const unsigned int length)
+Bytes::Bytes(const unsigned char* byteArray, const unsigned int length)
 	: byteArray(nullptr), length(0)
 {
-	this->byteArray = byteArray;
-	this->length = length;
+	this->copy(byteArray, length);
 }
 
 Bytes::Bytes(const Bytes& other)
@@ -56,7 +57,7 @@ const unsigned int Bytes::GetLength() const
 #pragma region Private
 
 
-void Bytes::copy(unsigned char* byteArray, const unsigned int length)
+void Bytes::copy(const unsigned char* byteArray, const unsigned int length)
 {
 	if (byteArray == nullptr || length == 0) return;
 
