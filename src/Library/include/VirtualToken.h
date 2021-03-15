@@ -15,8 +15,9 @@ namespace Abstractions {
 		GetIdentifierResult GetIdentifier() const override; 
 		GetManufacturerResult GetManufacturer() const override;
 		InitialiseResult Initialise() override;
+		FinaliseResult Finalise() override;
 		CreateSessionResult CreateSession() const override;
-
+		EndSessionResult EndSession(const unsigned char sessionId) const override;
 	private:
 
 		ServiceProxyReference serviceProxy;

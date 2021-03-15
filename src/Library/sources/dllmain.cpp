@@ -43,5 +43,9 @@ int main() {
 
     auto createSessionResult = Token->CreateSession();
 
+    auto endSessionResult = Token->EndSession(createSessionResult.GetValue());
+
+    auto finaliseResult = Token->Finalise();
+
     return 0;
 }

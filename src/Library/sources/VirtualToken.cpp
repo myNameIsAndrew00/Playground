@@ -15,15 +15,28 @@ InitialiseResult VirtualToken::Initialise()
 {
 	bool registerResult = this->serviceProxy->Register(IServiceProxyClientReference(this));
 
-	//todo: handle type of messages
-	return InitialiseResult(InitialiseResult::Code::OkResult, true);
+	//todo: handle type of messages or do client side validations
+	return InitialiseResult(InitialiseResult::Code::OkResult, registerResult);
 }
+
+InitialiseResult VirtualToken::Finalise()
+{
+	bool detachResult = this->serviceProxy->DetachCurrentClient();
+	//todo: handle type of messages or do client side validations
+	return InitialiseResult(InitialiseResult::Code::OkResult, detachResult);
+}
+
 
 CreateSessionResult Abstractions::VirtualToken::CreateSession() const
 {
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->BeginSession();
+}
 
-	//todo: use the proxy
-	return CreateSessionResult(CreateSessionResult::Code::OkResult, 1L);
+EndSessionResult Abstractions::VirtualToken::EndSession(const unsigned char sessionId) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->EndSession(sessionId);
 }
 
 

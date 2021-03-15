@@ -24,43 +24,56 @@ bool ServiceProxy::Register(const IServiceProxyClientReference& client) {
 	return this->communicationInitialised;
 }
 
-int Abstractions::ServiceProxy::BeginSession()
-{  
-	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::BeginSession, nullptr, 0);
-	if (reader == nullptr) return -1;
+bool ServiceProxy::DetachCurrentClient() {
+	if (!this->communicationInitialised) return true;
 
-	int result = reader->PeekInt();
-	
-	delete reader;
-	return result;
+	return this->communicationResolver->FinaliseCurrentCommunication();
 }
 
-bool Abstractions::ServiceProxy::EndSession(const int sessionId)
-{
-	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::EndSession, nullptr, 0);
+Abstractions::CreateSessionResult Abstractions::ServiceProxy::BeginSession()
+{  
+	unsigned long resultCode = (unsigned long)Abstractions::CreateSessionResult::Code::OkResult;
 
-	if (reader == nullptr) return false;
+	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::BeginSession, resultCode, nullptr, 0);
+	if (reader == nullptr) return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, -1);
+
+	unsigned char result = reader->PeekChar();
+	
+	delete reader;
+	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, result);
+}
+
+EndSessionResult Abstractions::ServiceProxy::EndSession(const unsigned char sessionId)
+{
+	unsigned long resultCode = 0;
+	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::EndSession, resultCode, &sessionId, sizeof(const unsigned char));
+
+	//todo: change response to use resultCode
+	if (reader == nullptr) return EndSessionResult(Abstractions::EndSessionResult::Code::OkResult, false);
 
 	delete reader;
-	return true;
+	return EndSessionResult(Abstractions::EndSessionResult::Code::OkResult, true);
 }
 
 
 
 #pragma region Private
 
-BytesReader* ServiceProxy::executeRequest(Abstractions::ServiceActionCode code, const unsigned char* data, const unsigned int dataLength) {
+BytesReader* ServiceProxy::executeRequest(Abstractions::ServiceActionCode serviceActionCode, unsigned long& resultCode, const unsigned char* data, const unsigned int dataLength) {
 	if (!this->communicationInitialised) return nullptr;
 
 	Bytes clientRequest = data == nullptr ?
-		this->protocolDispatcher->CreateClientRequest(code) :
-		this->protocolDispatcher->CreateClientRequest(code, Bytes(data, dataLength));
+		this->protocolDispatcher->CreateClientRequest(serviceActionCode) :
+		this->protocolDispatcher->CreateClientRequest(serviceActionCode, Bytes(data, dataLength));
 
 	Abstractions::ServiceExecutionResult executionResult =
 		this->protocolDispatcher->ParseServiceResponse(
 			this->communicationResolver->ExecuteRequest(clientRequest));
 
-	return new Abstractions::BytesReader(BytesReference(new Bytes(std::move(executionResult.GetBytes()))));
+	resultCode = executionResult.GetResultCode();
+	auto reader = new Abstractions::BytesReader(BytesReference(new Bytes(std::move(executionResult.GetBytes()))));
+	 
+	return reader;	
 } 
 
 

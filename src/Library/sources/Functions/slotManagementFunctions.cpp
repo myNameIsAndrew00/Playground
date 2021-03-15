@@ -14,7 +14,7 @@ CK_DEFINE_FUNCTION(CK_RV, C_GetSlotList)(CK_BBOOL tokenPresent, CK_SLOT_ID_PTR s
 	else {
 		auto tokenResult = Token->GetIdentifier();
 
-		*slotsPointer = tokenResult.GetObject();
+		*slotsPointer = tokenResult.GetValue();
 		functionResult = (CK_RV)tokenResult.GetCode();
 	}
 

@@ -18,10 +18,12 @@ namespace Abstractions {
 	class IPkcs11Token abstract {
 	public: 
 		virtual InitialiseResult Initialise() = 0;
-		
+		virtual FinaliseResult Finalise() = 0;
+
 		virtual GetIdentifierResult GetIdentifier() const = 0;
 		virtual GetManufacturerResult GetManufacturer() const = 0;
 		virtual CreateSessionResult CreateSession() const = 0;
+		virtual EndSessionResult EndSession(const unsigned char) const = 0;
 
 		virtual ~IPkcs11Token() { }
 	};

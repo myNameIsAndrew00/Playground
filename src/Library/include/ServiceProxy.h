@@ -2,6 +2,8 @@
 #include "IServiceProxyClient.h"
 #include "IServiceProtocolDispatcher.h"
 #include "BytesReader.h"
+#include "TokenActionResult.h"
+
 #include <list>
 
 namespace Abstractions {
@@ -15,8 +17,10 @@ namespace Abstractions {
 
 		/*Add a new client to the registered clients list*/
 		bool Register(const IServiceProxyClientReference& client);
-		int BeginSession();
-		bool EndSession(const int sessionId);
+		bool DetachCurrentClient();
+
+		CreateSessionResult BeginSession();
+		EndSessionResult EndSession(const unsigned char sessionId);
 	private:
 		bool communicationInitialised;
 
@@ -26,7 +30,7 @@ namespace Abstractions {
 		IServiceProtocolDispatcherReference protocolDispatcher;
 
 
-		Abstractions::BytesReader* executeRequest(Abstractions::ServiceActionCode code, const unsigned char* data, const unsigned int dataLength);
+		Abstractions::BytesReader* executeRequest(Abstractions::ServiceActionCode code, unsigned long& resultCode, const unsigned char* data, const unsigned int dataLength);
 	};
 
 	using ServiceProxyReference = std::shared_ptr<ServiceProxy>;

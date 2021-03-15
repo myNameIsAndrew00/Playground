@@ -76,11 +76,11 @@ namespace Service.Core.Infrastructure
         private void handleClient(TcpClient client)
         {
             NetworkStream clientStream = client.GetStream();
-            int handledBytesCount = 0;
-            int readBytesCount = 0;
-
+            
             while (true)
             {
+                int handledBytesCount = 0;
+                int readBytesCount = 0;
                 int packetSize = readPacketSize(clientStream);
 
                 if (packetSize == CONNECTION_CLOSE_TRIGGER) break;

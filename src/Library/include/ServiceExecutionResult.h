@@ -4,7 +4,7 @@
 namespace Abstractions {
 	class ServiceExecutionResult {
 	public:
-		ServiceExecutionResult(const Bytes& payload, unsigned long resultCode) : bytes(bytes), resultCode(resultCode) {
+		ServiceExecutionResult(const Bytes& payload, unsigned long resultCode) : bytes(payload), resultCode(resultCode) {
 		}
 
 		const Bytes& GetBytes() const { return bytes; }

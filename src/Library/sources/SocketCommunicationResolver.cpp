@@ -38,11 +38,13 @@ bool Infrastructure::SocketCommunicationResolver::FinaliseCurrentCommunication()
 {
 	if(!initialised) return false;
 
-	return 0 == closesocket(socket);
+	sendData(nullptr, -1);
 }
 
 Infrastructure::SocketCommunicationResolver::~SocketCommunicationResolver()
 {
+	closesocket(socket);
+	
 	WSACleanup();
 }
 
@@ -66,13 +68,18 @@ void Infrastructure::SocketCommunicationResolver::initialiseAddress(const char* 
 	}
 }
 
-bool Infrastructure::SocketCommunicationResolver::sendData(const unsigned char* payload, const unsigned int payloadLength)
+bool Infrastructure::SocketCommunicationResolver::sendData(const unsigned char* payload, const int payloadLength)
 { 
-	unsigned int packetSize = payloadLength + this->headerSize;
+	//send bytes to the server. Payload length can be negative to trigger connection close.
+
+	unsigned int packetSize = max(0, payloadLength) + this->headerSize;
 	unsigned char* packet = new unsigned char[packetSize];
 
-	memcpy(packet, &payloadLength, this->headerSize);
-	memcpy(packet + this->headerSize, payload, payloadLength);
+	unsigned int networkPayloadLength = htonl(payloadLength);
+
+	memcpy(packet, &networkPayloadLength, this->headerSize);
+	if(payload != nullptr && payloadLength > 0)
+		memcpy(packet + this->headerSize, payload, payloadLength);
 
 	int sentBytesCount = 0;
 	while (packetSize > 0)
@@ -91,6 +98,7 @@ unsigned int Infrastructure::SocketCommunicationResolver::receiveData(unsigned c
 
 	unsigned int packetSize = 0;
 	if (recv(this->socket, (char*)&packetSize, sizeof(int), 0) < 0) return 0;
+	packetSize = ntohl(packetSize);
 	const unsigned int packetSizeResult = packetSize;
 
 	*receivedData = new unsigned char[packetSize];
