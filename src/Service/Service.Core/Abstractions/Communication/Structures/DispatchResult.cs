@@ -1,9 +1,9 @@
-﻿using Service.Core.Infrastructure.Structures;
+﻿using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Structures
+namespace Service.Core.Abstractions.Communication.Structures
 {
 
     /// <summary>

@@ -6,8 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Attributes\" />
-    <Folder Include="Infrastructure\Structures\" />
+    <Compile Remove="Infrastructure\Attributes\**" />
+    <Compile Remove="Infrastructure\Structures\**" />
+    <EmbeddedResource Remove="Infrastructure\Attributes\**" />
+    <EmbeddedResource Remove="Infrastructure\Structures\**" />
+    <None Remove="Infrastructure\Attributes\**" />
+    <None Remove="Infrastructure\Structures\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Abstractions\Token\Interfaces\" />
+    <Folder Include="Abstractions\Token\Structures\" />
   </ItemGroup>
 
 </Project>

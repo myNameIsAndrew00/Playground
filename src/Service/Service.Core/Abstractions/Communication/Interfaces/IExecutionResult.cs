@@ -1,9 +1,9 @@
-﻿using Service.Core.Abstractions.Structures;
+﻿using Service.Core.Abstractions.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Interfaces
+namespace Service.Core.Abstractions.Communication.Interfaces
 {
     /// <summary>
     /// An object which encapsulates client request processing result

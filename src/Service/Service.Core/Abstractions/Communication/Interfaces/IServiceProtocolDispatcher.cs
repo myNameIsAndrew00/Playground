@@ -1,10 +1,10 @@
-﻿using Service.Core.Abstractions.Structures;
+﻿using Service.Core.Abstractions.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static Service.Core.Abstractions.Interfaces.IServiceProtocolDispatcher;
+using static Service.Core.Abstractions.Communication.Interfaces.IServiceProtocolDispatcher;
 
-namespace Service.Core.Abstractions.Interfaces
+namespace Service.Core.Abstractions.Communication.Interfaces
 {
     /// <summary>
     /// Implements methods to handle client/server protocol.

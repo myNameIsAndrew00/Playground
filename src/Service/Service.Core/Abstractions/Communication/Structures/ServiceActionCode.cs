@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Structures
+namespace Service.Core.Abstractions.Communication.Structures
 { 
     public enum ServiceActionCode : byte
     {

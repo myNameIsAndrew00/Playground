@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Infrastructure.Structures
+namespace Service.Core.Infrastructure.Communication.Structures
 {
     /// <summary>
     /// Encapsulates data available for a session

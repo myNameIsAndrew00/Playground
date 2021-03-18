@@ -1,5 +1,5 @@
-﻿using Service.Core.Abstractions.Interfaces;
-using Service.Core.Abstractions.Structures;
+﻿using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Abstractions.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.IO.Pipes;
 using System.Reflection;
 using System.Text;
 
-namespace Service.Core.Abstractions
+namespace Service.Core.Communication.Abstractions
 {
     /// <summary>
     /// A class which can handle received messages from pkcs11 clients

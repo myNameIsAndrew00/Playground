@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Interfaces
+namespace Service.Core.Abstractions.Communication.Interfaces
 {
     /// <summary>
     /// Expose methods which describe a PKCS 11 service behavior

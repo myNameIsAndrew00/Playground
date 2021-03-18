@@ -1,12 +1,12 @@
-﻿using Service.Core.Abstractions.Interfaces;
-using Service.Core.Abstractions.Structures;
-using Service.Core.Infrastructure.Structures;
+﻿using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Abstractions.Communication.Structures;
+using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Service.Core.Infrastructure
+namespace Service.Core.Communication.Infrastructure
 {  
     /// <summary>
     /// Represents the main protocol dispatcher used by this service.

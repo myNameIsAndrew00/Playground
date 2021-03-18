@@ -1,10 +1,11 @@
-﻿using Service.Core.Abstractions.Interfaces;
-using Service.Core.Abstractions.Structures;
+﻿using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Abstractions.Communication.Structures;
+using Service.Core.Communication.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Infrastructure
+namespace Service.Core.Client
 {
     /// <summary>
     /// Main executor used by service.
@@ -18,6 +19,7 @@ namespace Service.Core.Infrastructure
         {
             this.dispatchResult = dispatchResult;
         }
+
         public IExecutionResult GetBadSessionResult()
         {
             return new BytesResult(ExecutionResultCode.BadArguments);

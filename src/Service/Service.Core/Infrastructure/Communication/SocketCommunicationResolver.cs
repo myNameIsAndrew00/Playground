@@ -1,5 +1,5 @@
-﻿using Service.Core.Abstractions.Interfaces;
-using Service.Core.Abstractions.Structures;
+﻿using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Abstractions.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Core.Infrastructure
+namespace Service.Core.Communication.Infrastructure
 {
     /// <summary>
     /// Resolve the communication between client and service using sockets.

@@ -1,4 +1,7 @@
-﻿using Service.Core.Abstractions.Interfaces;
+﻿using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Client;
+using Service.Core.Communication.Abstractions;
+using Service.Core.Communication.Infrastructure;
 using Service.Core.Infrastructure;
 using System;
 using System.Collections.Generic;

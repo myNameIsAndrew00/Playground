@@ -1,10 +1,10 @@
-﻿using Service.Core.Abstractions.Interfaces;
-using Service.Core.Abstractions.Structures;
+﻿using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Abstractions.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Infrastructure
+namespace Service.Core.Communication.Infrastructure
 {
     internal class BytesResult : IExecutionResult
     {
