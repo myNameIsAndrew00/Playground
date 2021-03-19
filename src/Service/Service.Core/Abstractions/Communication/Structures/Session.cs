@@ -7,7 +7,7 @@ namespace Service.Core.Infrastructure.Communication.Structures
     /// <summary>
     /// Encapsulates data available for a session
     /// </summary>
-    public class Session
+    public class Session : IDisposable
     {        
 
         public byte Id { get; }
@@ -35,6 +35,12 @@ namespace Service.Core.Infrastructure.Communication.Structures
         public override int GetHashCode()
         {
             return Id;
+        }
+
+        public void Dispose()
+        {
+            //todo: add disposing code here
+            return;
         }
     }
 }

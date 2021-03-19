@@ -40,7 +40,7 @@ namespace Service.Core.Abstractions.Communication.Structures
 
         public bool RequireSession { get; }
 
-        public bool SessionCheckPass => (Session == null && !RequireSession) || (Session != null);
+        public bool SessionCheckPassed => (Session == null && !RequireSession) || (Session != null);
 
         /// <summary>
         /// A boolean which will specify if the request if authorized
@@ -48,7 +48,7 @@ namespace Service.Core.Abstractions.Communication.Structures
         public Session Session { get; }
 
         /// <summary>
-        /// Data from request, without session or control byte
+        /// Data from request, without session or header bytes
         /// </summary>
         public byte[] Payload { get; }
 

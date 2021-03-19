@@ -1,6 +1,7 @@
 ﻿using Service.Core.Abstractions.Communication.Interfaces;
 using Service.Core.Abstractions.Communication.Structures;
 using Service.Core.Communication.Infrastructure;
+using Service.Core.Infrastructure.Token;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Service.Core.Client
 
         public IExecutionResult GetBadSessionResult()
         {
+
             return new BytesResult(ExecutionResultCode.BadArguments);
         }
 

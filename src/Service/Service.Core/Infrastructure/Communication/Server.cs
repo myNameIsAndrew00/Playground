@@ -41,7 +41,7 @@ namespace Service.Core.Communication.Abstractions
             Executor executor = new Executor();
             executor.SetDispatcherResult(dispatchResult);
 
-            if (!dispatchResult.SessionCheckPass)
+            if (!dispatchResult.SessionCheckPassed)
                 return executor.GetBadSessionResult();
 
             MethodInfo method = typeof(Executor).GetMethod(

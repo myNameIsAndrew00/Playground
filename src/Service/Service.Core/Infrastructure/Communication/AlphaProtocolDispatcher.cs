@@ -72,6 +72,9 @@ namespace Service.Core.Communication.Infrastructure
 
         private void removeSession(byte sessionId)
         {
+            if (sessions.TryGetValue(sessionId, out Session session))
+                session.Dispose();
+
             sessions.Remove(sessionId);
         }
 
@@ -84,7 +87,6 @@ namespace Service.Core.Communication.Infrastructure
             {          
                 case ServiceActionCode.BeginSession:
                     createdSession = beginSession();
-                    requireSession = false;
                     break;
                 case ServiceActionCode.EndSession:
                     requireSession = true;
@@ -93,7 +95,6 @@ namespace Service.Core.Communication.Infrastructure
                     requireSession = true;
                     break;
                 default:
-                    requireSession = false;
                     break;
             }
 

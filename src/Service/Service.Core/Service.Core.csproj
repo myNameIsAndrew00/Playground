@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Abstractions\Token\Interfaces\" />
-    <Folder Include="Abstractions\Token\Structures\" />
   </ItemGroup>
 
 </Project>
