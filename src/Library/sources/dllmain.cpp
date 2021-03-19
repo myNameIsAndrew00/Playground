@@ -38,7 +38,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 }
 
 int main() {
-
+    //tescases for abstract token
     auto initialiseResult = Token->Initialise();
 
     auto createSessionResult = Token->CreateSession();

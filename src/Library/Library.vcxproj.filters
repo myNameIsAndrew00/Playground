@@ -84,6 +84,9 @@
     <ClCompile Include="sources\BytesReader.cpp">
       <Filter>Source Files\Abstractions\Structures</Filter>
     </ClCompile>
+    <ClCompile Include="sources\TlvParser.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\pkcs11.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="include\BytesReader.h">
       <Filter>Header Files\Abstractions\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TlvParser.h">
+      <Filter>Header Files\Infrastructure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

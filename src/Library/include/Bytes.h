@@ -20,6 +20,8 @@ namespace Abstractions {
 		Bytes(Bytes&&) noexcept;
 		Bytes operator=(const Bytes&);
 
+		void SetFromArray(unsigned char*& byteArray, const unsigned int length);
+
 		const unsigned char* GetBytes() const;
 
 		const unsigned int GetLength() const;

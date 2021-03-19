@@ -37,6 +37,17 @@ Bytes::Bytes(Bytes&& source) noexcept
 	source.length = 0;
 }
 
+void Abstractions::Bytes::SetFromArray(unsigned char*& byteArray, const unsigned int length)
+{
+	if (this->byteArray != nullptr) delete this->byteArray;
+
+	this->byteArray = byteArray;
+	this->length = length;
+
+	byteArray = nullptr;
+}
+
+
 Bytes::~Bytes()
 {
 	if (this->byteArray != nullptr) delete this->byteArray;
