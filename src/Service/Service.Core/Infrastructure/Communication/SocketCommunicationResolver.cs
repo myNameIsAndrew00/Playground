@@ -25,8 +25,7 @@ namespace Service.Core.Communication.Infrastructure
 
         ///Represents the value which will trigger server to close connection
         private const int CONNECTION_CLOSE_TRIGGER = -1;
-
-        private const byte ERROR_BYTE = 0x01;
+         
 
         private TcpListener server;
         private byte[] receivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
@@ -100,18 +99,16 @@ namespace Service.Core.Communication.Infrastructure
                         DispatchResult dispatchResult = Dispatcher.DispatchClientRequest(memoryStream.ToArray());
 
                         IExecutionResult executionResult = OnCommunicationCreated?.Invoke(dispatchResult);
+
                         byte[] executionResultBytes = Dispatcher.BuildClientResponse(executionResult);
 
                         byte[] returnBytes = buildReturnBytes(executionResultBytes);
 
                         clientStream.Write(returnBytes, 0, returnBytes.Length);
-                    }
+                    } 
                     catch (Exception exception)
-                    {
-                        OnRequestHandlingError?.Invoke(exception);
-
-                        //replace this with error byte handling
-                        clientStream.Write(BitConverter.GetBytes(ERROR_BYTE), 0, 1);
+                    { 
+                        OnRequestHandlingError?.Invoke(exception); 
                     }
                 }
             }

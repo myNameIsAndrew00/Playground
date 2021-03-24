@@ -7,7 +7,9 @@ using System.Text;
 namespace Service.Core.Abstractions.Communication.Interfaces
 {
     /// <summary>
-    /// Provide methods to execute service actions
+    /// Provide methods to execute service actions.
+    /// Other optional methods can be contained which have names of values contained by ServiceActionCode enum.
+    /// If a optional method is called, but it is not implemented by executor, service will return not implemented error code.
     /// </summary>
     public interface IServiceExecutor 
     {
@@ -18,10 +20,10 @@ namespace Service.Core.Abstractions.Communication.Interfaces
         void SetDispatcherResult(DispatchResult dispatchResult);
 
         /// <summary>
-        /// Returns a execution result associated with a bad session
+        /// Returns a empty session result
         /// </summary>
         /// <returns></returns>
-        IExecutionResult GetBadSessionResult();
+        IExecutionResult GetEmptySessionResult(ExecutionResultCode code);
 
         IEncryptionHandler EncryptionHandler { get; }
 

@@ -19,7 +19,7 @@ namespace Service.Core.Abstractions.Storage.Structures
         {
             //todo: check unhandled attributes and better handling for codes
             createdObject = new Pkcs11Object(attributes);
-            code = ExecutionResultCode.Ok;
+            code = ExecutionResultCode.OK;
 
             return true;
         }

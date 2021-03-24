@@ -10,7 +10,7 @@ namespace Service.Core.Infrastructure.Communication
 {  
     /// <summary>
     /// Represents the main protocol dispatcher used by this service.
-    /// Client messages format used by this dispatcher accepts first byte for called method code, second byte for session id 
+    /// Client messages format used by this dispatcher accepts first byte for called method code, second byte for session id (if required)
     /// and following bytes payload. 
     /// Response messages accept first byte for result code and following bytes payload
     /// </summary>
@@ -51,10 +51,10 @@ namespace Service.Core.Infrastructure.Communication
         public byte[] BuildClientResponse(IExecutionResult executionResult)
         {
             byte[] executionResultBytes = executionResult.GetBytes();
-            byte[] resultBytes = new byte[sizeof(int) + executionResultBytes.Length];
+            byte[] resultBytes = new byte[sizeof(long) + executionResultBytes.Length];
              
-            BitConverter.GetBytes((int)executionResult.ResultCode).CopyTo(resultBytes, 0);
-            executionResultBytes.CopyTo(resultBytes, sizeof(int));
+            BitConverter.GetBytes((long)executionResult.ResultCode).CopyTo(resultBytes, 0);
+            executionResultBytes.CopyTo(resultBytes, sizeof(long));
 
             return resultBytes;
         }
@@ -92,6 +92,9 @@ namespace Service.Core.Infrastructure.Communication
                 case ServiceActionCode.EndSession:
                 case ServiceActionCode.CreateObject:
                 case ServiceActionCode.Authenticate:
+                case ServiceActionCode.EncryptInit:
+                case ServiceActionCode.Encrypt:
+                case ServiceActionCode.EncryptFinal:
                     requireSession = true;
                     break;
                 default:

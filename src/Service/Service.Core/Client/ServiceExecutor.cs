@@ -15,9 +15,9 @@ namespace Service.Core.Client
 {
     /// <summary>
     /// Main executor used by service.
-    /// Methods for commands execution are implemented on this class
+    /// Methods for commands execution are implemented on this class. Payload format for methods are different foreach method.
     /// </summary>
-    internal class ServiceExecutor : IServiceExecutor
+    public class ServiceExecutor : IServiceExecutor
     {
         private DispatchResult dispatchResult;
 
@@ -32,9 +32,9 @@ namespace Service.Core.Client
             this.dispatchResult = dispatchResult;
         }
 
-        public IExecutionResult GetBadSessionResult()
+        public IExecutionResult GetEmptySessionResult(ExecutionResultCode code)
         {
-            return new BytesResult(ExecutionResultCode.BadArguments);
+            return new BytesResult(code);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Service.Core.Client
         public virtual IExecutionResult BeginSession()
         {
             //todo: better handling for codes
-            return new BytesResult(BitConverter.GetBytes(dispatchResult.Session.Id), ExecutionResultCode.Ok);
+            return new BytesResult(BitConverter.GetBytes(dispatchResult.Session.Id), ExecutionResultCode.OK);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Service.Core.Client
         public virtual IExecutionResult EndSession()
         {
             //todo: better handling for codes
-            return new BytesResult(ExecutionResultCode.Ok);
+            return new BytesResult(ExecutionResultCode.OK);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Service.Core.Client
                 this.dispatchResult.Session.Authenticate(authenticationData.Type, ASCIIEncoding.UTF8.GetString(authenticationData.Value));
 
             //todo: better handling for codes
-            return new BytesResult(ExecutionResultCode.Ok);
+            return new BytesResult(ExecutionResultCode.OK);
         }
 
         /// <summary>
@@ -87,8 +87,27 @@ namespace Service.Core.Client
 
             long handlerId = this.dispatchResult.Session.AddSesionObject(@object);
 
-            return new BytesResult(BitConverter.GetBytes(handlerId), ExecutionResultCode.Ok);
+            return new BytesResult(BitConverter.GetBytes(handlerId), ExecutionResultCode.OK);
         }
+
+        public virtual IExecutionResult EncryptInit()
+        {
+            //todo: implement
+            return null;
+        }
+
+        public virtual IExecutionResult Encrypt()
+        {
+            //todo: implement
+            return null;
+        }
+
+        public virtual IExecutionResult EncryptFinal()
+        {
+            //todo: implement
+            return null;
+        }
+       
 
     }
 }

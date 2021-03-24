@@ -17,7 +17,7 @@ namespace Service.Core.Communication.Abstractions
     /// <typeparam name="Executor">Executor which handle client requests. For now only one executor is allowed</typeparam>
     internal class Server<Executor> : IPkcs11Server
         where Executor : IServiceExecutor, new()
-    { 
+    {
         private IServiceCommunicationResolver resolver;
 
         internal Server(IServiceCommunicationResolver resolver)
@@ -26,12 +26,12 @@ namespace Service.Core.Communication.Abstractions
         }
 
         public void Start()
-        { 
+        {
             resolver.OnCommunicationCreated += onCommunicationCreated;
             resolver.OnClientConnectionError += onClientConnectionError;
             resolver.OnRequestHandlingError += onRequestHandlingError;
 
-            resolver.Listen();           
+            resolver.Listen();
         }
 
 
@@ -39,23 +39,31 @@ namespace Service.Core.Communication.Abstractions
         #region Private
 
         private IExecutionResult onCommunicationCreated(DispatchResult dispatchResult)
-        {        
+        {
+
             Executor executor = new Executor();
             executor.SetDispatcherResult(dispatchResult);
 
-            if (!dispatchResult.SessionCheckPassed)
-                return executor.GetBadSessionResult();
+            try
+            {
+                if (!dispatchResult.SessionCheckPassed)
+                    return executor.GetEmptySessionResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            MethodInfo method = typeof(Executor).GetMethod(
-                name: dispatchResult.DispatchedAction.ToString(),
-                bindingAttr: BindingFlags.Public | BindingFlags.Instance);
+                MethodInfo method = typeof(Executor).GetMethod(
+                    name: dispatchResult.DispatchedAction.ToString(),
+                    bindingAttr: BindingFlags.Public | BindingFlags.Instance);
 
-            if (method == null)
-                throw new NotImplementedException($"Provided executor type { typeof(Executor) } doesn't implement {dispatchResult.DispatchedAction}");
+                if (method == null) 
+                    return executor.GetEmptySessionResult(ExecutionResultCode.FUNCTION_NOT_SUPPORTED);
 
-            IExecutionResult executionResult = (IExecutionResult) method.Invoke(executor, null);
+                IExecutionResult executionResult = (IExecutionResult)method.Invoke(executor, null);
 
-            return executionResult;
+                return executionResult;
+            }
+            catch
+            {
+                return executor.GetEmptySessionResult(ExecutionResultCode.GENERAL_ERROR);
+            }
         }
 
         private void onClientConnectionError(Exception exception)

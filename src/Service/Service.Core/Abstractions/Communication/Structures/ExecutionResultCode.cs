@@ -7,15 +7,16 @@ namespace Service.Core.Abstractions.Communication.Structures
     /// <summary>
     /// Represents code returned by an executor method which process a client request
     /// </summary>
-    public enum ExecutionResultCode : int
+    public enum ExecutionResultCode : long
     {
         ///Code associated with CKR_OK response
-        Ok = 0x00000000,
+        OK = 0x00000000,
         ///Code associated with CKR_GENERAL_ERROR response
-        ServerError = 0x00000005,
+        GENERAL_ERROR = 0x00000005,
         ///Code associated with CKR_USER_NOT_LOGGED_IN response
-        LogedInRequired = 0x00000101,
+        USER_NOT_LOGGED_IN = 0x00000101,
         ///Code associated with CKR_ARGUMENTS_BAD
-        BadArguments = 0x00000007
+        ARGUMENTS_BAD = 0x00000007,
+        FUNCTION_NOT_SUPPORTED = 0x00000054L
     }
 }
