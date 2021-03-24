@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Service.Core.Communication.Infrastructure
+namespace Service.Core.Infrastructure.Communication
 {  
     /// <summary>
     /// Represents the main protocol dispatcher used by this service.
@@ -16,9 +16,8 @@ namespace Service.Core.Communication.Infrastructure
     /// </summary>
     internal class AlphaProtocolDispatcher : IServiceProtocolDispatcher
     {
-        private byte nextSessionId = 0x01;
 
-        Dictionary<byte, Session> sessions = new Dictionary<byte, Session>();
+        Dictionary<long, Session> sessions = new Dictionary<long, Session>();
 
         public DispatchResult DispatchClientRequest(byte[] inputBytes)
         
@@ -63,9 +62,11 @@ namespace Service.Core.Communication.Infrastructure
         #region Private
 
         private Session beginSession()
-        {            
+        {
+            long nextSessionId = Extensions.GetNextId();
+
             Session session = new Session(nextSessionId);
-            sessions.Add(nextSessionId++, session);
+            sessions.Add(nextSessionId, session);
 
             return session;
         }
@@ -89,8 +90,7 @@ namespace Service.Core.Communication.Infrastructure
                     createdSession = beginSession();
                     break;
                 case ServiceActionCode.EndSession:
-                    requireSession = true;
-                    break;
+                case ServiceActionCode.CreateObject:
                 case ServiceActionCode.Authenticate:
                     requireSession = true;
                     break;

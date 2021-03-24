@@ -1,5 +1,7 @@
 ﻿using Service.Core.Abstractions.Communication.Interfaces;
 using Service.Core.Abstractions.Communication.Structures;
+using Service.Core.Abstractions.Token.Interfaces;
+using Service.Core.Infrastructure.Token;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -5,11 +5,12 @@ using System.Text;
 namespace Service.Core.Abstractions.Token.Structures
 {
     /// <summary>
-    /// Represents an handle to keep data of a tlv structure
+    /// Represents an handle to keep data of a attribute tlv structure
     /// </summary>
-    internal struct Pkcs11AttributeContainer
+    public struct Pkcs11DataContainer<EnumDataType> 
+        where EnumDataType : Enum
     {
-        public Pkcs11Attribute Attribute { get; set; }
+        public EnumDataType Type { get; set; }
 
         public byte[] Value { get; set; }
     }

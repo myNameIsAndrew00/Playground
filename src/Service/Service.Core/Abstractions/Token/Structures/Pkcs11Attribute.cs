@@ -7,7 +7,7 @@ namespace Service.Core.Abstractions.Token.Structures
     /// <summary>
     /// Represents an enum which contains pkcs11 attributes 
     /// </summary>
-    enum Pkcs11Attribute : long
+    public enum Pkcs11Attribute : long
     {
        CLASS                                   = 0x00000000L,
        TOKEN                                   = 0x00000001L,

@@ -12,20 +12,21 @@ namespace Service.Core.Infrastructure.Token
         /// </summary>
         /// <param name="bytes">Bytes used to provide data</param>
         /// <returns></returns>
-        public static IEnumerable<Pkcs11AttributeContainer> ToPkcs11Container(this byte[] bytes)
+        public static IEnumerable<Pkcs11DataContainer<Type>> ToPkcs11DataContainer<Type>(this byte[] bytes)
+            where Type : Enum
         {
             if (bytes == null) return null;
 
             try
             {
-                List<Pkcs11AttributeContainer> result = new List<Pkcs11AttributeContainer>();
+                List<Pkcs11DataContainer<Type>> result = new List<Pkcs11DataContainer<Type>>();
                 int cursor = 0;
 
                 while (cursor < bytes.Length)
                 {
-                    Pkcs11AttributeContainer container = new Pkcs11AttributeContainer();
-
-                    container.Attribute = (Pkcs11Attribute)BitConverter.ToInt64(bytes, cursor);
+                    Pkcs11DataContainer<Type> container = new Pkcs11DataContainer<Type>();
+                    
+                    container.Type = (Type)Enum.ToObject(typeof(Type), BitConverter.ToInt64(bytes, cursor));
                     cursor += sizeof(long);
 
                     long dataLength = BitConverter.ToInt64(bytes, cursor);

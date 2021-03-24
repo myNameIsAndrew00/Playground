@@ -1,4 +1,5 @@
-﻿using Service.Core.Infrastructure.Communication.Structures;
+﻿using Service.Core.Infrastructure.Communication;
+using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;

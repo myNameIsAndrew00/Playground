@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Abstractions.Token.Interfaces;
 using Service.Core.Client;
 using Service.Core.Communication.Abstractions;
 using Service.Core.Communication.Infrastructure;
@@ -7,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions
+namespace Service.Core.Infrastructure
 {
     /// <summary>
     /// Use this class as to create server instances

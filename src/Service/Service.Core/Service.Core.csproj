@@ -15,7 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Abstractions\Token\Interfaces\" />
+    <Folder Include="Abstractions\Storage\Interfaces\" />
+    <Folder Include="Infrastructure\Storage\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SQLite" Version="3.13.0" />
   </ItemGroup>
 
 </Project>
