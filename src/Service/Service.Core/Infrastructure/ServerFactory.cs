@@ -4,6 +4,7 @@ using Service.Core.Client;
 using Service.Core.Communication.Abstractions;
 using Service.Core.Communication.Infrastructure;
 using Service.Core.Infrastructure;
+using Service.Core.Infrastructure.Communication;
 using System;
 using System.Collections.Generic;
 using System.Text;
