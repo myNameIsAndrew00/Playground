@@ -63,7 +63,7 @@ namespace Service.Core.Client
         /// <returns></returns>
         public virtual IExecutionResult Authenticate()
         {
-            Pkcs11DataContainer<Pkcs11UserType> authenticationData = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11UserType>().FirstOrDefault();
+            Pkcs11DataContainer<Pkcs11UserType> authenticationData = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11UserType>().FirstOrDefault();
 
             bool authenticationResult =
                 this.dispatchResult.Session.Authenticate(authenticationData.Type, ASCIIEncoding.UTF8.GetString(authenticationData.Value));
@@ -78,11 +78,13 @@ namespace Service.Core.Client
         /// <returns>Bytes representing data. Payload represents 4 bytes for handler id</returns>
         public virtual IExecutionResult CreateObject()
         {
-            IEnumerable<Pkcs11DataContainer<Pkcs11Attribute>> attributes = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11Attribute>();
-            //todo: better handling for codes
 
-            if( ! Pkcs11Object.Create(attributes, out Pkcs11Object @object, out ExecutionResultCode creationResultCode)){
-                return new BytesResult(BitConverter.GetBytes(-1L), creationResultCode);
+            IEnumerable<Pkcs11DataContainer<Pkcs11Attribute>> attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
+            if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+
+            if (!Pkcs11Object.Create(attributes, out Pkcs11Object @object, out ExecutionResultCode creationResultCode))
+            {
+                return new BytesResult(creationResultCode);
             }
 
             long handlerId = this.dispatchResult.Session.AddSesionObject(@object);
@@ -90,10 +92,22 @@ namespace Service.Core.Client
             return new BytesResult(BitConverter.GetBytes(handlerId), ExecutionResultCode.OK);
         }
 
+        /// <summary>
+        /// Function for encrypt init
+        /// </summary>
+        /// <returns></returns>
         public virtual IExecutionResult EncryptInit()
         {
-            //todo: implement
-            return null;
+            var mechanism = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11Mechanism>();
+            var attributes = this.dispatchResult.Payload.Skip(mechanism.Size).ToArray().ToPkcs11DataContainerCollection<Pkcs11Attribute>();
+            
+            if (attributes == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+
+            //todo: better handling for codes
+            if (!this.EncryptionHandler.Initialise(attributes, mechanism, out ExecutionResultCode executionResultCode))
+                return new BytesResult(executionResultCode);
+
+            return new BytesResult(ExecutionResultCode.OK);
         }
 
         public virtual IExecutionResult Encrypt()
@@ -107,7 +121,7 @@ namespace Service.Core.Client
             //todo: implement
             return null;
         }
-       
+
 
     }
 }

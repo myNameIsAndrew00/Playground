@@ -12,7 +12,7 @@ namespace Service.Core.Infrastructure.Token
         /// </summary>
         /// <param name="bytes">Bytes used to provide data</param>
         /// <returns></returns>
-        public static IEnumerable<Pkcs11DataContainer<Type>> ToPkcs11DataContainer<Type>(this byte[] bytes)
+        public static IEnumerable<Pkcs11DataContainer<Type>> ToPkcs11DataContainerCollection<Type>(this byte[] bytes)
             where Type : Enum
         {
             if (bytes == null) return null;
@@ -23,19 +23,7 @@ namespace Service.Core.Infrastructure.Token
                 int cursor = 0;
 
                 while (cursor < bytes.Length)
-                {
-                    Pkcs11DataContainer<Type> container = new Pkcs11DataContainer<Type>();
-                    
-                    container.Type = (Type)Enum.ToObject(typeof(Type), BitConverter.ToInt64(bytes, cursor));
-                    cursor += sizeof(long);
-
-                    long dataLength = BitConverter.ToInt64(bytes, cursor);
-                    cursor += sizeof(long);
-
-                    container.Value = new byte[dataLength];
-                    bytes.CopyTo(container.Value, cursor);
-                    cursor += (int)dataLength;
-                }
+                    result.Add(parseContainer<Type>(bytes, ref cursor));
 
                 return result;
             }
@@ -44,5 +32,45 @@ namespace Service.Core.Infrastructure.Token
                 return null;
             }
         }
+
+        public static Pkcs11DataContainer<Type> ToPkcs11DataContainer<Type>(this byte[] bytes)
+           where Type : Enum
+        {
+            if (bytes == null) return null;
+
+            int cursor = 0;
+
+            try
+            {
+                return parseContainer<Type>(bytes, ref cursor);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
+        #region Private
+
+        private static Pkcs11DataContainer<Type> parseContainer<Type>(byte[] bytes, ref int cursor)
+        where Type : Enum
+        {
+            Pkcs11DataContainer<Type> container = new Pkcs11DataContainer<Type>();
+
+            container.Type = (Type)Enum.ToObject(typeof(Type), BitConverter.ToInt64(bytes, cursor));
+            cursor += sizeof(long);
+
+            long dataLength = BitConverter.ToInt64(bytes, cursor);
+            cursor += sizeof(long);
+
+            container.Value = new byte[dataLength];
+            bytes.CopyTo(container.Value, cursor);
+            cursor += (int)dataLength;
+
+            return container;
+        }
+
+        #endregion
     }
 }
