@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Communication.Structures;
 using Service.Core.Abstractions.Token.Interfaces;
+using Service.Core.Infrastructure.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,10 +26,7 @@ namespace Service.Core.Abstractions.Communication.Interfaces
         /// <returns></returns>
         IExecutionResult GetEmptySessionResult(ExecutionResultCode code);
 
-        IEncryptionHandler EncryptionHandler { get; }
+        IServiceExecutorModelBinder ModelBinder { get; }
 
-        ISigningHandler SigningHandler { get; }
-
-        IHashingHandler HashingHandler { get; }
     }
 }

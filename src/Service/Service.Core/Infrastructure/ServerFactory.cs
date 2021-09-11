@@ -24,7 +24,7 @@ namespace Service.Core.Infrastructure
         /// <returns>A server instance</returns>
         public static IPkcs11Server CreateDefaultSocketServer(string address, int port)
         {
-            return new Server<ServiceExecutor>(
+            return new Server<TlvServiceExecutor>(
                    new SocketCommunicationResolver(
                        address: address,
                        port: port,

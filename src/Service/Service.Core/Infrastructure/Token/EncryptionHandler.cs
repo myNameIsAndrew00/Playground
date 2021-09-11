@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Communication.Structures;
+using Service.Core.Abstractions.Storage.Structures;
 using Service.Core.Abstractions.Token.Interfaces;
 using Service.Core.Abstractions.Token.Structures;
 using System;
@@ -30,7 +31,7 @@ namespace Service.Core.Infrastructure.Token
             return false;
         }
 
-        public bool Initialise(IEnumerable<Pkcs11DataContainer<Pkcs11Attribute>> attributes, Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
+        public bool Initialise(Pkcs11Object keyHanddler, Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
         {
             //todo: implement
             executionResultCode = ExecutionResultCode.GENERAL_ERROR;

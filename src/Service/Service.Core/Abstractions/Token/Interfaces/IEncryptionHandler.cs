@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Communication.Structures;
+using Service.Core.Abstractions.Storage.Structures;
 using Service.Core.Abstractions.Token.Structures;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,11 @@ namespace Service.Core.Abstractions.Token.Interfaces
         /// <summary>
         /// Use this method to initialise the handler with certain attributes and mechanism
         /// </summary>
-        /// <param name="attributes">Attributes used to do encrypion</param>
+        /// <param name="keyHandler">Key object used to do encrypion</param>
         /// <param name="mechanism">Mechanism specified for encryption</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if handler was initialised with success</param>
         /// <returns>A boolean which is true if initialisation was done with success, false otherwise</returns>
-        bool Initialise(IEnumerable<Pkcs11DataContainer<Pkcs11Attribute>> attributes, Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode);
+        bool Initialise(Pkcs11Object keyHandler, Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode);
 
         /// <summary>
         /// Use this method to encrypt data

@@ -51,10 +51,10 @@ namespace Service.Core.Infrastructure.Communication
         public byte[] BuildClientResponse(IExecutionResult executionResult)
         {
             byte[] executionResultBytes = executionResult.GetBytes();
-            byte[] resultBytes = new byte[sizeof(long) + executionResultBytes.Length];
+            byte[] resultBytes = new byte[sizeof(uint) + executionResultBytes.Length];
              
-            BitConverter.GetBytes((long)executionResult.ResultCode).CopyTo(resultBytes, 0);
-            executionResultBytes.CopyTo(resultBytes, sizeof(long));
+            BitConverter.GetBytes((uint)executionResult.ResultCode).CopyTo(resultBytes, 0);
+            executionResultBytes.CopyTo(resultBytes, sizeof(uint));
 
             return resultBytes;
         }

@@ -4,6 +4,7 @@ using Service.Core.Abstractions.Storage.Structures;
 using Service.Core.Abstractions.Token.Interfaces;
 using Service.Core.Abstractions.Token.Structures;
 using Service.Core.Communication.Infrastructure;
+using Service.Core.Infrastructure.Storage;
 using Service.Core.Infrastructure.Token;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,11 @@ namespace Service.Core.Client
     /// <summary>
     /// Main executor used by service.
     /// Methods for commands execution are implemented on this class. Payload format for methods are different foreach method.
+    /// Payload parameters are raw bytes, simple types are passed without any encoding (just consecutive bytes), composed types use TLV encoding
     /// </summary>
-    public class ServiceExecutor : IServiceExecutor
+    public class TlvServiceExecutor : IServiceExecutor
     {
-        private DispatchResult dispatchResult;
+        private DispatchResult dispatchResult; 
 
         public IEncryptionHandler EncryptionHandler => new EncryptionHandler();
 
@@ -27,10 +29,10 @@ namespace Service.Core.Client
 
         public IHashingHandler HashingHandler => new HashingHandler();
 
-        public void SetDispatcherResult(DispatchResult dispatchResult)
-        {
-            this.dispatchResult = dispatchResult;
-        }
+        public IServiceExecutorModelBinder ModelBinder => new TlvServiceExecutorModelBinder();
+
+        public void SetDispatcherResult(DispatchResult dispatchResult) => this.dispatchResult = dispatchResult;
+         
 
         public IExecutionResult GetEmptySessionResult(ExecutionResultCode code)
         {
@@ -47,6 +49,7 @@ namespace Service.Core.Client
             return new BytesResult(BitConverter.GetBytes(dispatchResult.Session.Id), ExecutionResultCode.OK);
         }
 
+
         /// <summary>
         /// End session. No parameters required
         /// </summary>
@@ -61,9 +64,9 @@ namespace Service.Core.Client
         /// Authenticate a session. Require a tlv structure representing the user type and password value
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult Authenticate()
+        public virtual IExecutionResult Authenticate(Pkcs11DataContainer<Pkcs11UserType> authenticationData)
         {
-            Pkcs11DataContainer<Pkcs11UserType> authenticationData = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11UserType>().FirstOrDefault();
+            //Pkcs11DataContainer<Pkcs11UserType> authenticationData = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11UserType>();
 
             bool authenticationResult =
                 this.dispatchResult.Session.Authenticate(authenticationData.Type, ASCIIEncoding.UTF8.GetString(authenticationData.Value));
@@ -76,13 +79,12 @@ namespace Service.Core.Client
         /// Create a object. Require a tlv structure array representing the attributes used for creation
         /// </summary>
         /// <returns>Bytes representing data. Payload represents 4 bytes for handler id</returns>
-        public virtual IExecutionResult CreateObject()
+        public virtual IExecutionResult CreateObject(IEnumerable<Pkcs11DataContainer<Pkcs11Attribute>> attributes)
         {
-
-            IEnumerable<Pkcs11DataContainer<Pkcs11Attribute>> attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
+            //attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            if (!Pkcs11Object.Create(attributes, out Pkcs11Object @object, out ExecutionResultCode creationResultCode))
+            if (!Pkcs11ObjectsBuilder.Instance.Get(attributes, out Pkcs11Object @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }
@@ -98,13 +100,14 @@ namespace Service.Core.Client
         /// <returns></returns>
         public virtual IExecutionResult EncryptInit()
         {
+            //todo: handle null and edge cases
+            var keyHandler =  this.dispatchResult.Session.GetSessionObject(BitConverter.ToInt64(this.dispatchResult.Payload.Take(8).ToArray(), 0));
             var mechanism = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11Mechanism>();
-            var attributes = this.dispatchResult.Payload.Skip(mechanism.Size).ToArray().ToPkcs11DataContainerCollection<Pkcs11Attribute>();
             
-            if (attributes == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+            if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
             //todo: better handling for codes
-            if (!this.EncryptionHandler.Initialise(attributes, mechanism, out ExecutionResultCode executionResultCode))
+            if (!this.EncryptionHandler.Initialise(keyHandler, mechanism, out ExecutionResultCode executionResultCode))
                 return new BytesResult(executionResultCode);
 
             return new BytesResult(ExecutionResultCode.OK);
@@ -122,6 +125,6 @@ namespace Service.Core.Client
             return null;
         }
 
-
+       
     }
 }

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Service.Core.Abstractions.Token.Structures
 {
-    public enum Pkcs11UserType : long
+    public enum Pkcs11UserType : int
     {
-        SecurityOfficer = 0L,
-        User = 1L,
-        ContextSpecific = 2L
+        SecurityOfficer = 0,
+        User = 1,
+        ContextSpecific = 2
     }
 }

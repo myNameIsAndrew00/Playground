@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Abstractions\Storage\Interfaces\" />
-    <Folder Include="Infrastructure\Storage\" />
   </ItemGroup>
 
   <ItemGroup>

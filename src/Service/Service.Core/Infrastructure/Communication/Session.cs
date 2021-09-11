@@ -49,6 +49,13 @@ namespace Service.Core.Infrastructure.Communication.Structures
             return nextId;
         }
 
+        public Pkcs11Object GetSessionObject(long id)
+        {
+            this.sessionObjects.TryGetValue(id, out Pkcs11Object @object);
+            
+            return @object;
+        }
+
         public void Dispose()
         {
             //todo: add disposing code here
