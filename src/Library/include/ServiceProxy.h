@@ -11,12 +11,14 @@ namespace Abstractions {
 	class ServiceProxy
 	{
 	public: 
-		ServiceProxy(){}
+		ServiceProxy() : client(nullptr) {}
 		ServiceProxy(const IServiceCommunicationResolverReference& communicationResolver,
 				    const IServiceProtocolDispatcherReference& protocolDispatcher );
 
 		/*Add a new client to the registered clients list*/
-		bool Register(const IServiceProxyClientReference& client);
+		bool Register( IServiceProxyClient* client);
+		bool Unregister( IServiceProxyClient* client);
+
 		bool DetachCurrentClient();
 
 		CreateSessionResult BeginSession();
@@ -25,7 +27,7 @@ namespace Abstractions {
 		bool communicationInitialised;
 
 		/*Represents a list of clients registered to the service*/
-		IServiceProxyClientReference client;
+		IServiceProxyClient* client;
 		IServiceCommunicationResolverReference communicationResolver;
 		IServiceProtocolDispatcherReference protocolDispatcher;
 

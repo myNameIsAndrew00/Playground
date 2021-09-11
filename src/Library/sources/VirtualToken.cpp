@@ -13,7 +13,7 @@ GetIdentifierResult VirtualToken::GetIdentifier() const
 
 InitialiseResult VirtualToken::Initialise()
 {
-	bool registerResult = this->serviceProxy->Register(IServiceProxyClientReference(this));
+	bool registerResult = this->serviceProxy->Register(this);
 
 	//todo: handle type of messages or do client side validations
 	return InitialiseResult(InitialiseResult::Code::OkResult, registerResult);
@@ -46,3 +46,7 @@ GetManufacturerResult VirtualToken::GetManufacturer() const
 	return GetManufacturerResult(GetManufacturerResult::Code::OkResult, "Virtual token");
 }
  
+
+VirtualToken::~VirtualToken() {
+	this->serviceProxy->Unregister(this);
+}

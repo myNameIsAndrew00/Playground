@@ -18,6 +18,8 @@ namespace Abstractions {
 		FinaliseResult Finalise() override;
 		CreateSessionResult CreateSession() const override;
 		EndSessionResult EndSession(const unsigned char sessionId) const override;
+
+		~VirtualToken();
 	private:
 
 		ServiceProxyReference serviceProxy;

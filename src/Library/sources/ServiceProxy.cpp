@@ -5,16 +5,16 @@ using namespace Abstractions;
 ServiceProxy::ServiceProxy(
 	const IServiceCommunicationResolverReference& communicationResolver,
 	const IServiceProtocolDispatcherReference& protocolDispatcher
-	)
-	: communicationInitialised(false)
-{ 
+)
+	: communicationInitialised(false), client(nullptr)
+{
 	this->communicationResolver = communicationResolver;
 	this->protocolDispatcher = protocolDispatcher;
 }
 
-bool ServiceProxy::Register(const IServiceProxyClientReference& client) {
+bool ServiceProxy::Register(IServiceProxyClient* client) {
 
-	this->client = client; 
+	this->client = client;
 
 	if (this->communicationInitialised)
 		this->communicationResolver->FinaliseCurrentCommunication();
@@ -22,7 +22,21 @@ bool ServiceProxy::Register(const IServiceProxyClientReference& client) {
 	this->communicationInitialised = this->communicationResolver->InitialiseCommunication();
 
 	return this->communicationInitialised;
+
+	return true;
 }
+
+bool ServiceProxy::Unregister(IServiceProxyClient* client) {
+	if (!this->DetachCurrentClient())
+		return false;
+
+	if (this->client != client) return false;
+
+	this->client = nullptr;
+ 
+	return true;
+}
+
 
 bool ServiceProxy::DetachCurrentClient() {
 	if (!this->communicationInitialised) return true;
@@ -31,14 +45,14 @@ bool ServiceProxy::DetachCurrentClient() {
 }
 
 Abstractions::CreateSessionResult Abstractions::ServiceProxy::BeginSession()
-{  
+{
 	unsigned long resultCode = (unsigned long)Abstractions::CreateSessionResult::Code::OkResult;
 
 	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::BeginSession, resultCode, nullptr, 0);
 	if (reader == nullptr) return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, -1);
 
 	unsigned char result = reader->PeekChar();
-	
+
 	delete reader;
 	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, result);
 }
@@ -72,9 +86,9 @@ BytesReader* ServiceProxy::executeRequest(Abstractions::ServiceActionCode servic
 
 	resultCode = executionResult.GetResultCode();
 	auto reader = new Abstractions::BytesReader(BytesReference(new Bytes(std::move(executionResult.GetBytes()))));
-	 
-	return reader;	
-} 
+
+	return reader;
+}
 
 
 #pragma endregion

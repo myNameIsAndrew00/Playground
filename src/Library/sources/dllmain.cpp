@@ -12,40 +12,40 @@ using namespace Abstractions;
 using namespace Infrastructure;
 
 /*Create a token which use a proxy service which communicates via pipes*/
-IPkcs11TokenReference Token = 
-    std::make_shared<VirtualToken>(
-        std::make_shared<ServiceProxy>( 
-            std::make_shared<SocketCommunicationResolver>("127.0.0.1", 5123),
-            std::make_shared<AlphaProtocolDispatcher>()
-            )
-        );
+IPkcs11TokenReference Token =
+std::make_shared<VirtualToken>(
+	std::make_shared<ServiceProxy>(
+		std::make_shared<SocketCommunicationResolver>("127.0.0.1", 5123),
+		std::make_shared<AlphaProtocolDispatcher>()
+		)
+	);
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+BOOL APIENTRY DllMain(HMODULE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
- 
-    switch (ul_reason_for_call)
-    {
-    case DLL_PROCESS_ATTACH:
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
-    }
-    return TRUE;
+
+	switch (ul_reason_for_call)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
 }
 
 int main() {
-    //tescases for abstract token
-    auto initialiseResult = Token->Initialise();
 
-    auto createSessionResult = Token->CreateSession();
+	auto initialiseResult = Token->Initialise();
 
-    auto endSessionResult = Token->EndSession(createSessionResult.GetValue());
+	auto createSessionResult = Token->CreateSession();
 
-    auto finaliseResult = Token->Finalise();
+	auto endSessionResult = Token->EndSession(createSessionResult.GetValue());
 
-    return 0;
+	auto finaliseResult = Token->Finalise();
+
+	return 0;
 }
