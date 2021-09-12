@@ -44,16 +44,16 @@ namespace Service.Core.Infrastructure
         public void RegisterModule<ModuleType, ImplementationType>()
             where ModuleType : ITokenModule
             where ImplementationType : ITokenModule
-                => moduleCollection.AddModule(typeof(ModuleType), typeof(ImplementationType));
+                => moduleCollection.RegisterModule(typeof(ModuleType), typeof(ImplementationType));
 
         public void RegisterEncryptionModule<EncryptionModuleType>(Func<Pkcs11ContextObject, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
-                => moduleCollection.AddModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+                => moduleCollection.RegisterModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
 
         public void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ContextObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
-                => moduleCollection.AddModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+                => moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
 
         public void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ContextObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
-                => moduleCollection.AddModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+                => moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
 
 
 
@@ -64,8 +64,9 @@ namespace Service.Core.Infrastructure
             // create an instance of the executor
             IServiceExecutor executor = CreateExecutor();
 
-            // initialise the dispatch result
-            executor.SetDispatcherResult(dispatchResult); 
+            // initialise the executor
+            executor.SetDispatcherResult(dispatchResult);
+            executor.SetModuleCollection(this.moduleCollection);
 
             try
             {

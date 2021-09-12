@@ -14,7 +14,7 @@ namespace Service.Core.Infrastructure.Token
         private readonly Dictionary<Type, Type> moduleStorage = new Dictionary<Type, Type>();
 
 
-        public void AddModule(Type type, Type implementation, Func<object, ITokenModule> factoryMethod = null)
+        public void RegisterModule(Type type, Type implementation, Func<object, ITokenModule> factoryMethod = null)
         {
             if (type is null)
                 throw new ArgumentNullException($"Passed argument {type} is null");
