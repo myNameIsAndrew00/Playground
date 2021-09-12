@@ -1,6 +1,6 @@
-﻿using Service.Core.Abstractions.Communication.Structures;
-using Service.Core.Abstractions.Storage.Structures;
-using Service.Core.Abstractions.Token.Structures;
+﻿using Service.Core.Infrastructure.Communication.Structures;
+using Service.Core.Infrastructure.Storage.Structures;
+using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;

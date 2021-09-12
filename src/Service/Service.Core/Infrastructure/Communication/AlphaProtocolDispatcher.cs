@@ -1,5 +1,4 @@
-﻿using Service.Core.Abstractions.Communication.Interfaces;
-using Service.Core.Abstractions.Communication.Structures;
+﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
@@ -63,7 +62,7 @@ namespace Service.Core.Infrastructure.Communication
 
         private Session beginSession()
         {
-            long nextSessionId = Extensions.GetNextId();
+            uint nextSessionId = Utils.GetNextId();
 
             Session session = new Session(nextSessionId);
             sessions.Add(nextSessionId, session);

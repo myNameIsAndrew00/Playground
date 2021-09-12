@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Communication.Structures
+namespace Service.Core.Infrastructure.Communication.Structures
 {
     /// <summary>
     /// Represents code returned by an executor method which process a client request

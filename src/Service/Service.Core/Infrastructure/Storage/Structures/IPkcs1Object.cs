@@ -1,10 +1,9 @@
-﻿using Service.Core.Abstractions.Communication.Structures;
-using Service.Core.Abstractions.Token.Structures;
+﻿using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Storage.Structures
+namespace Service.Core.Infrastructure.Storage.Structures
 {
     /// <summary>
     /// Represents an model of a pcks11 object

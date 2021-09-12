@@ -1,5 +1,5 @@
-﻿using Service.Core.Abstractions.Communication.Interfaces;
-using Service.Core.Abstractions.Communication.Structures;
+﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.IO;

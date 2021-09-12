@@ -1,10 +1,10 @@
-﻿using Service.Core.Abstractions.Communication.Structures;
+﻿using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Service.Core.Abstractions.Communication.Interfaces
+namespace Service.Core.Abstractions.Communication
 {
     /// <summary>
     /// Represents a class which can be used to provide parameters to a executor method

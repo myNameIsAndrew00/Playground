@@ -1,4 +1,4 @@
-﻿using Service.Core.Abstractions.Token.Interfaces;
+﻿using Service.Core.Abstractions.Token;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,6 +1,6 @@
-﻿using Service.Core.Abstractions.Communication.Interfaces;
-using Service.Core.Abstractions.Communication.Structures;
-using Service.Core.Abstractions.Token.Interfaces;
+﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Abstractions.Token;
+using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage;
 using Service.Core.Infrastructure.Token;
 using System;
@@ -15,11 +15,13 @@ namespace Service.Core.Communication.Abstractions
     /// <summary>
     /// A class which can handle received messages from pkcs11 clients
     /// </summary>
-    /// <typeparam name="Executor">Executor which handle client requests. For now only one executor is allowed</typeparam>
-    internal class Server<Executor> : IPkcs11Server
-        where Executor : IServiceExecutor, new()
+    public abstract class Server : IPkcs11Server
     {
         private IServiceCommunicationResolver resolver;
+
+        public IServiceCommunicationResolver Resolver => resolver;
+
+        public abstract IServiceExecutor CreateExecutor();
 
         internal Server(IServiceCommunicationResolver resolver)
         {
@@ -42,7 +44,7 @@ namespace Service.Core.Communication.Abstractions
         private IExecutionResult onCommunicationCreated(DispatchResult dispatchResult)
         {
             // create an instance of the executor
-            Executor executor = new Executor();
+            IServiceExecutor executor = CreateExecutor();
 
             // initialise the dispatch result
             executor.SetDispatcherResult(dispatchResult); 
@@ -54,7 +56,7 @@ namespace Service.Core.Communication.Abstractions
                     return executor.GetEmptySessionResult(ExecutionResultCode.ARGUMENTS_BAD);
 
                 // initialise the invoked method and bind the parameters using the binder, if exists
-                MethodInfo method = typeof(Executor).GetMethod(
+                MethodInfo method = executor.GetType().GetMethod(
                     name: dispatchResult.DispatchedAction.ToString(),
                     bindingAttr: BindingFlags.Public | BindingFlags.Instance);
 
@@ -86,5 +88,19 @@ namespace Service.Core.Communication.Abstractions
             Debug.WriteLine(exception);
         }
         #endregion
+    }
+
+    /// <summary>
+    /// A class which can handle received messages from pkcs11 clients
+    /// </summary>
+    /// <typeparam name="Executor">Executor which handle client requests. For now only one executor is allowed</typeparam>
+    internal class Server<Executor> : Server
+        where Executor : IServiceExecutor, new()
+    {
+        internal Server(IServiceCommunicationResolver resolver) : base(resolver)
+        { 
+        }
+
+        public override IServiceExecutor CreateExecutor() => new Executor();
     }
 }

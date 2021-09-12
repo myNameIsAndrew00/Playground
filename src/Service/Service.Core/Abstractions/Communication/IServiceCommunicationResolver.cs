@@ -1,9 +1,9 @@
-﻿using Service.Core.Abstractions.Communication.Structures;
+﻿using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Communication.Interfaces
+namespace Service.Core.Abstractions.Communication
 {
     /// <summary>
     /// Resolve the communication between clients and service

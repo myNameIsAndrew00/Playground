@@ -1,5 +1,5 @@
-﻿using Service.Core.Abstractions.Communication.Interfaces;
-using Service.Core.Abstractions.Token.Interfaces;
+﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Abstractions.Token;
 using Service.Core.Client;
 using Service.Core.Communication.Abstractions;
 using Service.Core.Communication.Infrastructure;
@@ -24,13 +24,7 @@ namespace Service.Core.Infrastructure
         /// <returns>A server instance</returns>
         public static IPkcs11Server CreateDefaultSocketServer(string address, int port)
         {
-            return new Server<TlvServiceExecutor>(
-                   new SocketCommunicationResolver(
-                       address: address,
-                       port: port,
-                       dispatcher: new AlphaProtocolDispatcher()
-                   )
-               );
+            return CreateSocketServer<TlvServiceExecutor>(address, port); 
         }
 
  

@@ -1,6 +1,6 @@
-﻿using Service.Core.Abstractions.Communication.Interfaces;
-using Service.Core.Abstractions.Communication.Structures;
-using Service.Core.Abstractions.Token.Structures;
+﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Infrastructure.Communication.Structures;
+using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Service.Core.Client
     /// Use this class to bind parameters to a service executor method.
     /// Model binder will fill bind only parameter of types int, long and Pkcs11DataContainer in the order passed to the method.
     /// </summary>
-    internal class TlvServiceExecutorModelBinder : IServiceExecutorModelBinder
+    public class TlvServiceExecutorModelBinder : IServiceExecutorModelBinder
     {
         public object[] GetMethodParameters(MethodInfo method, DispatchResult dispatcherResult)
         {
@@ -58,33 +58,36 @@ namespace Service.Core.Client
 
         private int tryParseValueType(IEnumerable<byte> parsingBytes, Type parameterType, out object parameterBuilt)
         {
-            int result = 0;
-
-            //available value types which model binder may bind are int and long
-            var @switch = new Dictionary<Type, Func<int>>()
+            var parsingInfoContainer = new Dictionary<Type,  (int size, Func<byte[], object> convertFunction)>
             {
-                [typeof(int)] = () =>
-                {
-                    result = BitConverter.ToInt32(parsingBytes.Take(sizeof(int)).ToArray(), 0);
-                    return sizeof(int);
-                },
-                [typeof(long)] = () =>
-                {
-                    result = BitConverter.ToInt32(parsingBytes.Take(sizeof(long)).ToArray(), 0);
-                    return sizeof(long);
-                }
+                [typeof(char)]   = (sizeof(char),    (bytes) => BitConverter.ToChar(bytes, 0)),
+                [typeof(short)]  = (sizeof(short),   (bytes) => BitConverter.ToInt16(bytes, 0)),
+                [typeof(ushort)] = (sizeof(ushort),  (bytes) => BitConverter.ToUInt16(bytes, 0)),
+                [typeof(int)]    = (sizeof(int),     (bytes) => BitConverter.ToInt32(bytes, 0)),
+                [typeof(uint)]   = (sizeof(uint),    (bytes) => BitConverter.ToUInt32(bytes, 0)),
+                [typeof(long)]   = (sizeof(long),    (bytes) => BitConverter.ToInt64(bytes, 0))
             };
 
-            if (@switch.TryGetValue(parameterType, out Func<int> builtFunction))
+            if (parsingInfoContainer.TryGetValue(parameterType, out (int size, Func<byte[], object> convertFunction) parsingInfo))
             {
-                parameterBuilt = result;
-                return builtFunction();
+                byte[] inputBytes = parsingBytes.Take(parsingInfo.size).ToArray();
+
+                if (BitConverter.IsLittleEndian)
+                    Array.Reverse(inputBytes);
+
+                //available value types which model binder may bind are int and long
+                parameterBuilt = parsingInfo.convertFunction(inputBytes);
+                 
+                return parsingInfo.size;
             }
             else
             {
                 parameterBuilt = 0;
                 return 0;
             }
+           
+           
+
         }
     }
 }

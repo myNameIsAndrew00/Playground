@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Token.Structures
+namespace Service.Core.Infrastructure.Token.Structures
 {
     public enum Pkcs11UserType : int
     {

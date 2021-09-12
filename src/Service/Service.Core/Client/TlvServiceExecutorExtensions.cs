@@ -1,4 +1,4 @@
-﻿using Service.Core.Abstractions.Token.Structures;
+﻿using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace Service.Core.Client
         public static object ToPkcs11DataContainer(this IEnumerable<byte> bytes, Type enumType)
         {
             TryParsePkcs11DataContainer(bytes, enumType, out object output);
-            
+
             return output;
         }
 
@@ -99,19 +99,22 @@ namespace Service.Core.Client
 
         #region Private
 
-        private static object parseContainer(Type type, IEnumerable<byte> bytes, ref int cursor) 
+        private static object parseContainer(Type type, IEnumerable<byte> bytes, ref int cursor)
         {
-            byte[] _bytes = bytes.ToArray();
-            Pkcs11DataContainer container = (Pkcs11DataContainer) Activator.CreateInstance(type);
+            Pkcs11DataContainer container = (Pkcs11DataContainer)Activator.CreateInstance(type);
 
-            container.Type = BitConverter.ToInt64(_bytes, cursor);
-            cursor += sizeof(long);
+            // parse the type.
+            container.Type = bytes.Skip(cursor).ToUInt32();
+            cursor += sizeof(uint);
 
-            long dataLength = BitConverter.ToInt64(_bytes, cursor);
-            cursor += sizeof(long);
+            // parse the value.
+            uint dataLength = bytes.Skip(cursor).ToUInt32();
+            cursor += sizeof(uint);
 
+            // parse the data.
             container.Value = new byte[dataLength];
-            _bytes.CopyTo(container.Value, cursor);
+            byte[] _bytes = bytes.Skip(cursor).Take((int)dataLength).ToArray();
+            _bytes.CopyTo(container.Value, 0);
             cursor += (int)dataLength;
 
             return container;

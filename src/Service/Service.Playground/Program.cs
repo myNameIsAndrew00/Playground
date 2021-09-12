@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using Service.Core.Abstractions;
-using Service.Core.Abstractions.Communication.Interfaces;
+using Service.Core.Abstractions.Communication;
 using Service.Core.Infrastructure;
 
 namespace Service.Playground

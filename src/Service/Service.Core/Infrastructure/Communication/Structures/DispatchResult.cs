@@ -1,10 +1,9 @@
 ﻿using Service.Core.Infrastructure.Communication;
-using Service.Core.Infrastructure.Communication.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Communication.Structures
+namespace Service.Core.Infrastructure.Communication.Structures
 {
 
     /// <summary>
@@ -12,7 +11,7 @@ namespace Service.Core.Abstractions.Communication.Structures
     /// </summary>
     public class DispatchResult
     {
-        internal DispatchResult(ServiceActionCode dispatchedAction, byte[] payload, bool requireSession)
+        public DispatchResult(ServiceActionCode dispatchedAction, byte[] payload, bool requireSession)
         {
             this.DispatchedAction = dispatchedAction;
             this.Payload = payload;

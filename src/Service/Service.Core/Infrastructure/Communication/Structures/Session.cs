@@ -1,5 +1,5 @@
-﻿using Service.Core.Abstractions.Storage.Structures;
-using Service.Core.Abstractions.Token.Structures;
+﻿using Service.Core.Infrastructure.Storage.Structures;
+using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,13 +11,13 @@ namespace Service.Core.Infrastructure.Communication.Structures
     /// </summary>
     public class Session : IDisposable
     {
-        private Dictionary<long, Pkcs11Object> sessionObjects = new Dictionary<long, Pkcs11Object>();
+        private Dictionary<uint, Pkcs11Object> sessionObjects = new Dictionary<uint, Pkcs11Object>();
 
-        public long Id { get; }
+        public uint Id { get; }
     
         public bool Authenticated { get; private set; }
 
-        public Session(long id)
+        public Session(uint id)
         {
             this.Id = id;
             this.Authenticated = false;
@@ -42,14 +42,14 @@ namespace Service.Core.Infrastructure.Communication.Structures
 
         public long AddSesionObject(Pkcs11Object pkcs11Object)
         {
-            long nextId = Extensions.GetNextId();
+            uint nextId = Utils.GetNextId();
 
             this.sessionObjects.Add(nextId, pkcs11Object);
 
             return nextId;
         }
 
-        public Pkcs11Object GetSessionObject(long id)
+        public Pkcs11Object GetSessionObject(uint id)
         {
             this.sessionObjects.TryGetValue(id, out Pkcs11Object @object);
             

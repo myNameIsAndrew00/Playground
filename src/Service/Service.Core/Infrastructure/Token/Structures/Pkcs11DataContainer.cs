@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Token.Structures
+namespace Service.Core.Infrastructure.Token.Structures
 {
     /// <summary>
-    /// Represents an handler to keep data of a attribute tlv structure. Type and length value have 8 bytes each (long data type)
+    /// Represents an handler to keep data of a attribute tlv structure. Type and length value have 4 bytes each (uint data type)
     /// </summary>
     public class Pkcs11DataContainer
     {
-        public long Type { get; set; }
+        public uint Type { get; set; }
 
         /// <summary>
         /// Represents the value of container
@@ -19,7 +19,7 @@ namespace Service.Core.Abstractions.Token.Structures
         /// <summary>
         /// Represents the size of raw container in bytes
         /// </summary>
-        public int Size => sizeof(long) /*size of type*/ + sizeof(long) /*size of length*/ + Value.Length;
+        public int Size => sizeof(uint) /*size of type*/ + sizeof(uint) /*size of length*/ + Value.Length;
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace Service.Core.Abstractions.Token.Structures
         /// <summary>
         /// Represents the type of the container
         /// </summary>
-        public new EnumDataType Type { get; set; }
+        public new EnumDataType Type => (EnumDataType)(object)base.Type;
 
     }
 }

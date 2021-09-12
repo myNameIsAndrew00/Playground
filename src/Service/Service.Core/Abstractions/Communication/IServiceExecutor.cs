@@ -1,11 +1,10 @@
-﻿using Service.Core.Abstractions.Communication.Structures;
-using Service.Core.Abstractions.Token.Interfaces;
+﻿using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Communication.Interfaces
+namespace Service.Core.Abstractions.Communication
 {
     /// <summary>
     /// Provide methods to execute service actions.
@@ -26,6 +25,9 @@ namespace Service.Core.Abstractions.Communication.Interfaces
         /// <returns></returns>
         IExecutionResult GetEmptySessionResult(ExecutionResultCode code);
 
+        /// <summary>
+        /// Represents an object which may be used by server to parse parameters to ServiceExecutor invoked method
+        /// </summary>
         IServiceExecutorModelBinder ModelBinder { get; }
 
     }

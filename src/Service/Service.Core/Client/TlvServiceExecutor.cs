@@ -1,11 +1,11 @@
-﻿using Service.Core.Abstractions.Communication.Interfaces;
-using Service.Core.Abstractions.Communication.Structures;
-using Service.Core.Abstractions.Storage.Structures;
-using Service.Core.Abstractions.Token.Interfaces;
-using Service.Core.Abstractions.Token.Structures;
+﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Abstractions.Token;
 using Service.Core.Communication.Infrastructure;
+using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage;
+using Service.Core.Infrastructure.Storage.Structures;
 using Service.Core.Infrastructure.Token;
+using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,11 +98,10 @@ namespace Service.Core.Client
         /// Function for encrypt init
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult EncryptInit()
+        public virtual IExecutionResult EncryptInit(uint keyIdentifier, Pkcs11DataContainer<Pkcs11Mechanism> mechanism)
         {
             //todo: handle null and edge cases
-            var keyHandler =  this.dispatchResult.Session.GetSessionObject(BitConverter.ToInt64(this.dispatchResult.Payload.Take(8).ToArray(), 0));
-            var mechanism = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11Mechanism>();
+            var keyHandler =  this.dispatchResult.Session.GetSessionObject(keyIdentifier); 
             
             if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
