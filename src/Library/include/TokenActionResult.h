@@ -42,7 +42,7 @@ namespace Abstractions {
 	using FinaliseResult = TokenActionResult<bool>;
 	using GetIdentifierResult = TokenActionResult<unsigned int>;
 	using GetManufacturerResult = TokenActionResult<std::string>;
-	using CreateSessionResult = TokenActionResult<unsigned char>;
+	using CreateSessionResult = TokenActionResult<unsigned int>;
 	using EndSessionResult = TokenActionResult<bool>;
   
 }

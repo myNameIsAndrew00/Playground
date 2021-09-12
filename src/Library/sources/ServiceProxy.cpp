@@ -51,8 +51,8 @@ Abstractions::CreateSessionResult Abstractions::ServiceProxy::BeginSession()
 	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::BeginSession, resultCode, nullptr, 0);
 	if (reader == nullptr) return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, -1);
 
-	unsigned char result = reader->PeekChar();
-
+	unsigned int result = reader->PeekInt();
+	
 	delete reader;
 	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, result);
 }
