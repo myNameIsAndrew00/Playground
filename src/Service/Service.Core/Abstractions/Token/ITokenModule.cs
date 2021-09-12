@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Core.Infrastructure.Storage.Structures;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,5 +10,9 @@ namespace Service.Core.Abstractions.Token
     /// </summary>
     public interface ITokenModule
     {
+        /// <summary>
+        /// Represent the context used by this module
+        /// </summary>
+        Pkcs11ContextObject Context { get; }
     }
 }

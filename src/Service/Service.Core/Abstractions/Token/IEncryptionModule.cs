@@ -13,34 +13,26 @@ namespace Service.Core.Abstractions.Token
     public interface IEncryptionModule : ITokenModule
     {
         /// <summary>
-        /// Represent the context of encryption
+        /// Use this method to initialise the handler context with certain attributes and mechanism
         /// </summary>
-        EncryptionObjectHandler Context { get; }
-
-        /// <summary>
-        /// Use this method to initialise the handler with certain attributes and mechanism
-        /// </summary>
-        /// <param name="keyHandler">Key object used to do encrypion</param>
         /// <param name="mechanism">Mechanism specified for encryption</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if handler was initialised with success</param>
-        /// <returns>A boolean which is true if initialisation was done with success, false otherwise</returns>
-        bool Initialise(Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode);
+        /// <returns>An object representing the key which can be used to do encryption</returns>
+        EncryptionContext Initialise(DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode);
 
         /// <summary>
         /// Use this method to encrypt data
         /// </summary>
         /// <param name="plainData">Data which must be encrypted</param>
-        /// <param name="encryptedData">Data which was encrypted</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if encryption was done with success</param>
         /// <returns>A boolean which is true if data was encrypted with success</returns>
-        bool Encrypt(byte[] plainData, out byte[] encryptedData, out ExecutionResultCode executionResultCode);
+        bool Encrypt(byte[] plainData, out ExecutionResultCode executionResultCode);
 
         /// <summary>
         /// Use this method to finalise encryption. This method can return encrypted data for some mechanisms.
         /// </summary>
-        /// <param name="encryptedData">Data which was encrypted</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if encryption finalise was done with success</param>
         /// <returns>A boolean which is true if encryption was finalised with success</returns>
-        bool EncryptFinalise(out byte[] encryptedData, out ExecutionResultCode executionResultCode);
+        bool EncryptFinalise(out ExecutionResultCode executionResultCode);
     }
 }

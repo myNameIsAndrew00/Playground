@@ -46,14 +46,14 @@ namespace Service.Core.Infrastructure
             where ImplementationType : ITokenModule
                 => moduleCollection.AddModule(typeof(ModuleType), typeof(ImplementationType));
 
-        public void RegisterEncryptionModule<EncryptionModuleType>(Func<EncryptionObjectHandler, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
-                => moduleCollection.AddModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as EncryptionObjectHandler));
+        public void RegisterEncryptionModule<EncryptionModuleType>(Func<Pkcs11ContextObject, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
+                => moduleCollection.AddModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
 
-        public void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ObjectHandler, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
-                => moduleCollection.AddModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ObjectHandler));
+        public void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ContextObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
+                => moduleCollection.AddModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
 
-        public void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ObjectHandler, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
-                => moduleCollection.AddModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ObjectHandler));
+        public void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ContextObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
+                => moduleCollection.AddModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
 
 
 

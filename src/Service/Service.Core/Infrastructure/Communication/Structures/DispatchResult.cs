@@ -43,7 +43,7 @@ namespace Service.Core.Infrastructure.Communication.Structures
         public bool SessionCheckPassed => (Session == null && !RequireSession) || (Session != null);
 
         /// <summary>
-        /// A boolean which will specify if the request if authorized
+        /// An object representing the current session after dispatching
         /// </summary>
         public Session Session { get; }
 

@@ -13,33 +13,25 @@ namespace Service.Core.Infrastructure.Token
     /// </summary>
     internal class EncryptionModule : IEncryptionModule
     {
-        EncryptionObjectHandler context;
+        private Pkcs11ContextObject context;
 
-        public EncryptionModule(EncryptionObjectHandler context)
+        private EncryptionContext keyContext => context as EncryptionContext;
+
+        public EncryptionModule(Pkcs11ContextObject context)
         {
             this.context = context;
         }
-        public EncryptionObjectHandler Context => context;
+        public Pkcs11ContextObject Context => context;
 
-        public bool Encrypt(byte[] plainData, out byte[] encryptedData, out ExecutionResultCode executionResultCode)
+        public bool Encrypt(byte[] plainData, out ExecutionResultCode executionResultCode)
         {
             //todo: implement
-            encryptedData = null;
             executionResultCode = ExecutionResultCode.GENERAL_ERROR; 
 
             return false;
         }
 
-        public bool EncryptFinalise(out byte[] encryptedData, out ExecutionResultCode executionResultCode)
-        {
-            //todo: implement
-            encryptedData = null;
-            executionResultCode = ExecutionResultCode.GENERAL_ERROR;
-
-            return false;
-        }
-
-        public bool Initialise(Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
+        public bool EncryptFinalise(out ExecutionResultCode executionResultCode)
         {
             //todo: implement
             executionResultCode = ExecutionResultCode.GENERAL_ERROR;
@@ -47,7 +39,16 @@ namespace Service.Core.Infrastructure.Token
             return false;
         }
 
-        public bool Initialise(Pkcs11ObjectHandler keyHandler, Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
+        public EncryptionContext Initialise(DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
+        {
+            //todo: implement
+            executionResultCode = ExecutionResultCode.GENERAL_ERROR;
+
+
+            return null;
+        }
+
+        public bool Initialise(Pkcs11ContextObject keyHandler, DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
         {
             throw new NotImplementedException();
         }

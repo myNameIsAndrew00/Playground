@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Infrastructure.Token.Structures
+namespace Service.Core.Infrastructure.Storage.Structures
 {
     /// <summary>
     /// Represents an handler to keep data of a attribute tlv structure. Type and length value have 4 bytes each (uint data type)
     /// </summary>
-    public class Pkcs11DataContainer
+    public class DataContainer
     {
         public uint Type { get; set; }
 
@@ -25,7 +25,7 @@ namespace Service.Core.Infrastructure.Token.Structures
     /// <summary>
     /// Represents an generic handler to keep data of a attribute tlv structure. Type and length value have 8 bytes each (long data type)
     /// </summary>
-    public class Pkcs11DataContainer<EnumDataType> : Pkcs11DataContainer
+    public class DataContainer<EnumDataType> : DataContainer
         where EnumDataType : Enum
     {
         /// <summary>

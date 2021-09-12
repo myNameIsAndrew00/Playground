@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Infrastructure.Communication.Structures;
+using Service.Core.Infrastructure.Storage.Structures;
 using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections;
@@ -36,7 +37,7 @@ namespace Service.Core.Client
                     cursor += tryParseValueType(parsingBytes, parameter.ParameterType, out parameterBuilt);
                 }
                 //check if parameter is Pkcs11DataContainer 
-                else if (parameter.ParameterType.Inherits(typeof(Pkcs11DataContainer)))
+                else if (parameter.ParameterType.Inherits(typeof(DataContainer)))
                     cursor += parsingBytes.TryParsePkcs11DataContainer(
                            enumType: parameter.ParameterType.IsGenericType ? parameter.ParameterType.GenericTypeArguments[0] : null,
                            out parameterBuilt);
@@ -44,7 +45,7 @@ namespace Service.Core.Client
                 else if (parameter.ParameterType.Inherits(typeof(IEnumerable)))
                 {
                     Type innerType = parameter.ParameterType.GenericTypeArguments.FirstOrDefault();
-                    if (innerType.Inherits(typeof(Pkcs11DataContainer)))
+                    if (innerType.Inherits(typeof(DataContainer)))
                         cursor += parsingBytes.TryParsePkcs11DataContainerCollection(
                             enumType: innerType.IsGenericType ? innerType.GenericTypeArguments[0] : null,
                             out parameterBuilt);

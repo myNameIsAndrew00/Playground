@@ -70,7 +70,7 @@ namespace Service.Core.Client
         /// Authenticate a session. Require a tlv structure representing the user type and password value
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult Authenticate(Pkcs11DataContainer<Pkcs11UserType> authenticationData)
+        public virtual IExecutionResult Authenticate(DataContainer<Pkcs11UserType> authenticationData)
         {
             //Pkcs11DataContainer<Pkcs11UserType> authenticationData = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11UserType>();
 
@@ -85,17 +85,17 @@ namespace Service.Core.Client
         /// Create a object. Require a tlv structure array representing the attributes used for creation
         /// </summary>
         /// <returns>Bytes representing data. Payload represents 4 bytes for handler id</returns>
-        public virtual IExecutionResult CreateObject(IEnumerable<Pkcs11DataContainer<Pkcs11Attribute>> attributes)
+        public virtual IExecutionResult CreateObject(IEnumerable<DataContainer<Pkcs11Attribute>> attributes)
         {
             //attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            if (!Pkcs11ObjectHandlersBuilder.Instance.Get(attributes, out Pkcs11ObjectHandler @object, out ExecutionResultCode creationResultCode))
+            if (!Pkcs11ObjectHandlersBuilder.Instance.Get(attributes, out Pkcs11ContextObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }
 
-            long handlerId = this.dispatchResult.Session.AddSesionObject(@object);
+            uint handlerId = this.dispatchResult.Session.AddSesionObject(@object);
 
             return new BytesResult(BitConverter.GetBytes(handlerId), ExecutionResultCode.OK);
         }
@@ -104,31 +104,41 @@ namespace Service.Core.Client
         /// Function for encrypt init
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult EncryptInit(uint keyIdentifier, Pkcs11DataContainer<Pkcs11Mechanism> mechanism)
-        { 
+        public virtual IExecutionResult EncryptInit(uint keyIdentifier, DataContainer<Pkcs11Mechanism> mechanism)
+        {
             //todo: handle null and edge cases
-            var keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier) as EncryptionObjectHandler;
+            Pkcs11ContextObject keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier);
 
             if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
-           
+
             IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(keyHandler);
 
             //todo: better handling for codes
-            if (!encryptionHandler.Initialise(mechanism, out ExecutionResultCode executionResultCode))
+            keyHandler = encryptionHandler.Initialise(mechanism, out ExecutionResultCode executionResultCode);
+
+            if (keyHandler == null)
                 return new BytesResult(executionResultCode);
 
+            this.dispatchResult.Session.UpdateAndRegisterSesionObject(keyIdentifier, keyHandler);
+            
             return new BytesResult(ExecutionResultCode.OK);
         }
 
         public virtual IExecutionResult Encrypt()
         {
             //todo: implement
+
             return null;
         }
 
         public virtual IExecutionResult EncryptFinal()
         {
             //todo: implement
+            return null;
+        }
+
+        public virtual IExecutionResult EncryptUpdate()
+        {
             return null;
         }
 

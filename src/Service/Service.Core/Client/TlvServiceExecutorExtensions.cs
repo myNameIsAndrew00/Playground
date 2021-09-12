@@ -1,4 +1,5 @@
-﻿using Service.Core.Infrastructure.Token.Structures;
+﻿using Service.Core.Infrastructure.Storage.Structures;
+using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,10 +17,10 @@ namespace Service.Core.Client
         /// </summary>
         /// <param name="bytes">Bytes used to provide data</param>
         /// <returns></returns>
-        public static IEnumerable<Pkcs11DataContainer<Type>> ToPkcs11DataContainerCollection<Type>(this IEnumerable<byte> bytes)
+        public static IEnumerable<DataContainer<Type>> ToPkcs11DataContainerCollection<Type>(this IEnumerable<byte> bytes)
             where Type : Enum
         {
-            return ToPkcs11DataContainerCollection(bytes, typeof(Type)) as IEnumerable<Pkcs11DataContainer<Type>>;
+            return ToPkcs11DataContainerCollection(bytes, typeof(Type)) as IEnumerable<DataContainer<Type>>;
         }
 
         /// <summary>
@@ -28,10 +29,10 @@ namespace Service.Core.Client
         /// <typeparam name="Type"></typeparam>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        public static Pkcs11DataContainer<Type> ToPkcs11DataContainer<Type>(this IEnumerable<byte> bytes)
+        public static DataContainer<Type> ToPkcs11DataContainer<Type>(this IEnumerable<byte> bytes)
            where Type : Enum
         {
-            return ToPkcs11DataContainer(bytes, typeof(Type)) as Pkcs11DataContainer<Type>;
+            return ToPkcs11DataContainer(bytes, typeof(Type)) as DataContainer<Type>;
         }
 
         public static object ToPkcs11DataContainer(this IEnumerable<byte> bytes, Type enumType)
@@ -58,7 +59,7 @@ namespace Service.Core.Client
 
             try
             {
-                Type containerType = enumType == null ? typeof(Pkcs11DataContainer) : typeof(Pkcs11DataContainer<>).MakeGenericType(enumType);
+                Type containerType = enumType == null ? typeof(DataContainer) : typeof(DataContainer<>).MakeGenericType(enumType);
                 output = parseContainer(containerType, bytes, ref cursor);
 
                 return cursor;
@@ -77,7 +78,7 @@ namespace Service.Core.Client
             int cursor = 0;
             try
             {
-                Type containerType = enumType == null ? typeof(Pkcs11DataContainer) : typeof(Pkcs11DataContainer<>).MakeGenericType(enumType);
+                Type containerType = enumType == null ? typeof(DataContainer) : typeof(DataContainer<>).MakeGenericType(enumType);
 
                 Type resultType = typeof(List<>).MakeGenericType(containerType);
 
@@ -101,7 +102,7 @@ namespace Service.Core.Client
 
         private static object parseContainer(Type type, IEnumerable<byte> bytes, ref int cursor)
         {
-            Pkcs11DataContainer container = (Pkcs11DataContainer)Activator.CreateInstance(type);
+            DataContainer container = (DataContainer)Activator.CreateInstance(type);
 
             // parse the type.
             container.Type = bytes.Skip(cursor).ToUInt32();

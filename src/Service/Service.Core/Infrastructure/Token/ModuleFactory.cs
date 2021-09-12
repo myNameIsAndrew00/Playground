@@ -30,11 +30,11 @@ namespace Service.Core.Infrastructure.Token
                 factoryStorage.Add(implementation, factoryMethod);
         }
 
-        public IEncryptionModule GetEncryptionModule(EncryptionObjectHandler objectHandler) => getModule<IEncryptionModule, EncryptionObjectHandler>(objectHandler);
+        public IEncryptionModule GetEncryptionModule(Pkcs11ContextObject objectHandler) => getModule<IEncryptionModule, Pkcs11ContextObject>(objectHandler);
 
-        public IHashingModule GetHashingModule(Pkcs11ObjectHandler objectHandler) => getModule<IHashingModule, Pkcs11ObjectHandler>(objectHandler);
+        public IHashingModule GetHashingModule(Pkcs11ContextObject objectHandler) => getModule<IHashingModule, Pkcs11ContextObject>(objectHandler);
 
-        public ISigningModule GetSigningModule(Pkcs11ObjectHandler objectHandler) => getModule<ISigningModule, Pkcs11ObjectHandler>(objectHandler);
+        public ISigningModule GetSigningModule(Pkcs11ContextObject objectHandler) => getModule<ISigningModule, Pkcs11ContextObject>(objectHandler);
 
         public ModuleType GetModule<ModuleType>() where ModuleType : class, ITokenModule => getModule<ModuleType, object>(null);
 

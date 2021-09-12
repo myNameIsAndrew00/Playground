@@ -40,20 +40,20 @@ namespace Service.Core.Abstractions.Communication
         /// Register an encryption module to the server which may be used by executor to handle encryption operations.
         /// </summary>
         /// <returns></returns>
-        void RegisterEncryptionModule<EncryptionModuleType>(Func<EncryptionObjectHandler, EncryptionModuleType> implementationFactory = null) 
+        void RegisterEncryptionModule<EncryptionModuleType>(Func<Pkcs11ContextObject, EncryptionModuleType> implementationFactory = null) 
             where EncryptionModuleType : IEncryptionModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle hashing operations.
         /// </summary>
         /// <returns></returns>
-        void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ObjectHandler, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule;
+        void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ContextObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle signing operations.
         /// </summary>
         /// <returns></returns>
-        void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ObjectHandler, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule;
+        void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ContextObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule;
 
     }
 }

@@ -11,23 +11,32 @@ namespace Service.Core.Abstractions.Token
     public interface IModuleFactory
     {
         /// <summary>
-        /// Get a parameterless module from the collection. If module requires parameters for construction, an exception will be thrown.
+        /// Get a parameterless module from the collection (without context initialisation).
+        /// If module requires context for construction, an exception will be thrown.
         /// </summary>
         /// <typeparam name="ModuleType"></typeparam>
         /// <returns></returns>
         ModuleType GetModule<ModuleType>() where ModuleType : class, ITokenModule;
 
-        //todo: replace pkcs11object handler
-        ISigningModule GetSigningModule(Pkcs11ObjectHandler objectHandler);
-
-        //todo: replace pkcs11object handler
-        IHashingModule GetHashingModule(Pkcs11ObjectHandler objectHandler);
+        /// <summary>
+        /// Get the signing module from the collection
+        /// </summary>
+        /// <param name="context">Context used to initialise the module</param>
+        /// <returns></returns>
+        ISigningModule GetSigningModule(Pkcs11ContextObject context);
+     
+        /// <summary>
+        /// Get the hashing module from the collection
+        /// </summary>
+        /// <param name="context">Context used to initialise the module</param>
+        /// <returns></returns>
+        IHashingModule GetHashingModule(Pkcs11ContextObject context);
 
         /// <summary>
         /// Get the encryption module from the collection
         /// </summary>
-        /// <param name="objectHandler"></param>
+        /// <param name="context">Context used to initialise the module</param>
         /// <returns></returns>
-        IEncryptionModule GetEncryptionModule(EncryptionObjectHandler objectHandler);
+        IEncryptionModule GetEncryptionModule(Pkcs11ContextObject context);
     }
 }
