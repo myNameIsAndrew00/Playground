@@ -21,18 +21,24 @@ namespace Service.Core.Client
     /// </summary>
     public class TlvServiceExecutor : IServiceExecutor
     {
-        private DispatchResult dispatchResult; 
+        private DispatchResult dispatchResult;
 
-        public IEncryptionHandler EncryptionHandler => new EncryptionHandler();
+        private IModuleFactory moduleCollection;
 
-        public ISigningHandler SigningHandler => new SigningHandler();
+        public TlvServiceExecutor()
+        {
+        }
 
-        public IHashingHandler HashingHandler => new HashingHandler();
+
+
 
         public IServiceExecutorModelBinder ModelBinder => new TlvServiceExecutorModelBinder();
 
         public void SetDispatcherResult(DispatchResult dispatchResult) => this.dispatchResult = dispatchResult;
-         
+
+        public void SetModuleCollection(IModuleFactory moduleCollection) => this.moduleCollection = moduleCollection;
+
+
 
         public IExecutionResult GetEmptySessionResult(ExecutionResultCode code)
         {
@@ -84,7 +90,7 @@ namespace Service.Core.Client
             //attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            if (!Pkcs11ObjectsBuilder.Instance.Get(attributes, out Pkcs11Object @object, out ExecutionResultCode creationResultCode))
+            if (!Pkcs11ObjectHandlersBuilder.Instance.Get(attributes, out Pkcs11ObjectHandler @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }
@@ -99,14 +105,16 @@ namespace Service.Core.Client
         /// </summary>
         /// <returns></returns>
         public virtual IExecutionResult EncryptInit(uint keyIdentifier, Pkcs11DataContainer<Pkcs11Mechanism> mechanism)
-        {
+        { 
             //todo: handle null and edge cases
-            var keyHandler =  this.dispatchResult.Session.GetSessionObject(keyIdentifier); 
-            
+            var keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier) as EncryptionObjectHandler;
+
             if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+           
+            IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(keyHandler);
 
             //todo: better handling for codes
-            if (!this.EncryptionHandler.Initialise(keyHandler, mechanism, out ExecutionResultCode executionResultCode))
+            if (!encryptionHandler.Initialise(mechanism, out ExecutionResultCode executionResultCode))
                 return new BytesResult(executionResultCode);
 
             return new BytesResult(ExecutionResultCode.OK);
@@ -124,6 +132,6 @@ namespace Service.Core.Client
             return null;
         }
 
-       
+
     }
 }

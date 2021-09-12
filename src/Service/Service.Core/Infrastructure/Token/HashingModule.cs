@@ -8,7 +8,7 @@ namespace Service.Core.Infrastructure.Token
     /// <summary>
     /// Default implementation for hashing handler interface
     /// </summary>
-    internal class HashingHandler : IHashingHandler
+    internal class HashingModule : IHashingModule
     {
     }
 }

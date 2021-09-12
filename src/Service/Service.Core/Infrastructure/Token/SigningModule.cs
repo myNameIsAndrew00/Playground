@@ -8,7 +8,7 @@ namespace Service.Core.Infrastructure.Token
     /// <summary>
     /// Default implementation for signing handler interface
     /// </summary>
-    internal class SigningHandler : ISigningHandler
+    internal class SigningModule : ISigningModule
     {
     }
 }

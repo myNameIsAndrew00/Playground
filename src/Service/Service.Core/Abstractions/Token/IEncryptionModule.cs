@@ -10,8 +10,13 @@ namespace Service.Core.Abstractions.Token
     /// <summary>
     /// Implements method which must be implemented by classes used to handle encryption
     /// </summary>
-    public interface IEncryptionHandler
+    public interface IEncryptionModule : ITokenModule
     {
+        /// <summary>
+        /// Represent the context of encryption
+        /// </summary>
+        EncryptionObjectHandler Context { get; }
+
         /// <summary>
         /// Use this method to initialise the handler with certain attributes and mechanism
         /// </summary>
@@ -19,7 +24,7 @@ namespace Service.Core.Abstractions.Token
         /// <param name="mechanism">Mechanism specified for encryption</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if handler was initialised with success</param>
         /// <returns>A boolean which is true if initialisation was done with success, false otherwise</returns>
-        bool Initialise(Pkcs11Object keyHandler, Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode);
+        bool Initialise(Pkcs11DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode);
 
         /// <summary>
         /// Use this method to encrypt data

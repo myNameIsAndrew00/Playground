@@ -1,4 +1,5 @@
-﻿using Service.Core.Infrastructure.Communication.Structures;
+﻿using Service.Core.Abstractions.Token;
+using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,12 @@ namespace Service.Core.Abstractions.Communication
         /// </summary>
         /// <param name="dispatchResult">Value which will be set</param>
         void SetDispatcherResult(DispatchResult dispatchResult);
+
+        /// <summary>
+        /// Set the module collection used by this executor in request handling.
+        /// </summary>
+        /// <param name="moduleCollection"></param>
+        void SetModuleCollection(IModuleFactory moduleCollection);
 
         /// <summary>
         /// Returns a empty session result

@@ -5,9 +5,9 @@ using System.Text;
 namespace Service.Core.Abstractions.Token
 {
     /// <summary>
-    /// Implements method which must be implemented by classes used to handle signing
+    /// Implements methods required by a token module
     /// </summary>
-    public interface ISigningHandler
+    public interface ITokenModule
     {
     }
 }

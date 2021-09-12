@@ -10,9 +10,9 @@ namespace Service.Playground
     {
         static void Main(string[] args)
         {
-            IPkcs11Server server = ServerFactory.CreateDefaultSocketServer("127.0.0.1", 5123);
+            IPkcs11Server server = ServerFactory.CreateDefaultServer("127.0.0.1", 5123);
             Console.WriteLine("Waiting for clients...");
-
+             
             server.Start();
 
         }

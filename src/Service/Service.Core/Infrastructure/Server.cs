@@ -2,6 +2,7 @@
 using Service.Core.Abstractions.Token;
 using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage;
+using Service.Core.Infrastructure.Storage.Structures;
 using Service.Core.Infrastructure.Token;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,15 @@ using System.IO.Pipes;
 using System.Reflection;
 using System.Text;
 
-namespace Service.Core.Communication.Abstractions
+namespace Service.Core.Infrastructure
 {
     /// <summary>
     /// A class which can handle received messages from pkcs11 clients
     /// </summary>
     public abstract class Server : IPkcs11Server
     {
+        private ModuleFactory moduleCollection;
+
         private IServiceCommunicationResolver resolver;
 
         public IServiceCommunicationResolver Resolver => resolver;
@@ -26,6 +29,7 @@ namespace Service.Core.Communication.Abstractions
         internal Server(IServiceCommunicationResolver resolver)
         {
             this.resolver = resolver;
+            moduleCollection = new ModuleFactory();
         }
 
         public void Start()
@@ -36,6 +40,20 @@ namespace Service.Core.Communication.Abstractions
 
             resolver.Listen();
         }
+
+        public void RegisterModule<ModuleType, ImplementationType>()
+            where ModuleType : ITokenModule
+            where ImplementationType : ITokenModule
+                => moduleCollection.AddModule(typeof(ModuleType), typeof(ImplementationType));
+
+        public void RegisterEncryptionModule<EncryptionModuleType>(Func<EncryptionObjectHandler, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
+                => moduleCollection.AddModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as EncryptionObjectHandler));
+
+        public void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ObjectHandler, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
+                => moduleCollection.AddModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ObjectHandler));
+
+        public void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ObjectHandler, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
+                => moduleCollection.AddModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ObjectHandler));
 
 
 
@@ -87,6 +105,7 @@ namespace Service.Core.Communication.Abstractions
             //todo: handle the exception
             Debug.WriteLine(exception);
         }
+
         #endregion
     }
 

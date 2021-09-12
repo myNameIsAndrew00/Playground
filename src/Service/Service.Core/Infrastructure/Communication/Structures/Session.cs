@@ -11,7 +11,7 @@ namespace Service.Core.Infrastructure.Communication.Structures
     /// </summary>
     public class Session : IDisposable
     {
-        private Dictionary<uint, Pkcs11Object> sessionObjects = new Dictionary<uint, Pkcs11Object>();
+        private Dictionary<uint, Pkcs11ObjectHandler> sessionObjects = new Dictionary<uint, Pkcs11ObjectHandler>();
 
         public uint Id { get; }
     
@@ -40,8 +40,10 @@ namespace Service.Core.Infrastructure.Communication.Structures
             return Id.GetHashCode();
         }
 
-        public long AddSesionObject(Pkcs11Object pkcs11Object)
+        public long AddSesionObject(Pkcs11ObjectHandler pkcs11Object)
         {
+            //todo: check type of pkcs11object. 
+
             uint nextId = Utils.GetNextId();
 
             this.sessionObjects.Add(nextId, pkcs11Object);
@@ -49,9 +51,9 @@ namespace Service.Core.Infrastructure.Communication.Structures
             return nextId;
         }
 
-        public Pkcs11Object GetSessionObject(uint id)
+        public Pkcs11ObjectHandler GetSessionObject(uint id)
         {
-            this.sessionObjects.TryGetValue(id, out Pkcs11Object @object);
+            this.sessionObjects.TryGetValue(id, out Pkcs11ObjectHandler @object);
             
             return @object;
         }
