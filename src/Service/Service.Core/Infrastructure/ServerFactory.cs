@@ -5,6 +5,7 @@ using Service.Core.Communication.Infrastructure;
 using Service.Core.Infrastructure;
 using Service.Core.Infrastructure.Communication;
 using Service.Core.Infrastructure.Token;
+using Service.Core.Infrastructure.Token.Encryption;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,11 +33,14 @@ namespace Service.Core.Infrastructure
         /// <returns>A server instance</returns>
         public static IPkcs11Server CreateDefaultSocketServer(string address, int port)
         {
-            IPkcs11Server result = CreateSocketServer<TlvServiceExecutor>(address, port);
-             
-            result.RegisterEncryptionModule( opt => new EncryptionModule(opt) );
-            result.RegisterHashingModule( opt => new HashingModule() );
-            result.RegisterSigningModule( opt => new SigningModule() );
+            IPkcs11Server result = CreateSocketServer<TlvServiceExecutor>(address, port)
+                .RegisterEncryptionModule(options =>
+                {
+                    return new EncryptionModule(options)
+                        .SetMechanism(new AESECBMechanismCommand()) as EncryptionModule;
+                })
+                .RegisterHashingModule(opt => new HashingModule())
+                .RegisterSigningModule(opt => new SigningModule());
 
             return result;
         }

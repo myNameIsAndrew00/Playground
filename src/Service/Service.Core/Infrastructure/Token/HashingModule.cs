@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Token;
+using Service.Core.Abstractions.Token.Hashing;
 using Service.Core.Infrastructure.Storage.Structures;
 using System;
 using System.Collections.Generic;

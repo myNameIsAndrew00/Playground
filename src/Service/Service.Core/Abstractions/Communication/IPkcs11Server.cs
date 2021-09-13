@@ -1,4 +1,7 @@
 ﻿using Service.Core.Abstractions.Token;
+using Service.Core.Abstractions.Token.Encryption;
+using Service.Core.Abstractions.Token.Hashing;
+using Service.Core.Abstractions.Token.Signing;
 using Service.Core.Infrastructure.Storage.Structures;
 using System;
 using System.Collections.Generic;
@@ -31,29 +34,29 @@ namespace Service.Core.Abstractions.Communication
         /// Register an module to the server which may be used by executor to handle the request invoked.
         /// </summary>
         /// <typeparam name="ModuleType"></typeparam>
-        /// <returns></returns>
-        void RegisterModule<ModuleType, ImplementationType>() 
+        /// <returns>Returns and updated version of this instance</returns>
+        IPkcs11Server RegisterModule<ModuleType, ImplementationType>() 
             where ModuleType : ITokenModule
             where ImplementationType : ITokenModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle encryption operations.
         /// </summary>
-        /// <returns></returns>
-        void RegisterEncryptionModule<EncryptionModuleType>(Func<Pkcs11ContextObject, EncryptionModuleType> implementationFactory = null) 
+        /// <returns>Returns and updated version of this instance</returns>
+        IPkcs11Server RegisterEncryptionModule<EncryptionModuleType>(Func<Pkcs11ContextObject, EncryptionModuleType> implementationFactory = null) 
             where EncryptionModuleType : IEncryptionModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle hashing operations.
         /// </summary>
-        /// <returns></returns>
-        void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ContextObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule;
+        /// <returns>Returns and updated version of this instance</returns>
+        IPkcs11Server RegisterHashingModule<HashingModuleType>(Func<Pkcs11ContextObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle signing operations.
         /// </summary>
-        /// <returns></returns>
-        void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ContextObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule;
+        /// <returns>Returns and updated version of this instance</returns>
+        IPkcs11Server RegisterSigningModule<SigningModuleType>(Func<Pkcs11ContextObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule;
 
     }
 }

@@ -1,6 +1,6 @@
-﻿using Service.Core.Infrastructure.Communication.Structures;
+﻿using Service.Core.Abstractions.Token.DefinedTypes;
+using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage.Structures;
-using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,20 +10,20 @@ namespace Service.Core.Infrastructure.Storage
     /// <summary>
     /// Representa a builder class to create Pkcs11Objects
     /// </summary>
-    public class Pkcs11ObjectHandlersBuilder
+    public class Pkcs11ObjectContextsBuilder
     {
-        private static Pkcs11ObjectHandlersBuilder instance = null;
-        public static Pkcs11ObjectHandlersBuilder Instance
+        private static Pkcs11ObjectContextsBuilder instance = null;
+        public static Pkcs11ObjectContextsBuilder Instance
         {
             get
             {
-                if (instance == null) instance = new Pkcs11ObjectHandlersBuilder();
+                if (instance == null) instance = new Pkcs11ObjectContextsBuilder();
 
                 return instance;
             }
         }
 
-        private Pkcs11ObjectHandlersBuilder() { }
+        private Pkcs11ObjectContextsBuilder() { }
 
         /// <summary>
         /// Use this method to create a pkcs11 object

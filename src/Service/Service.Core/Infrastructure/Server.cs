@@ -1,5 +1,8 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Token;
+using Service.Core.Abstractions.Token.Encryption;
+using Service.Core.Abstractions.Token.Hashing;
+using Service.Core.Abstractions.Token.Signing;
 using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage;
 using Service.Core.Infrastructure.Storage.Structures;
@@ -41,19 +44,30 @@ namespace Service.Core.Infrastructure
             resolver.Listen();
         }
 
-        public void RegisterModule<ModuleType, ImplementationType>()
+        public IPkcs11Server RegisterModule<ModuleType, ImplementationType>()
             where ModuleType : ITokenModule
             where ImplementationType : ITokenModule
-                => moduleCollection.RegisterModule(typeof(ModuleType), typeof(ImplementationType));
+        {
+            moduleCollection.RegisterModule(typeof(ModuleType), typeof(ImplementationType));
+            return this;
+        }
 
-        public void RegisterEncryptionModule<EncryptionModuleType>(Func<Pkcs11ContextObject, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
-                => moduleCollection.RegisterModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+        public IPkcs11Server RegisterEncryptionModule<EncryptionModuleType>(Func<Pkcs11ContextObject, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
+        {
+            moduleCollection.RegisterModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+            return this;
+        }
 
-        public void RegisterHashingModule<HashingModuleType>(Func<Pkcs11ContextObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
-                => moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
-
-        public void RegisterSigningModule<SigningModuleType>(Func<Pkcs11ContextObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
-                => moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+        public IPkcs11Server RegisterHashingModule<HashingModuleType>(Func<Pkcs11ContextObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
+        {
+            moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+            return this;
+        }
+        public IPkcs11Server RegisterSigningModule<SigningModuleType>(Func<Pkcs11ContextObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
+        {
+            moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as Pkcs11ContextObject));
+            return this;
+        }
 
 
 
@@ -118,7 +132,7 @@ namespace Service.Core.Infrastructure
         where Executor : IServiceExecutor, new()
     {
         internal Server(IServiceCommunicationResolver resolver) : base(resolver)
-        { 
+        {
         }
 
         public override IServiceExecutor CreateExecutor() => new Executor();

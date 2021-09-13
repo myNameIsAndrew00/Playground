@@ -1,16 +1,16 @@
-﻿using Service.Core.Infrastructure.Communication.Structures;
+﻿using Service.Core.Abstractions.Token.DefinedTypes;
+using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage.Structures;
-using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Abstractions.Token
+namespace Service.Core.Abstractions.Token.Encryption
 {
     /// <summary>
     /// Implements method which must be implemented by classes used to handle encryption
     /// </summary>
-    public interface IEncryptionModule : ITokenModule
+    public interface IEncryptionModule : ITokenModule, IAllowMechanism
     {
         /// <summary>
         /// Use this method to initialise the handler context with certain attributes and mechanism
@@ -34,5 +34,8 @@ namespace Service.Core.Abstractions.Token
         /// <param name="executionResultCode">Result code. Ok code is returned if encryption finalise was done with success</param>
         /// <returns>A boolean which is true if encryption was finalised with success</returns>
         bool EncryptFinalise(out ExecutionResultCode executionResultCode);
+
+
+ 
     }
 }

@@ -1,5 +1,5 @@
-﻿using Service.Core.Infrastructure.Storage.Structures;
-using Service.Core.Infrastructure.Token.Structures;
+﻿using Service.Core.Abstractions.Token.DefinedTypes;
+using Service.Core.Infrastructure.Storage.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -56,6 +56,8 @@ namespace Service.Core.Infrastructure.Communication.Structures
             uint nextId = Utils.GetNextId();
 
             this.sessionObjects.Add(nextId, pkcs11Object);
+
+            pkcs11Object.SetId(nextId);
 
             return nextId;
         }

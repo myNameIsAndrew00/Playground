@@ -1,4 +1,4 @@
-﻿using Service.Core.Infrastructure.Token.Structures;
+﻿using Service.Core.Abstractions.Token;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,8 +10,11 @@ namespace Service.Core.Infrastructure.Storage.Structures
     /// </summary>
     public class EncryptionContext : Pkcs11ContextObjectDecorator
     {
-        public EncryptionContext(Pkcs11ContextObject objectHandler) : base(objectHandler)
+        public EncryptionContext(IMechanismCommand mechanismCommand, Pkcs11ContextObject objectHandler) : base(objectHandler)
         {
+            this.MechanismCommand = mechanismCommand;
         }
+
+        public IMechanismCommand MechanismCommand { get; }
     }
 }

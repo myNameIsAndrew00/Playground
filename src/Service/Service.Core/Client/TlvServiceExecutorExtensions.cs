@@ -1,5 +1,4 @@
 ﻿using Service.Core.Infrastructure.Storage.Structures;
-using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;

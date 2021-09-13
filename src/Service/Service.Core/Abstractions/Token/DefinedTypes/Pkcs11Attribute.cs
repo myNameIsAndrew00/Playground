@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Core.Infrastructure.Token.Structures
+namespace Service.Core.Abstractions.Token.DefinedTypes
 {
     /// <summary>
     /// Represents an enum which contains pkcs11 attributes 

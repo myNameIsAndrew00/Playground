@@ -1,11 +1,12 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Token;
+using Service.Core.Abstractions.Token.DefinedTypes;
+using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.Communication.Infrastructure;
 using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage;
 using Service.Core.Infrastructure.Storage.Structures;
 using Service.Core.Infrastructure.Token;
-using Service.Core.Infrastructure.Token.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace Service.Core.Client
             //attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            if (!Pkcs11ObjectHandlersBuilder.Instance.Get(attributes, out Pkcs11ContextObject @object, out ExecutionResultCode creationResultCode))
+            if (!Pkcs11ObjectContextsBuilder.Instance.Get(attributes, out Pkcs11ContextObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }
