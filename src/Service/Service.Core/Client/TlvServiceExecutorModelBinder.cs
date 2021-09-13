@@ -60,13 +60,13 @@ namespace Service.Core.Client
         {
             var parsingInfoContainer = new Dictionary<Type,  (int size, Func<byte[], object> convertFunction)>
             {
-                [typeof(bool)]   = (sizeof(bool),    (bytes) => BitConverter.ToBoolean(bytes, 0)),
-                [typeof(char)]   = (sizeof(char),    (bytes) => BitConverter.ToChar(bytes, 0)),
-                [typeof(short)]  = (sizeof(short),   (bytes) => BitConverter.ToInt16(bytes, 0)),
-                [typeof(ushort)] = (sizeof(ushort),  (bytes) => BitConverter.ToUInt16(bytes, 0)),
-                [typeof(int)]    = (sizeof(int),     (bytes) => BitConverter.ToInt32(bytes, 0)),
-                [typeof(uint)]   = (sizeof(uint),    (bytes) => BitConverter.ToUInt32(bytes, 0)),
-                [typeof(long)]   = (sizeof(long),    (bytes) => BitConverter.ToInt64(bytes, 0))
+                [typeof(bool)]   = (sizeof(bool),    (bytes) => bytes.ToBoolean() ),
+                [typeof(char)]   = (sizeof(char),    (bytes) => bytes.ToChar()),
+                [typeof(short)]  = (sizeof(short),   (bytes) => bytes.ToShort()),
+                [typeof(ushort)] = (sizeof(ushort),  (bytes) => bytes.ToUShort()),
+                [typeof(int)]    = (sizeof(int),     (bytes) => bytes.ToInt32()),
+                [typeof(uint)]   = (sizeof(uint),    (bytes) => bytes.ToUInt32()),
+                [typeof(long)]   = (sizeof(long),    (bytes) => bytes.ToLong())
             };
 
             if (parsingInfoContainer.TryGetValue(parameterType, out (int size, Func<byte[], object> convertFunction) parsingInfo))

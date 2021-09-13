@@ -91,7 +91,7 @@ namespace Service.Core.Client
             //attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            if (!Pkcs11ObjectContextsBuilder.Instance.Get(attributes, out Pkcs11ContextObject @object, out ExecutionResultCode creationResultCode))
+            if (!Pkcs11ContextObjectsBuilder.Instance.Get(attributes, out Pkcs11ContextObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }
@@ -138,6 +138,8 @@ namespace Service.Core.Client
                 isPartOperation: false, 
                 out ExecutionResultCode executionResultCode);
 
+            this.dispatchResult.Session.ResetRegisteredEncryptionObject();
+
             return new BytesResult(encryptedData, executionResultCode);
         }
 
@@ -170,6 +172,8 @@ namespace Service.Core.Client
             IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
 
             byte[] encryptedData = encryptionHandler.EncryptFinalise(out ExecutionResultCode executionResultCode);
+            
+            this.dispatchResult.Session.ResetRegisteredEncryptionObject();
 
             return new BytesResult(encryptedData, executionResultCode);
         }

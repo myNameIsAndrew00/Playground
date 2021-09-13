@@ -37,24 +37,26 @@ namespace Service.Core.Infrastructure.Token.Encryption
         /// <returns></returns>
         public byte[] Execute(Pkcs11ContextObject contextObject, byte[] data, out ExecutionResultCode resultCode)
         {
+            EncryptionContext encryptionContext = contextObject as EncryptionContext;
+
             resultCode = ExecutionResultCode.OK;
 
-            if (data is null || data.Length == 0)
+            if (data is null || (data.Length == 0 && !encryptionContext.AddPadding))
             {
                 resultCode = ExecutionResultCode.DATA_INVALID;
                 return null;
             }
 
-            EncryptionContext encryptionContext = contextObject as EncryptionContext;
-
             data = PreprocessExecutionData(encryptionContext, data);
-           
+
+            if (data.Length == 0 && !encryptionContext.AddPadding) return data;
+
             //execute the encryption operation
             using (var aesContext = new AesManaged
             {
                 Padding = encryptionContext.AddPadding ? PaddingMode.PKCS7 : PaddingMode.None,
                 Mode = CipherMode,
-                KeySize = encryptionContext.Key.Length,
+                KeySize = encryptionContext.Key.Length * 8,
                 IV = encryptionContext.IV,
                 Key = encryptionContext.Key
             })
@@ -92,7 +94,7 @@ namespace Service.Core.Infrastructure.Token.Encryption
         {
             EncryptionContext encryptionContext = contextObject as EncryptionContext;
 
-            if (encryptionContext is null || !allowedKeySizes.Contains(encryptionContext.Key.Length))
+            if (encryptionContext is null || encryptionContext.Key is null || !allowedKeySizes.Contains(encryptionContext.Key.Length))
             {
                 resultCode = ExecutionResultCode.KEY_HANDLE_INVALID;
                 return;

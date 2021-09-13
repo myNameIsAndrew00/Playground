@@ -33,7 +33,7 @@ namespace Service.Core.Infrastructure.Storage.Structures
         {
             get
             {
-                return Attributes.Where(attribute => attribute.Type == type).FirstOrDefault();
+                return Attributes?.Where(attribute => attribute.Type == type).FirstOrDefault();
             }
         }
     }
@@ -69,7 +69,7 @@ namespace Service.Core.Infrastructure.Storage.Structures
         {
             get
             {
-                return ObjectHandler.Attributes.Where(attribute => attribute.Type == type).FirstOrDefault();
+                return ObjectHandler[type];
             }
         }
 

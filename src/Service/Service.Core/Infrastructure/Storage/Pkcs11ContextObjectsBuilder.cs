@@ -10,20 +10,20 @@ namespace Service.Core.Infrastructure.Storage
     /// <summary>
     /// Representa a builder class to create Pkcs11Objects
     /// </summary>
-    public class Pkcs11ObjectContextsBuilder
+    public class Pkcs11ContextObjectsBuilder
     {
-        private static Pkcs11ObjectContextsBuilder instance = null;
-        public static Pkcs11ObjectContextsBuilder Instance
+        private static Pkcs11ContextObjectsBuilder instance = null;
+        public static Pkcs11ContextObjectsBuilder Instance
         {
             get
             {
-                if (instance == null) instance = new Pkcs11ObjectContextsBuilder();
+                if (instance == null) instance = new Pkcs11ContextObjectsBuilder();
 
                 return instance;
             }
         }
 
-        private Pkcs11ObjectContextsBuilder() { }
+        private Pkcs11ContextObjectsBuilder() { }
 
         /// <summary>
         /// Use this method to create a pkcs11 object

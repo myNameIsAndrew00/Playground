@@ -16,7 +16,5 @@ namespace Service.Core.Infrastructure.Token.Encryption
         public override Pkcs11Mechanism MechanismType => Pkcs11Mechanism.AES_OFB;
 
         protected override CipherMode CipherMode => CipherMode.OFB;
-
-      
     }
 }

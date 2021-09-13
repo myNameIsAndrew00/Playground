@@ -26,7 +26,10 @@ namespace Service.Core.Infrastructure.Token.Encryption
                 int unprocessedBytesCount = data.Length % encryptionDataBlockSize;
                 int processedBlocksCount = data.Length / encryptionDataBlockSize;
 
-                encryptionContext.UnprocessedData = new byte[data.Length % encryptionDataBlockSize];
+                encryptionContext.UnprocessedData = encryptionContext.UnprocessedData is not null ? 
+                    encryptionContext.UnprocessedData.Concat(new byte[data.Length % encryptionDataBlockSize]) :
+                    new byte[data.Length % encryptionDataBlockSize];
+
                 Array.Copy(data, processedBlocksCount * encryptionDataBlockSize, encryptionContext.UnprocessedData, 0, unprocessedBytesCount);
 
                 data = data.Take(processedBlocksCount * encryptionDataBlockSize).ToArray();

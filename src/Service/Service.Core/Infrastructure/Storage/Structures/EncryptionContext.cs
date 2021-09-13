@@ -18,9 +18,16 @@ namespace Service.Core.Infrastructure.Storage.Structures
 
         public IMechanismCommand MechanismCommand { get; }
 
-        public byte[] Key => this[Pkcs11Attribute.VALUE].Value;
+        public byte[] Key => this[Pkcs11Attribute.VALUE]?.Value;
 
-        public Pkcs11KeyType KeyType => (Pkcs11KeyType)this[Pkcs11Attribute.KEY_TYPE].Value.ToUInt32();
+        public Pkcs11KeyType? KeyType
+        {
+            get
+            {
+                UInt32? value = this[Pkcs11Attribute.KEY_TYPE]?.Value.ToUInt32();
+                return value is not null ? (Pkcs11KeyType)value : null;
+            }
+        }
 
         /// <summary>
         /// IV which may be used for block encryption.

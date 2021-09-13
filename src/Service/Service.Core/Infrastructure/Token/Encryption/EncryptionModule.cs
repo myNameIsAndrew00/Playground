@@ -2,6 +2,7 @@
 using Service.Core.Abstractions.Token.DefinedTypes;
 using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.Infrastructure.Communication.Structures;
+using Service.Core.Infrastructure.Storage;
 using Service.Core.Infrastructure.Storage.Structures;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,7 @@ namespace Service.Core.Infrastructure.Token.Encryption
         public EncryptionContext Initialise(DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
         {
             //check if attribute encrypt is set
-            if (context[Pkcs11Attribute.ENCRYPT] is null)
+            if (!context.IsEncrypt())
             {
                 executionResultCode = ExecutionResultCode.KEY_FUNCTION_NOT_PERMITTED;
                 return null;

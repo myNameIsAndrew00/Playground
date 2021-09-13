@@ -31,7 +31,16 @@ namespace Service.Core.Infrastructure.Storage.Structures
         /// <summary>
         /// Represents the type of the container
         /// </summary>
-        public new EnumDataType Type => (EnumDataType)(object)base.Type;
-
+        public new EnumDataType Type
+        {
+            get
+            {
+                return (EnumDataType)(object)base.Type;
+            }
+            set
+            {
+                base.Type = (uint)(object)value;
+            }
+        }
     }
 }

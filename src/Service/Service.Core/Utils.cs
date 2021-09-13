@@ -40,19 +40,59 @@ namespace Service.Core
             return false;
         }
 
+        #region IEnumerable extensions
+
+        /// <summary>
+        /// Extension method to convert an array of bytes formatted in big endian format to a boolean
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static bool ToBoolean(this IEnumerable<byte> bytes) => toValueType(bytes, BitConverter.ToBoolean);
+
+        /// <summary>
+        /// Extension method to convert an array of bytes formatted in big endian format to a char
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static char ToChar(this IEnumerable<byte> bytes) => toValueType(bytes, BitConverter.ToChar);
+
+
+        /// <summary>
+        /// Extension method to convert an array of bytes formatted in big endian format to a short
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static short ToShort(this IEnumerable<byte> bytes) => toValueType(bytes, BitConverter.ToInt16);
+
+
+        /// <summary>
+        /// Extension method to convert an array of bytes formatted in big endian format to an ushort
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static ushort ToUShort(this IEnumerable<byte> bytes) => toValueType(bytes, BitConverter.ToUInt16);
+
+
+        /// <summary>
+        /// Extension method to convert an array of bytes formatted in big endian format to an int
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static int ToInt32(this IEnumerable<byte> bytes) => toValueType(bytes, BitConverter.ToInt32);
         /// <summary>
         /// Extension method to convert an array of bytes formatted in big endian format to an uint
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        public static uint ToUInt32(this IEnumerable<byte> bytes)
-        {
-            //parse the type
-            byte[] parsingBytes = bytes.Take(sizeof(uint)).ToArray();
-            if (BitConverter.IsLittleEndian) Array.Reverse(parsingBytes);
-           
-            return BitConverter.ToUInt32(parsingBytes, 0);
-        }
+        public static uint ToUInt32(this IEnumerable<byte> bytes) => toValueType(bytes, BitConverter.ToUInt32);
+
+        /// <summary>
+        /// Extension method to convert an array of bytes formatted in big endian format to a long
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static long ToLong(this IEnumerable<byte> bytes) => toValueType(bytes, BitConverter.ToInt64);
+
 
         /// <summary>
         /// Use this extension method to concatenate two arrays.
@@ -75,7 +115,23 @@ namespace Service.Core
             return result;
         }
 
-       
+
+        private static TargeType toValueType<TargeType>(this IEnumerable<byte> bytes, Func<byte[], int, TargeType> factoryFunc)
+        {
+            try
+            {
+                byte[] parsingBytes = bytes.Take(sizeof(uint)).ToArray();
+                if (BitConverter.IsLittleEndian) Array.Reverse(parsingBytes);
+
+                return factoryFunc(parsingBytes, 0);
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        #endregion
 
     }
 }
