@@ -52,7 +52,7 @@ namespace Service.Core.Infrastructure.Communication
             byte[] executionResultBytes = executionResult.GetBytes();
             byte[] resultBytes = new byte[sizeof(uint) + executionResultBytes.Length];
              
-            BitConverter.GetBytes((uint)executionResult.ResultCode).CopyTo(resultBytes, 0);
+            ((uint)executionResult.ResultCode).GetBytes().CopyTo(resultBytes, 0);
             executionResultBytes.CopyTo(resultBytes, sizeof(uint));
 
             return resultBytes;

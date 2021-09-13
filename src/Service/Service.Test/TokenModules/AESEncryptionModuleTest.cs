@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Service.Test.TokenModules
 {
-    public class EncryptionModuleTest
+    public class AESEncryptionModuleTest
     {
         private byte[] data = Encoding.ASCII.GetBytes("Ana are mere");
 

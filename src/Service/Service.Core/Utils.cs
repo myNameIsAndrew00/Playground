@@ -40,6 +40,21 @@ namespace Service.Core
             return false;
         }
 
+        #region Bit operations
+
+        public static byte[] GetBytes(this uint integer)
+        {
+            byte[] result = BitConverter.GetBytes(integer);
+            
+            if (BitConverter.IsLittleEndian) Array.Reverse(result);
+            
+            return result;
+        }
+
+
+        #endregion
+
+
         #region IEnumerable extensions
 
         /// <summary>

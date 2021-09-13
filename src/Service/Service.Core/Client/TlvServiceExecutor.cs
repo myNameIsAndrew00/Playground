@@ -53,7 +53,7 @@ namespace Service.Core.Client
         public virtual IExecutionResult BeginSession()
         {
             //todo: better handling for codes
-            return new BytesResult(BitConverter.GetBytes(dispatchResult.Session.Id), ExecutionResultCode.OK);
+            return new BytesResult(dispatchResult.Session.Id.GetBytes(), ExecutionResultCode.OK);
         }
 
 
@@ -87,8 +87,7 @@ namespace Service.Core.Client
         /// </summary>
         /// <returns>Bytes representing data. Payload represents 4 bytes for handler id</returns>
         public virtual IExecutionResult CreateObject(IEnumerable<DataContainer<Pkcs11Attribute>> attributes)
-        {
-            //attributes = this.dispatchResult.Payload.ToPkcs11DataContainerCollection<Pkcs11Attribute>();
+        { 
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
             if (!Pkcs11ContextObjectsBuilder.Instance.Get(attributes, out Pkcs11ContextObject @object, out ExecutionResultCode creationResultCode))
@@ -97,8 +96,8 @@ namespace Service.Core.Client
             }
 
             uint handlerId = this.dispatchResult.Session.AddSesionObject(@object);
-
-            return new BytesResult(BitConverter.GetBytes(handlerId), ExecutionResultCode.OK);
+            
+            return new BytesResult( handlerId.GetBytes(), ExecutionResultCode.OK);
         }
 
         /// <summary>
