@@ -24,16 +24,17 @@ namespace Service.Core.Abstractions.Token.Encryption
         /// Use this method to encrypt data
         /// </summary>
         /// <param name="plainData">Data which must be encrypted</param>
+        /// <param name="isPartOperation">A boolean which specify if the operation will be succeed by further calls</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if encryption was done with success</param>
-        /// <returns>A boolean which is true if data was encrypted with success</returns>
-        bool Encrypt(byte[] plainData, out ExecutionResultCode executionResultCode);
+        /// <returns>Result of the encryption process</returns>
+        byte[] Encrypt(byte[] plainData, bool isPartOperation, out ExecutionResultCode executionResultCode);
 
         /// <summary>
         /// Use this method to finalise encryption. This method can return encrypted data for some mechanisms.
         /// </summary>
         /// <param name="executionResultCode">Result code. Ok code is returned if encryption finalise was done with success</param>
-        /// <returns>A boolean which is true if encryption was finalised with success</returns>
-        bool EncryptFinalise(out ExecutionResultCode executionResultCode);
+        /// <returns>Result of the encryption process</returns>
+        byte[] EncryptFinalise(out ExecutionResultCode executionResultCode);
 
 
  

@@ -37,7 +37,11 @@ namespace Service.Core.Infrastructure
                 .RegisterEncryptionModule(options =>
                 {
                     return new EncryptionModule(options)
-                        .SetMechanism(new AESECBMechanismCommand()) as EncryptionModule;
+                        .SetMechanism(new AESECBEncryptMechanismCommand())
+                        .SetMechanism(new AESCBCEncryptMechanismCommand())
+                        .SetMechanism(new AESCFBEncryptMechanismCommand())
+                        .SetMechanism(new AESOFBEncryptMechanismCommand())
+                        as EncryptionModule;
                 })
                 .RegisterHashingModule(opt => new HashingModule())
                 .RegisterSigningModule(opt => new SigningModule());

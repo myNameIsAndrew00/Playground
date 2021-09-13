@@ -86,17 +86,17 @@ namespace Service.Core.Infrastructure
             {
                 // check session
                 if (!dispatchResult.SessionCheckPassed)
-                    return executor.GetEmptySessionResult(ExecutionResultCode.ARGUMENTS_BAD);
+                    return executor.GetEmptySessionResult(ExecutionResultCode.SESSION_HANDLE_INVALID);
 
                 // initialise the invoked method and bind the parameters using the binder, if exists
                 MethodInfo method = executor.GetType().GetMethod(
                     name: dispatchResult.DispatchedAction.ToString(),
                     bindingAttr: BindingFlags.Public | BindingFlags.Instance);
-
-                object[] methodParameters = executor.ModelBinder?.GetMethodParameters(method, dispatchResult);
-
+                
                 if (method == null)
                     return executor.GetEmptySessionResult(ExecutionResultCode.FUNCTION_NOT_SUPPORTED);
+                
+                object[] methodParameters = executor.ModelBinder?.GetMethodParameters(method, dispatchResult);
 
                 // invoke the method and get the execution result
                 IExecutionResult executionResult = (IExecutionResult)method.Invoke(executor, methodParameters);

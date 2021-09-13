@@ -3,6 +3,7 @@ using Service.Core.Infrastructure.Communication.Structures;
 using Service.Core.Infrastructure.Storage.Structures;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Service.Core.Infrastructure.Token.Encryption
@@ -10,18 +11,12 @@ namespace Service.Core.Infrastructure.Token.Encryption
     /// <summary>
     /// Represents a mechanism command object to handle AES with ECB mode
     /// </summary>
-    internal class AESECBMechanismCommand : AESMechanismCommand
+    internal class AESECBEncryptMechanismCommand : AESEncryptMechanismCommand
     {
         public override Pkcs11Mechanism MechanismType => Pkcs11Mechanism.AES_ECB;
 
-        public override byte[] Execute(Pkcs11ContextObject contextObject, byte[] data, out ExecutionResultCode resultCode)
-        {
-            throw new NotImplementedException();
-        }
+        protected override CipherMode CipherMode => CipherMode.ECB;
 
-        public override void InitialiseContext(Pkcs11ContextObject contextObject, byte[] initialisationBytes, out ExecutionResultCode resultCode)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

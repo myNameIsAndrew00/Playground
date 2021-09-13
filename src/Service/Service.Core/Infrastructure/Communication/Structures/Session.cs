@@ -21,7 +21,7 @@ namespace Service.Core.Infrastructure.Communication.Structures
         /// Represents the session key object registered for encryption.
         /// When a encryption session object is added or updated via register, last value added will be provided by this reference.
         /// </summary>
-        public EncryptionContext RegisteredEncryptionObject { get; private set; }
+        public EncryptionContext RegisteredEncryptionContext { get; private set; }
 
         public Session(uint id)
         {
@@ -98,7 +98,7 @@ namespace Service.Core.Infrastructure.Communication.Structures
             return updateResult;
         }
 
-        public void ResetRegisteredEncryptionObject() => RegisteredEncryptionObject = null;
+        public void ResetRegisteredEncryptionObject() => RegisteredEncryptionContext = null;
 
    
 
@@ -125,7 +125,7 @@ namespace Service.Core.Infrastructure.Communication.Structures
 
         private void updateRegisteredObjects(Pkcs11ContextObject objectHandler)
         {
-            if (objectHandler is EncryptionContext) RegisteredEncryptionObject = objectHandler as EncryptionContext;
+            if (objectHandler is EncryptionContext) RegisteredEncryptionContext = objectHandler as EncryptionContext;
         }
 
         #endregion

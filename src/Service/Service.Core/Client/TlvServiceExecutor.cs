@@ -102,7 +102,7 @@ namespace Service.Core.Client
         }
 
         /// <summary>
-        /// Function for encrypt init
+        /// Function associated with encrypt init
         /// </summary>
         /// <returns></returns>
         public virtual IExecutionResult EncryptInit(uint keyIdentifier, DataContainer<Pkcs11Mechanism> mechanism)
@@ -117,31 +117,63 @@ namespace Service.Core.Client
             //todo: better handling for codes
             keyHandler = encryptionHandler.Initialise(mechanism, out ExecutionResultCode executionResultCode);
 
-            if (keyHandler == null)
-                return new BytesResult(executionResultCode);
+            if (keyHandler is not null)
+                this.dispatchResult.Session.UpdateAndRegisterSesionObject(keyIdentifier, keyHandler);
 
-            this.dispatchResult.Session.UpdateAndRegisterSesionObject(keyIdentifier, keyHandler);
-            
-            return new BytesResult(ExecutionResultCode.OK);
+            return new BytesResult(executionResultCode);
         }
 
-        public virtual IExecutionResult Encrypt()
+        /// <summary>
+        /// Function associated with encrypt
+        /// </summary>
+        /// <returns></returns>
+        public virtual IExecutionResult Encrypt(DataContainer dataToEncrypt)
         {
-            //todo: implement
+            EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
-            return null;
+            IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
+
+            byte[] encryptedData = encryptionHandler.Encrypt(
+                plainData: dataToEncrypt.Value,
+                isPartOperation: false, 
+                out ExecutionResultCode executionResultCode);
+
+            return new BytesResult(encryptedData, executionResultCode);
         }
 
+        /// <summary>
+        /// Function associated with encrypt update
+        /// </summary>
+        /// <returns></returns>
+        public virtual IExecutionResult EncryptUpdate(DataContainer dataToEncrypt)
+        {
+            EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+
+            IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
+
+            byte[] encryptedData = encryptionHandler.Encrypt(
+                plainData: dataToEncrypt.Value,
+                isPartOperation: true,
+                out ExecutionResultCode executionResultCode);
+
+            return new BytesResult(encryptedData, executionResultCode);
+        }
+
+        /// <summary>
+        /// Function associated with encrypt final
+        /// </summary>
+        /// <returns></returns>
         public virtual IExecutionResult EncryptFinal()
         {
-            //todo: implement
-            return null;
+            EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+
+            IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
+
+            byte[] encryptedData = encryptionHandler.EncryptFinalise(out ExecutionResultCode executionResultCode);
+
+            return new BytesResult(encryptedData, executionResultCode);
         }
 
-        public virtual IExecutionResult EncryptUpdate()
-        {
-            return null;
-        }
 
 
     }

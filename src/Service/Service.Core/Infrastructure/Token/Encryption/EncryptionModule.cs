@@ -32,26 +32,50 @@ namespace Service.Core.Infrastructure.Token.Encryption
 
         public Pkcs11ContextObject Context => context;
 
-        public bool Encrypt(byte[] plainData, out ExecutionResultCode executionResultCode)
+        public byte[] Encrypt(byte[] plainData, bool isPartOperation, out ExecutionResultCode executionResultCode)
         {
-            //todo: implement
-            executionResultCode = ExecutionResultCode.GENERAL_ERROR;
+            if(keyContext is null)
+            {
+                executionResultCode = ExecutionResultCode.OPERATION_NOT_INITIALIZED;
+                return null;
+            }
 
-            return false;
+            //if a part operation is made, padding is not required to be added
+            keyContext.AddPadding = !isPartOperation;
+             
+            //if a part operation is made and unprocessed data from previous execution exists, append that data to the current processing data
+            if(isPartOperation && keyContext.UnprocessedData is not null && keyContext.UnprocessedData.Length > 0)
+            {
+                plainData = keyContext.UnprocessedData.Concat(plainData);
+                keyContext.UnprocessedData = null;
+            }
+
+            //execute the command
+            return keyContext.MechanismCommand.Execute(keyContext, plainData, out executionResultCode);
         }
 
-        public bool EncryptFinalise(out ExecutionResultCode executionResultCode)
+        public byte[] EncryptFinalise(out ExecutionResultCode executionResultCode)
         {
-            //todo: implement
-            executionResultCode = ExecutionResultCode.GENERAL_ERROR;
+            if (keyContext is null)
+            {
+                executionResultCode = ExecutionResultCode.OPERATION_NOT_INITIALIZED;
+                return null;
+            }
 
-            return false;
+            keyContext.AddPadding = true;
+
+            byte[] plainData = keyContext.UnprocessedData;
+            keyContext.UnprocessedData = null;
+
+            if (plainData is null) plainData = new byte[0];
+
+            return keyContext.MechanismCommand.Execute(keyContext, plainData, out executionResultCode);
         }
 
         public EncryptionContext Initialise(DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
         {
             //check if attribute encrypt is set
-            if (context[Pkcs11Attribute.ENCRYPT] == null)
+            if (context[Pkcs11Attribute.ENCRYPT] is null)
             {
                 executionResultCode = ExecutionResultCode.KEY_FUNCTION_NOT_PERMITTED;
                 return null;
@@ -59,7 +83,7 @@ namespace Service.Core.Infrastructure.Token.Encryption
 
             //check if mechanism is allowed for this module
             if (this.storedMechanisms.ContainsKey(mechanism.Type))
-            {
+            { 
                 EncryptionContext result = new EncryptionContext(this.storedMechanisms[mechanism.Type], this.context);
 
                 //initialise the context using the given command
@@ -77,21 +101,15 @@ namespace Service.Core.Infrastructure.Token.Encryption
             return null;
         }
 
-        public bool Initialise(Pkcs11ContextObject keyHandler, DataContainer<Pkcs11Mechanism> mechanism, out ExecutionResultCode executionResultCode)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Pkcs11Mechanism> GetMechanisms() => storedMechanisms.Keys;
 
         public IAllowMechanism SetMechanism(IMechanismCommand mechanismCommand)
         {
+            //todo: maybe not all mechanism should be allowed?
             storedMechanisms[mechanismCommand.MechanismType] = mechanismCommand;
             return this;
         }
 
-        #region Private
-
-        #endregion
+     
     }
 }

@@ -12,7 +12,19 @@ namespace Service.Core
     {
         private static uint nextId = 0x1;
         private static object nextIdLock = new object();
-
+        
+        /// <summary>
+        /// Use this method to safely generate unique ids
+        /// </summary>
+        /// <returns></returns>
+        public static uint GetNextId()
+        {
+            lock (nextIdLock)
+            {
+                return nextId++;
+            }
+        }
+        
         /// <summary>
         /// Returns true if this type inherit type given as parameter
         /// </summary>
@@ -43,15 +55,27 @@ namespace Service.Core
         }
 
         /// <summary>
-        /// Use this method to safely generate unique ids
+        /// Use this extension method to concatenate two arrays.
         /// </summary>
+        /// <typeparam name="ArrayType"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
         /// <returns></returns>
-        public static uint GetNextId()
+        public static ArrayType[] Concat<ArrayType>(this ArrayType[] first, ArrayType[] second)
         {
-            lock (nextIdLock)
-            {
-                return nextId++;
-            }
+            if (first is null)
+                return second;
+            if (second is null)
+                return first;
+            
+            var result = new ArrayType[first.Length + second.Length];
+            first.CopyTo(result, 0);
+            second.CopyTo(result, first.Length);
+
+            return result;
         }
+
+       
+
     }
 }

@@ -60,6 +60,7 @@ namespace Service.Core.Client
         {
             var parsingInfoContainer = new Dictionary<Type,  (int size, Func<byte[], object> convertFunction)>
             {
+                [typeof(bool)]   = (sizeof(bool),    (bytes) => BitConverter.ToBoolean(bytes, 0)),
                 [typeof(char)]   = (sizeof(char),    (bytes) => BitConverter.ToChar(bytes, 0)),
                 [typeof(short)]  = (sizeof(short),   (bytes) => BitConverter.ToInt16(bytes, 0)),
                 [typeof(ushort)] = (sizeof(ushort),  (bytes) => BitConverter.ToUInt16(bytes, 0)),
