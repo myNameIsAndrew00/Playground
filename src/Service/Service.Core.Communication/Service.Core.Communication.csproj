@@ -6,13 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SQLite" Version="3.13.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Service.Abstractions\Service.Core.Abstractions.csproj" />
-    <ProjectReference Include="..\Service.Core.Communication\Service.Core.Communication.csproj" />
-    <ProjectReference Include="..\Service.Storage\Service.Core.Storage.csproj" />
+    <ProjectReference Include="..\Service.Runtime\Service.Runtime.csproj" />
     <ProjectReference Include="..\Storage.DefinedTypes\Service.Core.DefinedTypes.csproj" />
   </ItemGroup>
 
