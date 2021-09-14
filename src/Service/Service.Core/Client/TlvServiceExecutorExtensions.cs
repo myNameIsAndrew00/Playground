@@ -1,4 +1,5 @@
-﻿using Service.Core.Infrastructure.Storage.Structures;
+﻿using Service.Core.Storage.Memory;
+using Service.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;

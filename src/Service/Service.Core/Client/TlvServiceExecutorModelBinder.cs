@@ -1,6 +1,9 @@
 ﻿using Service.Core.Abstractions.Communication;
-using Service.Core.Infrastructure.Communication.Structures;
-using Service.Core.Infrastructure.Storage.Structures;
+using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Storage;
+using Service.Core.Execution;
+using Service.Core.Storage.Memory;
+using Service.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +17,7 @@ namespace Service.Core.Client
     /// Use this class to bind parameters to a service executor method.
     /// Model binder will fill bind only parameter of types int, long and Pkcs11DataContainer in the order passed to the method.
     /// </summary>
-    public class TlvServiceExecutorModelBinder : IServiceExecutorModelBinder
+    public class TlvServiceExecutorModelBinder : IServiceExecutorModelBinder<DispatchResult, Session>
     {
         public object[] GetMethodParameters(MethodInfo method, DispatchResult dispatcherResult)
         {
@@ -36,7 +39,7 @@ namespace Service.Core.Client
                     cursor += tryParseValueType(parsingBytes, parameter.ParameterType, out parameterBuilt);
                 }
                 //check if parameter is Pkcs11DataContainer 
-                else if (parameter.ParameterType.Inherits(typeof(DataContainer)))
+                else if (parameter.ParameterType.Inherits(typeof(IDataContainer)))
                     cursor += parsingBytes.TryParsePkcs11DataContainer(
                            enumType: parameter.ParameterType.IsGenericType ? parameter.ParameterType.GenericTypeArguments[0] : null,
                            out parameterBuilt);

@@ -1,5 +1,6 @@
 using Service.Core.Client;
-using Service.Core.Infrastructure.Communication.Structures;
+using Service.Core.DefinedTypes;
+using Service.Core.Execution;
 using System;
 using System.Reflection;
 using Xunit;

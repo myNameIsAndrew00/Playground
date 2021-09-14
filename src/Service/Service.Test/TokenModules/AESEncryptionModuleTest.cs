@@ -1,7 +1,7 @@
-﻿using Service.Core.Abstractions.Token.DefinedTypes;
-using Service.Core.Infrastructure.Communication.Structures;
-using Service.Core.Infrastructure.Storage.Structures;
-using Service.Core.Infrastructure.Token.Encryption;
+﻿using Service.Core.Abstractions.Storage;
+using Service.Core.DefinedTypes;
+using Service.Core.Storage.Memory;
+using Service.Core.Token.Encryption;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace Service.Test.TokenModules
         private byte[] key = new byte[] {
                                0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                                0x08, 0x09 ,0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+        private byte[] keyLength = BitConverter.GetBytes((uint)128).Reverse().ToArray();
 
         private byte[] iv = new byte[] {
                 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -31,12 +32,13 @@ namespace Service.Test.TokenModules
         public void TestInitialise()
         {
             // arrange
-            Pkcs11ContextObject unitialisedContextObject = new Pkcs11ContextObject();
+            MemoryObject unitialisedContextObject = new MemoryObject();
 
-            Pkcs11ContextObject contextObject = new Pkcs11ContextObject(new[] {
-                new DataContainer<Pkcs11Attribute>(){ Type = Pkcs11Attribute.ENCRYPT, Value = BitConverter.GetBytes(true) },
-                new DataContainer<Pkcs11Attribute>(){ Type = Pkcs11Attribute.VALUE, Value = key },
-                new DataContainer<Pkcs11Attribute>(){ Type = Pkcs11Attribute.KEY_TYPE, Value = keyType }
+            MemoryObject contextObject = new MemoryObject(new[] {
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.ENCRYPT, Value = BitConverter.GetBytes(true) },
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE, Value = key },
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.KEY_TYPE, Value = keyType },
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE_LEN, Value = keyLength },
             });
 
             DataContainer<Pkcs11Mechanism> mechanism = new DataContainer<Pkcs11Mechanism>()
@@ -65,10 +67,11 @@ namespace Service.Test.TokenModules
         [Fact]
         public void TestEncrypt()
         {
-            Pkcs11ContextObject contextObject = new Pkcs11ContextObject(new[] {
-                new DataContainer<Pkcs11Attribute>(){ Type = Pkcs11Attribute.ENCRYPT, Value = BitConverter.GetBytes(true) },
-                new DataContainer<Pkcs11Attribute>(){ Type = Pkcs11Attribute.VALUE, Value = key },
-                new DataContainer<Pkcs11Attribute>(){ Type = Pkcs11Attribute.KEY_TYPE, Value = keyType }
+            IMemoryObject contextObject = new MemoryObject(new[] {
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.ENCRYPT, Value = BitConverter.GetBytes(true) },
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE, Value = key },
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.KEY_TYPE, Value = keyType },
+                new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE_LEN, Value = keyLength }
             });
 
             DataContainer<Pkcs11Mechanism> mechanism = new DataContainer<Pkcs11Mechanism>()
@@ -80,7 +83,7 @@ namespace Service.Test.TokenModules
             //Pretest - initialisation
             EncryptionModule encryptionModule = new EncryptionModule(contextObject);
             encryptionModule.SetMechanism(new AESECBEncryptMechanismCommand());
-            EncryptionContext initialisedContext = encryptionModule.Initialise(mechanism, out ExecutionResultCode code);
+            IMemoryObject initialisedContext = encryptionModule.Initialise(mechanism, out ExecutionResultCode code);
 
             Assert.Equal(ExecutionResultCode.OK, code);
 

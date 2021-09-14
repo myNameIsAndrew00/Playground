@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Service.Core;
 using Service.Core.Abstractions;
 using Service.Core.Abstractions.Communication;
 using Service.Core.Infrastructure;

@@ -1,12 +1,15 @@
 ﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
-using Service.Core.Abstractions.Token.DefinedTypes;
 using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.Communication.Infrastructure;
-using Service.Core.Infrastructure.Communication.Structures;
-using Service.Core.Infrastructure.Storage;
-using Service.Core.Infrastructure.Storage.Structures;
-using Service.Core.Infrastructure.Token;
+using Service.Core.DefinedTypes;
+using Service.Core.Execution;
+using Service.Core.Storage;
+using Service.Core.Storage.Memory;
+using Service.Core.Token.Encryption;
+using Service.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +23,9 @@ namespace Service.Core.Client
     /// Methods for commands execution are implemented on this class. Payload format for methods are different foreach method.
     /// Payload parameters are raw bytes, simple types are passed without any encoding (just consecutive bytes), composed types use TLV encoding
     /// </summary>
-    public class TlvServiceExecutor : IServiceExecutor
+    public class TlvServiceExecutor : IServiceExecutor<DispatchResult, Session>
     {
-        private DispatchResult dispatchResult;
+        private IDispatchResult<Session> dispatchResult;
 
         private IModuleFactory moduleCollection;
 
@@ -33,11 +36,11 @@ namespace Service.Core.Client
 
 
 
-        public IServiceExecutorModelBinder ModelBinder => new TlvServiceExecutorModelBinder();
+        public IServiceExecutorModelBinder<DispatchResult, Session> ModelBinder => new TlvServiceExecutorModelBinder();
 
         public void SetDispatcherResult(DispatchResult dispatchResult) => this.dispatchResult = dispatchResult;
 
-        public void SetModuleCollection(IModuleFactory moduleCollection) => this.moduleCollection = moduleCollection;
+        public void SetModuleFactory(IModuleFactory moduleCollection) => this.moduleCollection = moduleCollection;
 
 
 
@@ -90,7 +93,8 @@ namespace Service.Core.Client
         { 
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            if (!Pkcs11ContextObjectsBuilder.Instance.Get(attributes, out Pkcs11ContextObject @object, out ExecutionResultCode creationResultCode))
+            //todo: inject the builder into server
+            if (!MemoryObjectsBuilder.Instance.Get(attributes.Select( item => item as IPkcs11AttributeDataContainer), out IMemoryObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }
@@ -107,7 +111,7 @@ namespace Service.Core.Client
         public virtual IExecutionResult EncryptInit(uint keyIdentifier, DataContainer<Pkcs11Mechanism> mechanism)
         {
             //todo: handle null and edge cases
-            Pkcs11ContextObject keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier);
+            IMemoryObject keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier);
 
             if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
