@@ -8,7 +8,7 @@ VirtualToken::VirtualToken(const ServiceProxyReference& serviceProxy)
 
 GetIdentifierResult VirtualToken::GetIdentifier() const
 {
-	return GetIdentifierResult(GetIdentifierResult::Code::OkResult, VirtualToken::Identifier);
+	return GetIdentifierResult(GetIdentifierResult::Code::OK, VirtualToken::Identifier);
 }
 
 InitialiseResult VirtualToken::Initialise()
@@ -16,14 +16,14 @@ InitialiseResult VirtualToken::Initialise()
 	bool registerResult = this->serviceProxy->Register(this);
 
 	//todo: handle type of messages or do client side validations
-	return InitialiseResult(InitialiseResult::Code::OkResult, registerResult);
+	return InitialiseResult(InitialiseResult::Code::OK, registerResult);
 }
 
 InitialiseResult VirtualToken::Finalise()
 {
 	bool detachResult = this->serviceProxy->DetachCurrentClient();
 	//todo: handle type of messages or do client side validations
-	return InitialiseResult(InitialiseResult::Code::OkResult, detachResult);
+	return InitialiseResult(InitialiseResult::Code::OK, detachResult);
 }
 
 
@@ -43,7 +43,7 @@ EndSessionResult Abstractions::VirtualToken::EndSession(const unsigned char sess
 GetManufacturerResult VirtualToken::GetManufacturer() const
 {
 	//todo: get from proxy?
-	return GetManufacturerResult(GetManufacturerResult::Code::OkResult, "Virtual token");
+	return GetManufacturerResult(GetManufacturerResult::Code::OK, "Virtual token");
 }
  
 

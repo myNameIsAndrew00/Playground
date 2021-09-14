@@ -19,6 +19,7 @@ namespace Abstractions {
 		CreateSessionResult CreateSession() const override;
 		EndSessionResult EndSession(const unsigned char sessionId) const override;
 
+
 		~VirtualToken();
 	private:
 

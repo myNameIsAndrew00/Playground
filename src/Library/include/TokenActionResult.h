@@ -2,20 +2,21 @@
 
 #include <string>
 #include "pkcs11.h"
+#include "Bytes.h"
 
 namespace Abstractions {
- 
+
 	/*Encapsulates the response of a token action*/
 	template<typename Object>
 	class TokenActionResult {
 	public:
 		enum class Code {
-			OkResult = CKR_OK,
+			OK = CKR_OK,
 			//handle more codes
 		};
 
 		TokenActionResult(const Code code) {
-			this->resultCode = code;			
+			this->resultCode = code;
 		}
 
 		TokenActionResult(const Code code, const Object& value) {
@@ -44,6 +45,8 @@ namespace Abstractions {
 	using GetManufacturerResult = TokenActionResult<std::string>;
 	using CreateSessionResult = TokenActionResult<unsigned int>;
 	using EndSessionResult = TokenActionResult<bool>;
-  
+	using CreateObjectResult = TokenActionResult<unsigned long>;
+	using EncryptInitResult = TokenActionResult<bool>;
+	using EncryptResult = TokenActionResult<Bytes>;
+
 }
- 

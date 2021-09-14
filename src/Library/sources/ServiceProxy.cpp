@@ -46,15 +46,15 @@ bool ServiceProxy::DetachCurrentClient() {
 
 Abstractions::CreateSessionResult Abstractions::ServiceProxy::BeginSession()
 {
-	unsigned long resultCode = (unsigned long)Abstractions::CreateSessionResult::Code::OkResult;
+	unsigned long resultCode = (unsigned long)Abstractions::CreateSessionResult::Code::OK;
 
 	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::BeginSession, resultCode, nullptr, 0);
-	if (reader == nullptr) return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, -1);
+	if (reader == nullptr) return CreateSessionResult(Abstractions::CreateSessionResult::Code::OK, -1);
 
 	unsigned int result = reader->PeekInt();
 	
 	delete reader;
-	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OkResult, result);
+	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OK, result);
 }
 
 EndSessionResult Abstractions::ServiceProxy::EndSession(const unsigned char sessionId)
@@ -63,10 +63,10 @@ EndSessionResult Abstractions::ServiceProxy::EndSession(const unsigned char sess
 	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::EndSession, resultCode, &sessionId, sizeof(const unsigned char));
 
 	//todo: change response to use resultCode
-	if (reader == nullptr) return EndSessionResult(Abstractions::EndSessionResult::Code::OkResult, false);
+	if (reader == nullptr) return EndSessionResult(Abstractions::EndSessionResult::Code::OK, false);
 
 	delete reader;
-	return EndSessionResult(Abstractions::EndSessionResult::Code::OkResult, true);
+	return EndSessionResult(Abstractions::EndSessionResult::Code::OK, true);
 }
 
 
