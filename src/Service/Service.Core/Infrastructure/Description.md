@@ -1,1 +1,0 @@
-﻿This directory contains classes used as infrastructure (internal usage) for library
