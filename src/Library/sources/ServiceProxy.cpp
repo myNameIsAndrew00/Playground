@@ -51,16 +51,19 @@ Abstractions::CreateSessionResult Abstractions::ServiceProxy::BeginSession()
 	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::BeginSession, resultCode, nullptr, 0);
 	if (reader == nullptr) return CreateSessionResult(Abstractions::CreateSessionResult::Code::OK, -1);
 
-	unsigned int result = reader->PeekInt();
+	unsigned long long result = reader->PeekLong();
 	
 	delete reader;
 	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OK, result);
 }
 
-EndSessionResult Abstractions::ServiceProxy::EndSession(const unsigned char sessionId)
+EndSessionResult Abstractions::ServiceProxy::EndSession(const unsigned long long sessionId)
 {
 	unsigned long resultCode = 0;
-	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::EndSession, resultCode, &sessionId, sizeof(const unsigned char));
+
+	Bytes sessionIdBytes((const long long)sessionId);
+
+	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::EndSession, resultCode, sessionIdBytes.GetBytes(), sessionIdBytes.GetLength());
 
 	//todo: change response to use resultCode
 	if (reader == nullptr) return EndSessionResult(Abstractions::EndSessionResult::Code::OK, false);

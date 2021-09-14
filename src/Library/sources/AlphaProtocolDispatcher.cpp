@@ -14,12 +14,13 @@ Abstractions::Bytes Infrastructure::AlphaProtocolDispatcher::CreateClientRequest
 
 Abstractions::ServiceExecutionResult Infrastructure::AlphaProtocolDispatcher::ParseServiceResponse(const Abstractions::Bytes& payload)
 {
-    unsigned char dataLength = payload.GetLength() - sizeof(unsigned long);
+    const int codeSize = 8;
+    unsigned char dataLength = payload.GetLength() - codeSize; //sizeof(long) 64bit
     unsigned char* data = new unsigned char[dataLength];
-    unsigned long code = 0;
+    unsigned long long code = 0;
 
-    memcpy(data, payload.GetBytes() + sizeof(unsigned long), dataLength);
-    memcpy(&code, payload.GetBytes(), sizeof(unsigned long));
+    memcpy(data, payload.GetBytes() + codeSize, dataLength);
+    memcpy(&code, payload.GetBytes(), codeSize);
      
     return Abstractions::ServiceExecutionResult(Abstractions::Bytes(data, dataLength), code);
 }

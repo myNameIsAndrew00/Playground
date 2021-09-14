@@ -22,7 +22,7 @@ namespace Abstractions {
 		bool DetachCurrentClient();
 
 		CreateSessionResult BeginSession();
-		EndSessionResult EndSession(const unsigned char sessionId);
+		EndSessionResult EndSession(const unsigned long long sessionId);
 	private:
 		bool communicationInitialised;
 

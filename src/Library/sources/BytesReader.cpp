@@ -15,19 +15,26 @@ Abstractions::BytesReader::BytesReader(BytesReader&& bytesReader) noexcept
 char Abstractions::BytesReader::PeekChar()
 {
     const char* valuePointer = this->peekType<char>();
+     
     return *valuePointer;
 }
 
 int Abstractions::BytesReader::PeekInt()
 {
     const int* valuePointer = this->peekType<int>();
-    return *valuePointer;
+
+    int value = _byteswap_ulong(*valuePointer);
+
+    return value;
 }
 
-long Abstractions::BytesReader::PeekLong()
+long long Abstractions::BytesReader::PeekLong()
 {
-    const long* valuePointer = this->peekType<long>();
-    return *valuePointer;
+    const long long* valuePointer = this->peekType<long long>();
+    
+    int value = _byteswap_uint64(*valuePointer);
+    
+    return value;
 }
 
 Abstractions::Bytes Abstractions::BytesReader::PeekBytes(unsigned int length)

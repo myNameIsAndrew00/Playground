@@ -25,7 +25,7 @@ namespace Abstractions {
 		/// Get a long from reader and move to cursor to the next bytes available
 		/// </summary>
 		/// <returns>Long peeked from buffer</returns>
-		long PeekLong();
+		long long PeekLong();
 
 		/// <summary>	 	
 		/// Get length bytes from reader and move to cursor to the next bytes available
@@ -59,7 +59,7 @@ namespace Abstractions {
 		//todo: better exception handling;
 		if (size != sizeof(Type)) throw (-1);
 
-
+		return (reinterpret_cast<const Type*>(bytes));
 	}
 
 }

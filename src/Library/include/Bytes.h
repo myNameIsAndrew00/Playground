@@ -15,7 +15,9 @@ namespace Abstractions {
 	public:
 		Bytes();
 		Bytes(const unsigned char* byteArray, const unsigned int length);
-
+		Bytes(const char);
+		Bytes(const int);
+		Bytes(const long long);
 		Bytes(const Bytes&);
 		Bytes(Bytes&&) noexcept;
 		Bytes operator=(const Bytes&);

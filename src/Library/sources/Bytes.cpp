@@ -16,6 +16,24 @@ Bytes::Bytes(const unsigned char* byteArray, const unsigned int length)
 	this->copy(byteArray, length);
 }
 
+Bytes::Bytes(const char character)
+	: byteArray(nullptr), length(0)
+{
+	this->copy((const unsigned char*)&character, sizeof(char));
+}
+
+Bytes::Bytes(const int integer)
+{
+	int swapedInteger = _byteswap_ulong(integer);
+	this->copy((const unsigned char*)&swapedInteger, sizeof(int));
+}
+
+Bytes::Bytes(const long long int64)
+{
+	long long swapedLong = _byteswap_uint64(int64);
+	this->copy((const unsigned char*)&swapedLong, sizeof(long long));
+}
+
 Bytes::Bytes(const Bytes& other)
 	: byteArray(nullptr), length(0)
 { 

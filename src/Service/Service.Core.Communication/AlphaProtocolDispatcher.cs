@@ -36,7 +36,7 @@ namespace Service.Core.Infrastructure.Communication
 
             if (requireSession)
             {
-                ulong sessionId = inputBytes.ToULong();
+                ulong sessionId = inputBytes.Skip(payloadOffset).ToULong();
                 payloadOffset += sizeof(ulong);
 
                 sessions.TryGetValue(sessionId, out session);
@@ -57,10 +57,10 @@ namespace Service.Core.Infrastructure.Communication
         public byte[] BuildClientResponse(IExecutionResult executionResult)
         {
             byte[] executionResultBytes = executionResult.GetBytes();
-            byte[] resultBytes = new byte[sizeof(uint) + executionResultBytes.Length];
+            byte[] resultBytes = new byte[sizeof(ulong) + executionResultBytes.Length];
 
             ((ulong)executionResult.ResultCode).GetBytes().CopyTo(resultBytes, 0);
-            executionResultBytes.CopyTo(resultBytes, sizeof(uint));
+            executionResultBytes.CopyTo(resultBytes, sizeof(ulong));
 
             return resultBytes;
         }

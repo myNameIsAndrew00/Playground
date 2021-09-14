@@ -33,7 +33,7 @@ CreateSessionResult Abstractions::VirtualToken::CreateSession() const
 	return this->serviceProxy->BeginSession();
 }
 
-EndSessionResult Abstractions::VirtualToken::EndSession(const unsigned char sessionId) const
+EndSessionResult Abstractions::VirtualToken::EndSession(const unsigned long long sessionId) const
 {
 	//todo: handle cases or do client side validations
 	return this->serviceProxy->EndSession(sessionId);

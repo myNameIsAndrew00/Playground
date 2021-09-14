@@ -23,7 +23,7 @@ namespace Abstractions {
 		virtual GetIdentifierResult GetIdentifier() const = 0;
 		virtual GetManufacturerResult GetManufacturer() const = 0;
 		virtual CreateSessionResult CreateSession() const = 0;
-		virtual EndSessionResult EndSession(const unsigned char) const = 0;
+		virtual EndSessionResult EndSession(const unsigned long long) const = 0;
 
 		virtual ~IPkcs11Token() { }
 	};
