@@ -12,7 +12,7 @@ namespace Service.Core.Abstractions.Storage
     /// </summary>
     public interface IDataContainer
     {
-        public uint Type { get; set; }
+        public ulong Type { get; set; }
 
         /// <summary>
         /// Represents the value of container
@@ -22,7 +22,7 @@ namespace Service.Core.Abstractions.Storage
         /// <summary>
         /// Represents the size of raw container in bytes
         /// </summary>
-        public int Size => sizeof(uint) /*size of type*/ + sizeof(uint) /*size of length*/ + Value.Length;
+        public int Size => sizeof(ulong) /*size of type*/ + sizeof(uint) /*size of length*/ + Value.Length;
     }
 
     /// <summary>

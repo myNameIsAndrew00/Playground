@@ -7,7 +7,7 @@ namespace Service.Core.Abstractions.Execution
 {
     public interface ISession : IDisposable
     {
-        uint Id { get; init; }
+        ulong Id { get; init; }
 
         bool Authenticate(Pkcs11UserType userType, string password);
     }

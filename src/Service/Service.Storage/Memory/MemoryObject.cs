@@ -20,9 +20,9 @@ namespace Service.Core.Storage.Memory
             this.Attributes = attributes;
         }
 
-        public virtual void SetId(uint id) => this.Id = id;
+        public virtual void SetId(ulong id) => this.Id = id;
 
-        public virtual uint Id { get; private set; }
+        public virtual ulong Id { get; private set; }
 
         public virtual IEnumerable<IDataContainer<Pkcs11Attribute>> Attributes { get; set; }
 
@@ -58,9 +58,9 @@ namespace Service.Core.Storage.Memory
             set => ObjectHandler.Attributes = value;
         }
 
-        public void SetId(uint id) => ObjectHandler.SetId(id);
+        public void SetId(ulong id) => ObjectHandler.SetId(id);
                
-        public uint Id => ObjectHandler.Id;
+        public ulong Id => ObjectHandler.Id;
                
         public void Dispose()
         {

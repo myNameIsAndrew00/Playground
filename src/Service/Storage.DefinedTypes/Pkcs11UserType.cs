@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Service.Core.DefinedTypes
 {
-    public enum Pkcs11UserType : int
+    public enum Pkcs11UserType : ulong
     {
         SecurityOfficer = 0,
         User = 1,

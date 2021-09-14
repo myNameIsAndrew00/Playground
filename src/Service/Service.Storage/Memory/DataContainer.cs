@@ -11,17 +11,13 @@ namespace Service.Core.Storage.Memory
     /// </summary>
     internal class DataContainer : IDataContainer
     {
-        public uint Type { get; set; }
+        public ulong Type { get; set; }
 
         /// <summary>
         /// Represents the value of container
         /// </summary>
         public byte[] Value { get; set; }
-
-        /// <summary>
-        /// Represents the size of raw container in bytes
-        /// </summary>
-        public int Size => sizeof(uint) /*size of type*/ + sizeof(uint) /*size of length*/ + Value.Length;
+ 
     }
 
     /// <summary>
@@ -41,7 +37,7 @@ namespace Service.Core.Storage.Memory
             }
             set
             {
-                base.Type = (uint)(object)value;
+                base.Type = (ulong)(object)value;
             }
         }
     }

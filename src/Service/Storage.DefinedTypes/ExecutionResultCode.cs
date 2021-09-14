@@ -7,7 +7,7 @@ namespace Service.Core.DefinedTypes
     /// <summary>
     /// Represents code returned by an executor method which process a client request
     /// </summary>
-    public enum ExecutionResultCode : uint
+    public enum ExecutionResultCode : ulong
     {
      OK                               = 0x00000000,
      CANCEL                           = 0x00000001,

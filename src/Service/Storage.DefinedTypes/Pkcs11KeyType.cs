@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Service.Core.DefinedTypes
 {
-    public enum Pkcs11KeyType : uint
+    public enum Pkcs11KeyType : ulong
     {
         RSA = 0x00000000,
         DSA = 0x00000001,

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Service.Core.DefinedTypes
 {
-    public enum Pkcs11Mechanism : uint
+    public enum Pkcs11Mechanism : ulong
     {
         RSA_PKCS_KEY_PAIR_GEN           = 0x00000000,
         RSA_PKCS                        = 0x00000001,

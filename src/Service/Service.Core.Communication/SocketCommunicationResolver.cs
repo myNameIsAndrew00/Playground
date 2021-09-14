@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Execution;
+using Service.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -140,9 +141,7 @@ namespace Service.Core.Communication.Infrastructure
             int packetSize = executionResultBytes.Length;
 
             byte[] resultBytes = new byte[sizeof(int) + packetSize];
-            byte[] headerBytes = BitConverter.GetBytes(packetSize);
-
-            if (BitConverter.IsLittleEndian) Array.Reverse(headerBytes);
+            byte[] headerBytes = packetSize.GetBytes();
 
             headerBytes.CopyTo(resultBytes, 0); 
             executionResultBytes.CopyTo(resultBytes, sizeof(int));

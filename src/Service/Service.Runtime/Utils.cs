@@ -10,14 +10,14 @@ namespace Service.Runtime
     /// </summary>
     public static class Utils
     {
-        private static uint nextId = 0x1;
+        private static ulong nextId = 0x1;
         private static object nextIdLock = new object();
         
         /// <summary>
         /// Use this method to safely generate unique ids
         /// </summary>
         /// <returns></returns>
-        public static uint GetNextId()
+        public static ulong GetNextId()
         {
             lock (nextIdLock)
             {
@@ -42,16 +42,20 @@ namespace Service.Runtime
 
         #region Bit operations
 
-        public static byte[] GetBytes(this uint integer)
+        public static byte[] GetBytes(this int integer) => getBytes<int>(integer, BitConverter.GetBytes);
+
+        public static byte[] GetBytes(this uint integer) => getBytes<uint>(integer, BitConverter.GetBytes);
+       
+        public static byte[] GetBytes(this ulong value) => getBytes<ulong>(value, BitConverter.GetBytes);
+
+        private static byte[] getBytes<Type>(Type value, Func<Type, byte[]> factoryMethod)
         {
-            byte[] result = BitConverter.GetBytes(integer);
-            
+            byte[] result = factoryMethod(value);
+
             if (BitConverter.IsLittleEndian) Array.Reverse(result);
-            
+
             return result;
         }
-
-
         #endregion
 
 
