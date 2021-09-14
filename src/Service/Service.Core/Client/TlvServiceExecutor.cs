@@ -78,8 +78,7 @@ namespace Service.Core.Client
         /// </summary>
         /// <returns></returns>
         public virtual IExecutionResult Authenticate(IDataContainer<Pkcs11UserType> authenticationData)
-        {
-            //Pkcs11DataContainer<Pkcs11UserType> authenticationData = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11UserType>();
+        { 
 
             bool authenticationResult =
                 this.dispatchResult.Session.Authenticate(authenticationData.Type, ASCIIEncoding.UTF8.GetString(authenticationData.Value));
@@ -102,7 +101,7 @@ namespace Service.Core.Client
                 return new BytesResult(creationResultCode);
             }
 
-            uint handlerId = this.dispatchResult.Session.AddSesionObject(@object);
+            ulong handlerId = this.dispatchResult.Session.AddSesionObject(@object);
             
             return new BytesResult( handlerId.GetBytes(), ExecutionResultCode.OK);
         }
@@ -111,7 +110,7 @@ namespace Service.Core.Client
         /// Function associated with encrypt init
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult EncryptInit(uint keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
+        public virtual IExecutionResult EncryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
         {
             //todo: handle null and edge cases
             IMemoryObject keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier);

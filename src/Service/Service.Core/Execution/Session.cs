@@ -17,9 +17,9 @@ namespace Service.Core.Execution
     {
         public Session() { }
 
-        private Dictionary<uint, IMemoryObject> sessionObjects = new Dictionary<uint, IMemoryObject>();
+        private Dictionary<ulong, IMemoryObject> sessionObjects = new Dictionary<ulong, IMemoryObject>();
 
-        public uint Id { get; init; }
+        public ulong Id { get; init; }
     
         public bool Authenticated { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Service.Core.Execution
         /// </summary>
         public EncryptionContext RegisteredEncryptionContext { get; private set; }
 
-        public Session(uint id)
+        public Session(ulong id)
         {
             this.Id = id;
             this.Authenticated = false;
@@ -43,7 +43,7 @@ namespace Service.Core.Execution
         }
 
 
-        public IMemoryObject GetSessionObject(uint id)
+        public IMemoryObject GetSessionObject(ulong id)
         {
             this.sessionObjects.TryGetValue(id, out IMemoryObject @object);
 
@@ -55,11 +55,11 @@ namespace Service.Core.Execution
         /// </summary>
         /// <param name="pkcs11Object">Object which will be added to the current session</param>
         /// <returns></returns>
-        public uint AddSesionObject(IMemoryObject pkcs11Object)
+        public ulong AddSesionObject(IMemoryObject pkcs11Object)
         {
             //todo: check type of pkcs11object. 
 
-            uint nextId = Utils.GetNextId();
+            ulong nextId = Utils.GetNextId();
 
             this.sessionObjects.Add(nextId, pkcs11Object);
 
@@ -74,7 +74,7 @@ namespace Service.Core.Execution
         /// <param name="id">Id of the object which will be update</param>
         /// <param name="pkcs11Object">Object which will update the current session object</param>
         /// <returns></returns>
-        public IMemoryObject UpdateSessionObject(uint id, IMemoryObject pkcs11Object)
+        public IMemoryObject UpdateSessionObject(ulong id, IMemoryObject pkcs11Object)
         {
             if (this.sessionObjects.ContainsKey(id))
             {
@@ -91,7 +91,7 @@ namespace Service.Core.Execution
         /// <param name="id">Id of the object which will be update</param>
         /// <param name="pkcs11Object">Object which will update the current session object</param>
         /// <returns></returns>
-        public IMemoryObject UpdateAndRegisterSesionObject(uint id, IMemoryObject pkcs11Object)
+        public IMemoryObject UpdateAndRegisterSesionObject(ulong id, IMemoryObject pkcs11Object)
         {
             IMemoryObject updateResult = this.UpdateSessionObject(id, pkcs11Object);
 

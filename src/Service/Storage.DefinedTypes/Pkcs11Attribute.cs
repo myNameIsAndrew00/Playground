@@ -7,7 +7,7 @@ namespace Service.Core.DefinedTypes
     /// <summary>
     /// Represents an enum which contains pkcs11 attributes 
     /// </summary>
-    public enum Pkcs11Attribute : uint
+    public enum Pkcs11Attribute : ulong
     {
        CLASS                                   = 0x00000000,
        TOKEN                                   = 0x00000001,

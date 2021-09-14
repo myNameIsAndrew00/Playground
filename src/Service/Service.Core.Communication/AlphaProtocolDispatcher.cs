@@ -20,7 +20,7 @@ namespace Service.Core.Infrastructure.Communication
         where SessionType : ISession, new()
     {
 
-        Dictionary<long, SessionType> sessions = new Dictionary<long, SessionType>();
+        Dictionary<ulong, SessionType> sessions = new Dictionary<ulong, SessionType>();
 
         public DispatchResultType DispatchClientRequest(byte[] inputBytes)
 
@@ -36,7 +36,8 @@ namespace Service.Core.Infrastructure.Communication
 
             if (requireSession)
             {
-                byte sessionId = inputBytes[payloadOffset++];
+                ulong sessionId = inputBytes.ToULong();
+                payloadOffset += sizeof(ulong);
 
                 sessions.TryGetValue(sessionId, out session);
 
@@ -58,7 +59,7 @@ namespace Service.Core.Infrastructure.Communication
             byte[] executionResultBytes = executionResult.GetBytes();
             byte[] resultBytes = new byte[sizeof(uint) + executionResultBytes.Length];
 
-            ((uint)executionResult.ResultCode).GetBytes().CopyTo(resultBytes, 0);
+            ((ulong)executionResult.ResultCode).GetBytes().CopyTo(resultBytes, 0);
             executionResultBytes.CopyTo(resultBytes, sizeof(uint));
 
             return resultBytes;
@@ -68,7 +69,7 @@ namespace Service.Core.Infrastructure.Communication
 
         private SessionType beginSession()
         {
-            uint nextSessionId = Utils.GetNextId();
+            ulong nextSessionId = Utils.GetNextId();
 
             SessionType session = new SessionType() { Id = nextSessionId };
             sessions.Add(nextSessionId, session);
@@ -76,7 +77,7 @@ namespace Service.Core.Infrastructure.Communication
             return session;
         }
 
-        private void removeSession(byte sessionId)
+        private void removeSession(ulong sessionId)
         {
             if (sessions.TryGetValue(sessionId, out SessionType session))
                 session.Dispose();

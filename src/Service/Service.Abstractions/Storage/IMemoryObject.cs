@@ -13,9 +13,9 @@ namespace Service.Core.Abstractions.Storage
     /// </summary>
     public interface IMemoryObject : IDisposable
     {
-        void SetId(uint id);
+        void SetId(ulong id);
 
-        uint Id { get; }
+        ulong Id { get; }
 
         IEnumerable<IDataContainer<Pkcs11Attribute>> Attributes { get; set; }
 

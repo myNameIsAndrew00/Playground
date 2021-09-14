@@ -72,7 +72,8 @@ namespace Service.Core.Client
                 [typeof(ushort)] = (sizeof(ushort),  (bytes) => bytes.ToUShort()),
                 [typeof(int)]    = (sizeof(int),     (bytes) => bytes.ToInt32()),
                 [typeof(uint)]   = (sizeof(uint),    (bytes) => bytes.ToUInt32()),
-                [typeof(long)]   = (sizeof(long),    (bytes) => bytes.ToLong())
+                [typeof(long)]   = (sizeof(long),    (bytes) => bytes.ToLong()),
+                [typeof(ulong)] = (sizeof(long),     (bytes) => bytes.ToULong()),
             };
 
             if (parsingInfoContainer.TryGetValue(parameterType, out (int size, Func<byte[], object> convertFunction) parsingInfo))

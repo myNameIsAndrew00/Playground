@@ -29,7 +29,7 @@ namespace Service.Core.Token.Encryption
         {
             get
             {
-                UInt32? value = this[Pkcs11Attribute.KEY_TYPE]?.Value.ToUInt32();
+                UInt64? value = this[Pkcs11Attribute.KEY_TYPE]?.Value.ToULong();
                 return value is not null ? (Pkcs11KeyType)value : null;
             }
         }
