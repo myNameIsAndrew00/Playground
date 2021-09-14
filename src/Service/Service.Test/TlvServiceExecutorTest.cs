@@ -1,6 +1,7 @@
 using Service.Core.Client;
 using Service.Core.DefinedTypes;
 using Service.Core.Execution;
+using Service.Core.Storage;
 using System;
 using System.Reflection;
 using Xunit;
@@ -29,7 +30,7 @@ namespace Service.Test
             TlvServiceExecutorModelBinder binder = new TlvServiceExecutorModelBinder();
 
             //action
-            var objects = binder.GetMethodParameters(method, dispatchResult);
+            var objects = binder.GetMethodParameters(method, dispatchResult, new TokenStorage());
 
             //assert
             Assert.Equal(2, objects.Length);

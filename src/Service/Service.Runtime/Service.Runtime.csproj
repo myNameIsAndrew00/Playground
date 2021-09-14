@@ -5,4 +5,8 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Service.Abstractions\Service.Core.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

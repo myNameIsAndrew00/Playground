@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Storage;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -19,6 +20,6 @@ namespace Service.Core.Abstractions.Communication
         /// <param name="method">Method dispatched</param>
         /// <param name="dispatcherResult">Result of the dispatch process execution</param>
         /// <returns></returns>
-        object[] GetMethodParameters(MethodInfo method, DispatchResultType dispatcherResult);
+        object[] GetMethodParameters(MethodInfo method, DispatchResultType dispatcherResult, IPayloadDataParser dataContainerParser);
     }
 }

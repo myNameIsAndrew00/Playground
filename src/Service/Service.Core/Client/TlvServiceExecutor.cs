@@ -29,6 +29,8 @@ namespace Service.Core.Client
 
         private IModuleFactory moduleCollection;
 
+        private ITokenStorage tokenStorage;
+
         public TlvServiceExecutor()
         {
         }
@@ -42,6 +44,7 @@ namespace Service.Core.Client
 
         public void SetModuleFactory(IModuleFactory moduleCollection) => this.moduleCollection = moduleCollection;
 
+        public void SetStorage(ITokenStorage storage) => this.tokenStorage = storage;
 
 
         public IExecutionResult GetEmptySessionResult(ExecutionResultCode code)
@@ -74,7 +77,7 @@ namespace Service.Core.Client
         /// Authenticate a session. Require a tlv structure representing the user type and password value
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult Authenticate(DataContainer<Pkcs11UserType> authenticationData)
+        public virtual IExecutionResult Authenticate(IDataContainer<Pkcs11UserType> authenticationData)
         {
             //Pkcs11DataContainer<Pkcs11UserType> authenticationData = this.dispatchResult.Payload.ToPkcs11DataContainer<Pkcs11UserType>();
 
@@ -89,12 +92,12 @@ namespace Service.Core.Client
         /// Create a object. Require a tlv structure array representing the attributes used for creation
         /// </summary>
         /// <returns>Bytes representing data. Payload represents 4 bytes for handler id</returns>
-        public virtual IExecutionResult CreateObject(IEnumerable<DataContainer<Pkcs11Attribute>> attributes)
+        public virtual IExecutionResult CreateObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes)
         { 
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
             //todo: inject the builder into server
-            if (!MemoryObjectsBuilder.Instance.Get(attributes.Select( item => item as IPkcs11AttributeDataContainer), out IMemoryObject @object, out ExecutionResultCode creationResultCode))
+            if (!tokenStorage.CreateInMemoryObject(attributes.Select( item => item as IPkcs11AttributeDataContainer), out IMemoryObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }
@@ -108,7 +111,7 @@ namespace Service.Core.Client
         /// Function associated with encrypt init
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult EncryptInit(uint keyIdentifier, DataContainer<Pkcs11Mechanism> mechanism)
+        public virtual IExecutionResult EncryptInit(uint keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
         {
             //todo: handle null and edge cases
             IMemoryObject keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier);
@@ -130,7 +133,7 @@ namespace Service.Core.Client
         /// Function associated with encrypt
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult Encrypt(DataContainer dataToEncrypt)
+        public virtual IExecutionResult Encrypt(IDataContainer dataToEncrypt)
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
@@ -150,7 +153,7 @@ namespace Service.Core.Client
         /// Function associated with encrypt update
         /// </summary>
         /// <returns></returns>
-        public virtual IExecutionResult EncryptUpdate(DataContainer dataToEncrypt)
+        public virtual IExecutionResult EncryptUpdate(IDataContainer dataToEncrypt)
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
@@ -180,8 +183,6 @@ namespace Service.Core.Client
 
             return new BytesResult(encryptedData, executionResultCode);
         }
-
-
 
     }
 }

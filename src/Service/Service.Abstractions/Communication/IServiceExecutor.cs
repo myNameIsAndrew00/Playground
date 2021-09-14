@@ -30,6 +30,12 @@ namespace Service.Core.Abstractions.Communication
         void SetModuleFactory(IModuleFactory moduleCollection);
 
         /// <summary>
+        /// Set the executor storage which can be used to handle token internal storage
+        /// </summary>
+        /// <param name="storage"></param>
+        void SetStorage(ITokenStorage storage);
+
+        /// <summary>
         /// Returns a empty session result
         /// </summary>
         /// <returns></returns>

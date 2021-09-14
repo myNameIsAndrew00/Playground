@@ -11,7 +11,7 @@ namespace Service.Core.Storage.Memory
     /// Represents an model of a pcks11 object. A pkcs11 object context represents an inmemory storage class which store a collection of attributes.
     /// It is used to handle internal operations for different modules.
     /// </summary>
-    public class MemoryObject : IMemoryObject
+    internal class MemoryObject : IMemoryObject
     {
         internal MemoryObject() { }
 
@@ -42,32 +42,32 @@ namespace Service.Core.Storage.Memory
     /// <summary>
     /// Represents a decorator class for Pkcs 11 memory objects
     /// </summary>
-    public abstract class ContextDecorator : MemoryObject
+    public abstract class ContextDecorator : IMemoryObject
     {
-        public MemoryObject ObjectHandler { get; }
+        public IMemoryObject ObjectHandler { get; }
 
         public ContextDecorator(IMemoryObject objectHandler)
         {
-            this.ObjectHandler = objectHandler as MemoryObject;
+            this.ObjectHandler = objectHandler;
             //todo: replace here
         }
 
-        public override IEnumerable<IDataContainer<Pkcs11Attribute>> Attributes
+        public IEnumerable<IDataContainer<Pkcs11Attribute>> Attributes
         {
             get => ObjectHandler.Attributes;
             set => ObjectHandler.Attributes = value;
         }
 
-        public override void SetId(uint id) => ObjectHandler.SetId(id);
-        
-        public override uint Id => ObjectHandler.Id;
-
-        public override void Dispose()
+        public void SetId(uint id) => ObjectHandler.SetId(id);
+               
+        public uint Id => ObjectHandler.Id;
+               
+        public void Dispose()
         {
             ObjectHandler.Dispose();
         }
 
-        public override IDataContainer<Pkcs11Attribute> this[Pkcs11Attribute type]
+        public IDataContainer<Pkcs11Attribute> this[Pkcs11Attribute type]
         {
             get
             {

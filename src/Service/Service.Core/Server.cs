@@ -24,6 +24,9 @@ namespace Service.Core
     {
         private ModuleFactory moduleCollection;
 
+        private ITokenStorage tokenStorage;
+
+
         private IServiceCommunicationResolver<DispatchResult, Session> resolver;
 
         public IServiceCommunicationResolver<DispatchResult, Session> Resolver => resolver;
@@ -45,6 +48,8 @@ namespace Service.Core
             resolver.Listen();
         }
 
+        public IPkcs11Server SetStorage(ITokenStorage storage) { this.tokenStorage = storage; return this; }
+
         public IPkcs11Server RegisterModule<ModuleType, ImplementationType>()
             where ModuleType : ITokenModule 
             where ImplementationType : ITokenModule 
@@ -55,18 +60,18 @@ namespace Service.Core
 
         public IPkcs11Server RegisterEncryptionModule<EncryptionModuleType>(Func<IMemoryObject, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
         {
-            moduleCollection.RegisterModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as MemoryObject));
+            moduleCollection.RegisterModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as IMemoryObject));
             return this;
         }
 
         public IPkcs11Server RegisterHashingModule<HashingModuleType>(Func<IMemoryObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
         {
-            moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as MemoryObject));
+            moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as IMemoryObject));
             return this;
         }
         public IPkcs11Server  RegisterSigningModule<SigningModuleType>(Func<IMemoryObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
         {
-            moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as MemoryObject));
+            moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as IMemoryObject));
             return this;
         }
 
@@ -82,6 +87,7 @@ namespace Service.Core
             // initialise the executor
             executor.SetDispatcherResult(dispatchResult);
             executor.SetModuleFactory(this.moduleCollection);
+            executor.SetStorage(this.tokenStorage);
 
             try
             {
@@ -97,7 +103,7 @@ namespace Service.Core
                 if (method == null)
                     return executor.GetEmptySessionResult(ExecutionResultCode.FUNCTION_NOT_SUPPORTED);
                 
-                object[] methodParameters = executor.ModelBinder?.GetMethodParameters(method, dispatchResult);
+                object[] methodParameters = executor.ModelBinder?.GetMethodParameters(method, dispatchResult, tokenStorage);
 
                 // invoke the method and get the execution result
                 IExecutionResult executionResult = (IExecutionResult)method.Invoke(executor, methodParameters);
@@ -121,6 +127,7 @@ namespace Service.Core
             //todo: handle the exception
             Debug.WriteLine(exception);
         }
+
 
         #endregion
     }

@@ -1,26 +1,35 @@
-﻿using Service.Core.Storage.Memory;
+﻿using Service.Core.Abstractions.Storage;
+using Service.Core.Storage.Memory;
 using Service.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Service.Core.Client
+namespace Service.Core.Storage
 {
     /// <summary>
-    /// Contains a list of ex
+    /// Use this class to create data containers from bytes
     /// </summary>
-    public static class TlvServiceExecutorExtensions
+    internal class PayloadDataParser
     {
         /// <summary>
         /// Optain a set of pkcs11 attributes container from an array of bytes 
         /// </summary>
         /// <param name="bytes">Bytes used to provide data</param>
         /// <returns></returns>
-        public static IEnumerable<DataContainer<Type>> ToPkcs11DataContainerCollection<Type>(this IEnumerable<byte> bytes)
+        public  IEnumerable<IDataContainer<Type>> ToPkcs11DataContainerCollection<Type>( IEnumerable<byte> bytes)
             where Type : Enum
         {
-            return ToPkcs11DataContainerCollection(bytes, typeof(Type)) as IEnumerable<DataContainer<Type>>;
+            return ToPkcs11DataContainerCollection(bytes, typeof(Type)) as IEnumerable<IDataContainer<Type>>;
+        }
+
+        public  IDataContainer<Type> ToPkcs11DataContainer<Type>( IEnumerable<byte> bytes)
+           where Type : Enum
+        {
+            return ToPkcs11DataContainer(bytes, typeof(Type)) as IDataContainer<Type>;
         }
 
         /// <summary>
@@ -29,27 +38,21 @@ namespace Service.Core.Client
         /// <typeparam name="Type"></typeparam>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        public static DataContainer<Type> ToPkcs11DataContainer<Type>(this IEnumerable<byte> bytes)
-           where Type : Enum
-        {
-            return ToPkcs11DataContainer(bytes, typeof(Type)) as DataContainer<Type>;
-        }
-
-        public static object ToPkcs11DataContainer(this IEnumerable<byte> bytes, Type enumType)
+        public  object ToPkcs11DataContainer( IEnumerable<byte> bytes, Type enumType)
         {
             TryParsePkcs11DataContainer(bytes, enumType, out object output);
 
             return output;
         }
 
-        public static object ToPkcs11DataContainerCollection(this IEnumerable<byte> bytes, Type enumType)
+        public  object ToPkcs11DataContainerCollection( IEnumerable<byte> bytes, Type enumType)
         {
             TryParsePkcs11DataContainerCollection(bytes, enumType, out object output);
 
             return output;
         }
 
-        public static int TryParsePkcs11DataContainer(this IEnumerable<byte> bytes, Type enumType, out object output)
+        public  int TryParsePkcs11DataContainer( IEnumerable<byte> bytes, Type enumType, out object output)
         {
             output = null;
 
@@ -70,7 +73,7 @@ namespace Service.Core.Client
             }
         }
 
-        public static int TryParsePkcs11DataContainerCollection(this IEnumerable<byte> bytes, Type enumType, out object output)
+        public  int TryParsePkcs11DataContainerCollection( IEnumerable<byte> bytes, Type enumType, out object output)
         {
             output = null;
             if (bytes == null) return 0;
@@ -100,9 +103,9 @@ namespace Service.Core.Client
 
         #region Private
 
-        private static object parseContainer(Type type, IEnumerable<byte> bytes, ref int cursor)
+        private  object parseContainer(Type type, IEnumerable<byte> bytes, ref int cursor)
         {
-            DataContainer container = (DataContainer)Activator.CreateInstance(type);
+            IDataContainer container = (IDataContainer)Activator.CreateInstance(type);
 
             // parse the type.
             container.Type = bytes.Skip(cursor).ToUInt32();

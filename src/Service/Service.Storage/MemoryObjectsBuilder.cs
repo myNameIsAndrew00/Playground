@@ -10,7 +10,7 @@ namespace Service.Core.Storage
     /// <summary>
     /// Representa a builder class to create Pkcs11Objects
     /// </summary>
-    public class MemoryObjectsBuilder
+    internal class MemoryObjectsBuilder
     {
         private static MemoryObjectsBuilder instance = null;
         public static MemoryObjectsBuilder Instance
@@ -25,13 +25,7 @@ namespace Service.Core.Storage
 
         private MemoryObjectsBuilder() { }
 
-        /// <summary>
-        /// Use this method to create a pkcs11 object
-        /// </summary>
-        /// <param name="attributes">Attributes used for object creation</param>
-        /// <param name="createdObject">Object created</param>
-        /// <param name="code">Result code. Ok code is returned if object was created with success</param>
-        /// <returns>A boolean which is true if object was created with success, false otherwise</returns>
+     
         public bool Get(IEnumerable<IPkcs11AttributeDataContainer> attributes, out IMemoryObject createdObject, out ExecutionResultCode code)
         {
             //todo: check unhandled attributes and better handling for codes

@@ -9,7 +9,7 @@ namespace Service.Core.Storage.Memory
     /// <summary>
     /// Represents an handler to keep data of a attribute tlv structure. Type and length value have 4 bytes each (uint data type)
     /// </summary>
-    public class DataContainer : IDataContainer
+    internal class DataContainer : IDataContainer
     {
         public uint Type { get; set; }
 
@@ -27,7 +27,7 @@ namespace Service.Core.Storage.Memory
     /// <summary>
     /// Represents an generic handler to keep data of a attribute tlv structure. Type and length value have 8 bytes each (long data type)
     /// </summary>
-    public class DataContainer<EnumDataType> : DataContainer, IDataContainer<EnumDataType>
+    internal class DataContainer<EnumDataType> : DataContainer, IDataContainer<EnumDataType>
         where EnumDataType : Enum
     {
         /// <summary>
@@ -49,14 +49,14 @@ namespace Service.Core.Storage.Memory
     /// <summary>
     /// Represents handler to keep pkcs11 attribute data.
     /// </summary>
-    public class Pkcs11AttributeContainer : DataContainer<Pkcs11Attribute>, IPkcs11AttributeDataContainer
+    internal class Pkcs11AttributeContainer : DataContainer<Pkcs11Attribute>, IPkcs11AttributeDataContainer
     {
     }
 
     /// <summary>
     /// Represents handler to keep pkcs11 mechanism data.
     /// </summary>
-    public class Pkcs11MechanismContainer : DataContainer<Pkcs11Mechanism>
+    internal class Pkcs11MechanismContainer : DataContainer<Pkcs11Mechanism>
     {
     }
 }

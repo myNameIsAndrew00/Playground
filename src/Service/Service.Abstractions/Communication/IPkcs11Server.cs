@@ -17,6 +17,12 @@ namespace Service.Core.Abstractions.Communication
         /// </summary>
         void Start();
 
+        /// <summary>
+        /// Set the server storage module
+        /// </summary>
+        /// <param name="storage"></param>
+        /// <returns></returns>
+        IPkcs11Server SetStorage(ITokenStorage storage);
 
         /// <summary>
         /// Register an module to the server which may be used by executor to handle the request invoked.

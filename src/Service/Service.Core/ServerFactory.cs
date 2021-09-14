@@ -5,6 +5,7 @@ using Service.Core.Communication.Infrastructure;
 using Service.Core.Execution;
 using Service.Core.Infrastructure;
 using Service.Core.Infrastructure.Communication;
+using Service.Core.Storage;
 using Service.Core.Token;
 using Service.Core.Token.Encryption;
 using System;
@@ -27,7 +28,7 @@ namespace Service.Core
         public static IPkcs11Server CreateDefaultServer(string address, int port) => CreateDefaultSocketServer(address, port);
 
         /// <summary>
-        /// Creates a socket server with the executor implemented by the library
+        /// Creates a socket server with the executor, modules and storage implemented by the library
         /// </summary>
         /// <param name="address">IP Address used by the server</param>
         /// <param name="port">TCP Port where the server will listen to</param>
@@ -35,6 +36,7 @@ namespace Service.Core
         public static IPkcs11Server CreateDefaultSocketServer(string address, int port)
         {
             IPkcs11Server result = CreateSocketServer<TlvServiceExecutor>(address, port)
+                .SetStorage(new TokenStorage())
                 .RegisterEncryptionModule(options =>
                 {
                     return new EncryptionModule(options)
@@ -46,6 +48,7 @@ namespace Service.Core
                 })
                 .RegisterHashingModule(opt => new HashingModule())
                 .RegisterSigningModule(opt => new SigningModule());
+            
 
             return result;
         }

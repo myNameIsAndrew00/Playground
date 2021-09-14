@@ -15,11 +15,12 @@ namespace Service.Core.Client
 {
     /// <summary>
     /// Use this class to bind parameters to a service executor method.
-    /// Model binder will fill bind only parameter of types int, long and Pkcs11DataContainer in the order passed to the method.
+    /// Model binder will fill bind only value types and IDataContainer in the order passed to the method.
+    /// A single collection of data containers can be parsed by this binder.
     /// </summary>
     public class TlvServiceExecutorModelBinder : IServiceExecutorModelBinder<DispatchResult, Session>
     {
-        public object[] GetMethodParameters(MethodInfo method, DispatchResult dispatcherResult)
+        public object[] GetMethodParameters(MethodInfo method, DispatchResult dispatcherResult, IPayloadDataParser parser)
         {
             List<object> result = new List<object>();
              
@@ -40,15 +41,17 @@ namespace Service.Core.Client
                 }
                 //check if parameter is Pkcs11DataContainer 
                 else if (parameter.ParameterType.Inherits(typeof(IDataContainer)))
-                    cursor += parsingBytes.TryParsePkcs11DataContainer(
+                    cursor += parser.CreatePkcs11DataContainer(
+                           bytes: parsingBytes,
                            enumType: parameter.ParameterType.IsGenericType ? parameter.ParameterType.GenericTypeArguments[0] : null,
                            out parameterBuilt);
                 //check if parameter is a list of Pkcs11DataContainer
                 else if (parameter.ParameterType.Inherits(typeof(IEnumerable)))
                 {
                     Type innerType = parameter.ParameterType.GenericTypeArguments.FirstOrDefault();
-                    if (innerType.Inherits(typeof(DataContainer)))
-                        cursor += parsingBytes.TryParsePkcs11DataContainerCollection(
+                    if (innerType.Inherits(typeof(IDataContainer)))
+                        cursor += parser.CreatePkcs11DataContainerCollection(
+                            bytes: parsingBytes,
                             enumType: innerType.IsGenericType ? innerType.GenericTypeArguments[0] : null,
                             out parameterBuilt);
                 }
