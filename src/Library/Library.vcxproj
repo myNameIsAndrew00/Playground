@@ -33,6 +33,7 @@
     <ClCompile Include="sources\ServiceProxy.cpp" />
     <ClCompile Include="sources\SocketCommunicationResolver.cpp" />
     <ClCompile Include="sources\TlvParser.cpp" />
+    <ClCompile Include="sources\TlvStructure.cpp" />
     <ClCompile Include="sources\VirtualToken.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +53,7 @@
     <ClInclude Include="include\ServiceProxy.h" />
     <ClInclude Include="include\SocketCommunicationResolver.h" />
     <ClInclude Include="include\TlvParser.h" />
+    <ClInclude Include="include\TlvStructure.h" />
     <ClInclude Include="include\TokenActionResult.h" />
     <ClInclude Include="include\VirtualToken.h" />
   </ItemGroup>

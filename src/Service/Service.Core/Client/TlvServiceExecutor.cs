@@ -96,7 +96,7 @@ namespace Service.Core.Client
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
             //todo: inject the builder into server
-            if (!tokenStorage.CreateInMemoryObject(attributes.Select( item => item as IPkcs11AttributeDataContainer), out IMemoryObject @object, out ExecutionResultCode creationResultCode))
+            if (!tokenStorage.CreateInMemoryObject(attributes.Select( item => item as IDataContainer<Pkcs11Attribute>), out IMemoryObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
             }

@@ -3,32 +3,17 @@
 using namespace Infrastructure;
 
 
-Abstractions::Bytes TlvParser::ParsePkcs11Attributes(const CK_ATTRIBUTE* attributes, const int attributesCount)
+std::list<Abstractions::TlvStructure> TlvParser::ParsePkcs11Attributes(const CK_ATTRIBUTE* attributes, const int attributesCount)
 {
-	Abstractions::Bytes result;
+	std::list<Abstractions::TlvStructure> result;
+
 	if (attributes == nullptr) return result;
 
 	int resultSize = 0;
 
 	for (int i = 0; i < attributesCount; i++) {
-		resultSize += 2 * sizeof(unsigned long);
-		resultSize += attributes[i].ulValueLen;
+		result.emplace_back(Abstractions::TlvStructure(attributes[i].type, (unsigned char*)attributes[i].pValue, attributes[i].ulValueLen));
 	}
-
-	unsigned char* resultData = new unsigned char[resultSize];
-	int dataPointer = 0;
-
-	for (int i = 0; i < attributesCount; i++) {
-		memcpy(resultData + dataPointer, &attributes[i].type, sizeof(unsigned long));
-		dataPointer += sizeof(unsigned long);
-		memcpy(resultData + dataPointer, &attributes[i].ulValueLen, sizeof(unsigned long));
-		dataPointer += sizeof(unsigned long);
-		memcpy(resultData + dataPointer, attributes[i].pValue, attributes[i].ulValueLen);
-		dataPointer += attributes[i].ulValueLen;		 
-	}
-
-
-	result.SetFromArray(resultData, resultSize);
-
-	return std::move(result);
+ 
+	return result;
 }

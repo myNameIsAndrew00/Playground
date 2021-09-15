@@ -4,8 +4,9 @@
 
 #include "TokenActionResult.h"
 
-namespace Abstractions {
+struct CK_ATTRIBUTE;
 
+namespace Abstractions {
 	/*Constants*/
 	static const char Manufacturer[] = "Pkcs11Playground";
 	static const char Description[] = "Pkcs 11 playground";
@@ -24,7 +25,7 @@ namespace Abstractions {
 		virtual GetManufacturerResult GetManufacturer() const = 0;
 		virtual CreateSessionResult CreateSession() const = 0;
 		virtual EndSessionResult EndSession(const unsigned long long) const = 0;
-
+		virtual CreateObjectResult CreateObject(const unsigned long long sessionId, CK_ATTRIBUTE* attributes, const int length) const = 0;
 		virtual ~IPkcs11Token() { }
 	};
 	 

@@ -18,7 +18,7 @@ namespace Abstractions {
 		FinaliseResult Finalise() override;
 		CreateSessionResult CreateSession() const override;
 		EndSessionResult EndSession(const unsigned long long sessionId) const override;
-
+		CreateObjectResult CreateObject(const unsigned long long sessionId, CK_ATTRIBUTE* attributes, const int length) const override;
 
 		~VirtualToken();
 	private:

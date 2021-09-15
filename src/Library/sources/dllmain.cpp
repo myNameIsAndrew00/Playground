@@ -42,6 +42,22 @@ int main() {
 	auto initialiseResult = Token->Initialise();
 
 	auto createSessionResult = Token->CreateSession();
+	
+	CK_BBOOL true_val = 1;
+	CK_BBOOL false_val = 0;
+	CK_ULONG key_length_bytes = 128;
+
+	CK_ATTRIBUTE _template[] = {
+		{CKA_SENSITIVE, &true_val,         sizeof(CK_BBOOL)},
+		{CKA_TOKEN,     &false_val,        sizeof(CK_BBOOL)},
+		{CKA_VALUE_LEN, &key_length_bytes, sizeof(CK_ULONG)}
+	};
+	
+	auto createObjectResult = Token->CreateObject(
+		createSessionResult.GetValue(),
+		_template,
+		3
+	);
 
 	auto endSessionResult = Token->EndSession(createSessionResult.GetValue());
 

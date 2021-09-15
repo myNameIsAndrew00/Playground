@@ -1,5 +1,5 @@
 #pragma once
-#include "Bytes.h"
+#include "TlvStructure.h"
 
 struct CK_ATTRIBUTE;
 
@@ -9,6 +9,6 @@ namespace Infrastructure {
 	/// </summary>
 	class TlvParser {
 	public:
-		Abstractions::Bytes ParsePkcs11Attributes(const CK_ATTRIBUTE* attributes, const int attributesCount);
+		std::list<Abstractions::TlvStructure> ParsePkcs11Attributes(const CK_ATTRIBUTE* attributes, const int attributesCount);
 	};
 }

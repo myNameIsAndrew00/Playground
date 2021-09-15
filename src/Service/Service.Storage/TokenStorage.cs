@@ -15,7 +15,7 @@ namespace Service.Core.Storage
     {
         private PayloadDataParser dataParser = new PayloadDataParser();
 
-        public bool CreateInMemoryObject(IEnumerable<IPkcs11AttributeDataContainer> attributes, out IMemoryObject createdObject, out ExecutionResultCode code)
+        public bool CreateInMemoryObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out IMemoryObject createdObject, out ExecutionResultCode code)
         {
             return MemoryObjectsBuilder.Instance.Get(attributes, out createdObject, out code);
         }

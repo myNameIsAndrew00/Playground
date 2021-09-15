@@ -15,7 +15,7 @@ namespace Service.Core.Storage.Memory
     {
         internal MemoryObject() { }
 
-        internal MemoryObject(IEnumerable<IPkcs11AttributeDataContainer> attributes)
+        internal MemoryObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes)
         {
             this.Attributes = attributes;
         }

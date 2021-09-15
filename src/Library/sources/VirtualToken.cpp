@@ -1,4 +1,6 @@
 #include "../include/VirtualToken.h"
+#include "../include/TlvParser.h"
+
 using namespace Abstractions;
 
 VirtualToken::VirtualToken(const ServiceProxyReference& serviceProxy)
@@ -46,6 +48,13 @@ GetManufacturerResult VirtualToken::GetManufacturer() const
 	return GetManufacturerResult(GetManufacturerResult::Code::OK, "Virtual token");
 }
  
+CreateObjectResult VirtualToken::CreateObject(const unsigned long long sessionId, CK_ATTRIBUTE* attributes, const int length) const {
+	Infrastructure::TlvParser parser;
+
+	std::list<TlvStructure> templateStructure = parser.ParsePkcs11Attributes(attributes, length);
+
+	return this->serviceProxy->CreateObject(sessionId, templateStructure);
+}
 
 VirtualToken::~VirtualToken() {
 	this->serviceProxy->Unregister(this);

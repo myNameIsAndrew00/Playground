@@ -6,6 +6,9 @@
 
 #include <list>
 
+class TlvStructure;
+typedef unsigned long long Handler;
+
 namespace Abstractions {
 	/*Represents a proxy class for the cryptographic service. It will be responsable for handling messages*/
 	class ServiceProxy
@@ -22,7 +25,9 @@ namespace Abstractions {
 		bool DetachCurrentClient();
 
 		CreateSessionResult BeginSession();
-		EndSessionResult EndSession(const unsigned long long sessionId);
+		EndSessionResult EndSession(const Handler sessionId);
+		CreateObjectResult CreateObject(const Handler sessionId, const std::list<TlvStructure>& attributes);
+
 	private:
 		bool communicationInitialised;
 
