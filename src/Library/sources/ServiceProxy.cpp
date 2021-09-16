@@ -48,46 +48,104 @@ bool ServiceProxy::DetachCurrentClient() {
 CreateSessionResult ServiceProxy::BeginSession()
 {
 	return this->InvokeServer<CreateSessionResult>(
-		ServiceActionCode::BeginSession,
-		[]() {
-			return Bytes();
-		},
-		[](auto reader, auto code) {
-			unsigned long long result = reader->PeekLong();
+			ServiceActionCode::BeginSession,
+			[]() {
+				return Bytes();
+			},
+			[](auto reader, auto code) {
+				unsigned long long result = reader->PeekLong();
 
-			return CreateSessionResult((CreateSessionResult::Code)code, result);
-		}
-		);
+				return CreateSessionResult((CreateSessionResult::Code)code, result);
+			}
+	);
 }
 
-EndSessionResult ServiceProxy::EndSession(const Handler sessionId)
+EndSessionResult ServiceProxy::EndSession(const Id sessionId)
 { 
 	return this->InvokeServer<EndSessionResult>(
-		ServiceActionCode::EndSession,
-		[sessionId]() {
-			return Bytes((const long long)sessionId);
-		},
-		[](auto reader, auto code) {
+			ServiceActionCode::EndSession,
+			[sessionId]() {
+				return Bytes(sessionId);
+			},
+			[](auto reader, auto code) {
 
-			return EndSessionResult((EndSessionResult::Code)code, true);
-		}
+				return EndSessionResult((EndSessionResult::Code)code, true);
+			}
+	); 
+}
+
+CreateObjectResult ServiceProxy::CreateObject(const Id sessionId, const std::list<TlvStructure>& attributes) {
+	return this->InvokeServer<CreateObjectResult>(
+			ServiceActionCode::CreateObject,
+			[attributes]() {
+				return Bytes(attributes);
+			},
+			[](auto reader, auto code) {
+				unsigned long long result = reader->PeekLong();
+
+				return CreateObjectResult((CreateObjectResult::Code)code, result);
+			},
+			sessionId
+	);
+}
+
+EncryptInitResult Abstractions::ServiceProxy::EncryptInit(const Id sessionId, const Id objectId, const TlvStructure& mechanism)
+{
+	return this->InvokeServer<EncryptInitResult>(
+			ServiceActionCode::EncryptInit,
+			[objectId, mechanism]() {
+				return Bytes(objectId).Append(mechanism);
+			},
+			[](auto reader, auto code) {
+
+				return EncryptInitResult((EncryptInitResult::Code)code, true);
+			},
+			sessionId
+	);
+}
+
+EncryptResult Abstractions::ServiceProxy::Encrypt(const Id sessionId, TlvStructure dataToEncrypt)
+{
+	return this->InvokeServer<EncryptResult>(
+			ServiceActionCode::Encrypt,
+			[dataToEncrypt]() {
+				return dataToEncrypt.GetRaw();
+			},
+			[](auto reader, auto code) {
+				return EncryptResult((EncryptResult::Code)code, reader->PeekBytes());
+			},
+			sessionId
+	); 
+}
+
+EncryptUpdateResult Abstractions::ServiceProxy::EncryptUpdate(const Id sessionId, TlvStructure dataToEncrypt)
+{
+	return this->InvokeServer<EncryptUpdateResult>(
+			ServiceActionCode::EncryptUpdate,
+			[dataToEncrypt]() {
+				return dataToEncrypt.GetRaw();
+			},
+			[](auto reader, auto code) {
+				return EncryptUpdateResult((EncryptUpdateResult::Code)code, reader->PeekBytes());
+			},
+			sessionId
 		); 
 }
 
-CreateObjectResult ServiceProxy::CreateObject(const Handler sessionId, const std::list<TlvStructure>& attributes) {
-	return this->InvokeServer<CreateObjectResult>(
-		ServiceActionCode::CreateObject,
-		[attributes]() {
-			return Bytes(attributes);
-		},
-		[](auto reader, auto code) {
-			unsigned long long result = reader->PeekLong();
-
-			return CreateObjectResult((CreateObjectResult::Code)code, result);
-		},
-		sessionId
-		);
+EncryptFinalResult Abstractions::ServiceProxy::EncryptFinal(const Id sessionId)
+{
+	return this->InvokeServer<EncryptFinalResult>(
+			ServiceActionCode::EncryptUpdate,
+			[]() {
+				return Bytes();
+			},
+			[](auto reader, auto code) {
+				return EncryptFinalResult((EncryptFinalResult::Code)code, reader->PeekBytes());
+			},
+			sessionId
+		); 
 }
+ 
 
 
 #pragma region Private

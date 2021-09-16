@@ -21,7 +21,9 @@ Abstractions::ServiceExecutionResult Infrastructure::AlphaProtocolDispatcher::Pa
 
     memcpy(data, payload.GetBytes() + codeSize, dataLength);
     memcpy(&code, payload.GetBytes(), codeSize);
-     
+
+    code = _byteswap_uint64(code);
+
     return Abstractions::ServiceExecutionResult(Abstractions::Bytes(data, dataLength), code);
 }
 

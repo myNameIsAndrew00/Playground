@@ -46,5 +46,61 @@ namespace Service.Core.Abstractions.Communication
         /// </summary>
         IServiceExecutorModelBinder<DispatchResultType, SessionType> ModelBinder { get; }
 
+        #region Service actions
+
+        /* This region of code contains methods implemented by executor for handling crypto actions.
+        * Name of the methods are taken from ServiceActionCode enum */
+
+        /// <summary>
+        /// Begin session. No parameters required
+        /// </summary>
+        /// <returns>Bytes representing data. Payload represents 8 bytes for handler id</returns>
+        IExecutionResult BeginSession();
+
+        /// <summary>
+        /// End session. No parameters required
+        /// </summary>
+        /// <returns></returns>
+        IExecutionResult EndSession();
+
+        /// <summary>
+        /// Authenticate a session. Require a tlv structure representing the user type and password value
+        /// </summary>
+        /// <returns></returns>
+        IExecutionResult Authenticate(IDataContainer<Pkcs11UserType> authenticationData);
+
+        /// <summary>
+        /// Create a object.
+        /// </summary>
+        /// <returns>Bytes representing data. Payload represents 8 bytes for handler id</returns>
+        IExecutionResult CreateObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes);
+
+        /// <summary>
+        /// Function associated with encrypt init
+        /// </summary>
+        /// <returns></returns>
+        IExecutionResult EncryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism);
+       
+        /// <summary>
+        /// Function associated with encrypt
+        /// </summary>
+        /// <returns></returns>
+        IExecutionResult Encrypt(IDataContainer dataToEncrypt);
+
+        /// <summary>
+        /// Function associated with encrypt update
+        /// </summary>
+        /// <returns></returns>
+        IExecutionResult EncryptUpdate(IDataContainer dataToEncrypt);
+
+        /// <summary>
+        /// Function associated with PKCS11 encrypt final
+        /// </summary>
+        /// <returns></returns>
+        IExecutionResult EncryptFinal();
+    
+
+        #endregion
+
     }
 }

@@ -100,10 +100,10 @@ namespace Service.Core.Infrastructure.Communication
                 case ServiceActionCode.Authenticate:
                 case ServiceActionCode.EncryptInit:
                 case ServiceActionCode.Encrypt:
+                case ServiceActionCode.EncryptUpdate:
                 case ServiceActionCode.EncryptFinal:
-                    requireSession = true;
-                    break;
                 default:
+                    requireSession = true;
                     break;
             }
 

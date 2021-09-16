@@ -37,6 +37,12 @@ long long Abstractions::BytesReader::PeekLong()
     return value;
 }
 
+
+Abstractions::Bytes Abstractions::BytesReader::PeekBytes()
+{
+    return this->PeekBytes(this->bytesLength);
+}
+
 Abstractions::Bytes Abstractions::BytesReader::PeekBytes(unsigned int length)
 {
     const unsigned char* bytes = this->peekBytes(length);

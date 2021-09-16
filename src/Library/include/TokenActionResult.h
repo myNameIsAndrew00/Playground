@@ -116,10 +116,15 @@ namespace Abstractions {
 			this->resultCode = code;
 		}
 
-		TokenActionResult(const Code code, const Object& value) {
+		TokenActionResult(const Code code, const Object& value)  
+            : resultCode(code), value(value){
 			this->resultCode = code;
-			this->value = std::move(value);
+			this->value = value;
 		}
+
+        TokenActionResult(const Code code, Object&& value) 
+           : resultCode(code), value(std::move(value)){
+        }
 
 		const Code& GetCode() const {
 			return this->resultCode;
@@ -145,5 +150,6 @@ namespace Abstractions {
 	using CreateObjectResult = TokenActionResult<unsigned long long>;
 	using EncryptInitResult = TokenActionResult<bool>;
 	using EncryptResult = TokenActionResult<Bytes>;
-
+    using EncryptUpdateResult = TokenActionResult<Bytes>;
+    using EncryptFinalResult = TokenActionResult<Bytes>;
 }

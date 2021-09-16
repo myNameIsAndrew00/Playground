@@ -106,6 +106,7 @@ namespace Service.Core.Token.Encryption
                 return;
             }
 
+            //todo: initialisayion bytes may be a complex structure and not IV.
             // iv must be of 16 bytes length
             if (initialisationBytes.Length != 16)
             {

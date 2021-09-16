@@ -43,23 +43,39 @@ int main() {
 
 	auto createSessionResult = Token->CreateSession();
 	
+	CK_BYTE iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+					 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
+
 	CK_BBOOL true_val = 1;
 	CK_BBOOL false_val = 0;
 	CK_ULONG key_length_bytes = 128;
+	CK_ULONG key_type = CKK_AES;
+
+	CK_MECHANISM mechanismTemplate[] = {
+		{CKM_AES_CBC, iv, sizeof(iv)}
+	};
 
 	CK_ATTRIBUTE _template[] = {
+		{CKA_ENCRYPT,   &true_val,		   sizeof(CK_BBOOL)},
 		{CKA_SENSITIVE, &true_val,         sizeof(CK_BBOOL)},
 		{CKA_TOKEN,     &false_val,        sizeof(CK_BBOOL)},
+		{CKA_VALUE,		iv,				   sizeof(iv) },
+		{CKA_KEY_TYPE,  &key_type,		   sizeof(CK_ULONG)},
 		{CKA_VALUE_LEN, &key_length_bytes, sizeof(CK_ULONG)}
 	};
 	
 	auto createObjectResult = Token->CreateObject(
 		createSessionResult.GetValue(),
 		_template,
-		3
+		6
 	);
 
+	auto encryptInitResult = Token->EncryptInit(createSessionResult.GetValue(), createObjectResult.GetValue(), mechanismTemplate);
+	auto encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13);
+	encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13);
+
 	auto endSessionResult = Token->EndSession(createSessionResult.GetValue());
+
 
 	auto finaliseResult = Token->Finalise();
 

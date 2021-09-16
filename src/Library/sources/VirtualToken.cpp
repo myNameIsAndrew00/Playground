@@ -56,6 +56,32 @@ CreateObjectResult VirtualToken::CreateObject(const unsigned long long sessionId
 	return this->serviceProxy->CreateObject(sessionId, templateStructure);
 }
 
+EncryptInitResult Abstractions::VirtualToken::EncryptInit(const unsigned long long sessionId, const unsigned long long objectId, const CK_MECHANISM* mechanism) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->EncryptInit(sessionId, objectId, TlvStructure((unsigned long long)mechanism->mechanism, (const unsigned char*) mechanism->pParameter, mechanism->ulParameterLen));
+}
+
+EncryptResult Abstractions::VirtualToken::Encrypt(const unsigned long long sessionId, const unsigned char* data, const int length) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->Encrypt(sessionId, TlvStructure(0, data, length));
+}
+
+EncryptUpdateResult Abstractions::VirtualToken::EncryptUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->EncryptUpdate(sessionId, TlvStructure(0, data, length));
+}
+
+EncryptFinalResult Abstractions::VirtualToken::EncryptFinal(const unsigned long long sessionId) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->EncryptFinal(sessionId);
+}
+
+
+
 VirtualToken::~VirtualToken() {
 	this->serviceProxy->Unregister(this);
 }

@@ -80,9 +80,6 @@ namespace Service.Core.Client
             {
                 byte[] inputBytes = parsingBytes.Take(parsingInfo.size).ToArray();
 
-                if (BitConverter.IsLittleEndian)
-                    Array.Reverse(inputBytes);
-
                 //available value types which model binder may bind are int and long
                 parameterBuilt = parsingInfo.convertFunction(inputBytes);
                  

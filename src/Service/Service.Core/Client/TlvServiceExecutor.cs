@@ -106,10 +106,7 @@ namespace Service.Core.Client
             return new BytesResult( handlerId.GetBytes(), ExecutionResultCode.OK);
         }
 
-        /// <summary>
-        /// Function associated with encrypt init
-        /// </summary>
-        /// <returns></returns>
+ 
         public virtual IExecutionResult EncryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
         {
             //todo: handle null and edge cases
@@ -128,10 +125,7 @@ namespace Service.Core.Client
             return new BytesResult(executionResultCode);
         }
 
-        /// <summary>
-        /// Function associated with encrypt
-        /// </summary>
-        /// <returns></returns>
+         
         public virtual IExecutionResult Encrypt(IDataContainer dataToEncrypt)
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
@@ -148,10 +142,7 @@ namespace Service.Core.Client
             return new BytesResult(encryptedData, executionResultCode);
         }
 
-        /// <summary>
-        /// Function associated with encrypt update
-        /// </summary>
-        /// <returns></returns>
+         
         public virtual IExecutionResult EncryptUpdate(IDataContainer dataToEncrypt)
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
@@ -166,10 +157,7 @@ namespace Service.Core.Client
             return new BytesResult(encryptedData, executionResultCode);
         }
 
-        /// <summary>
-        /// Function associated with encrypt final
-        /// </summary>
-        /// <returns></returns>
+   
         public virtual IExecutionResult EncryptFinal()
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;

@@ -8,7 +8,8 @@ using namespace Infrastructure;
 TlvParser::TlvParser() 
 	: reversedTypes(
 		{
-			CKA_VALUE_LEN
+			CKA_VALUE_LEN,
+			CKA_KEY_TYPE
 		})
 { 
 }

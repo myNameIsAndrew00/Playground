@@ -38,6 +38,11 @@ Bytes::Bytes(const long long int64)
 	this->copy((const unsigned char*)&swapedLong, sizeof(long long));
 }
 
+Bytes::Bytes(const unsigned long long int64) : Bytes((const long long)int64)
+{
+}
+
+
 Bytes::Bytes(const Bytes& other)
 	: byteArray(nullptr), length(0)
 {
@@ -64,6 +69,11 @@ Bytes::Bytes(const std::list<TlvStructure>& tlvList)
 Bytes Bytes::operator=(const Bytes& other)
 {
 	return Bytes(other);
+}
+
+Bytes Bytes::operator=(Bytes&& other) noexcept
+{
+	return Bytes(std::move(other));
 }
 
 Bytes::Bytes(Bytes&& source) noexcept
