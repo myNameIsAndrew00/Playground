@@ -1,4 +1,5 @@
 #include "..\include\AlphaProtocolDispatcher.h"
+#include "..\include\ReturnCode.h"
 #include <memory>
 
 Abstractions::Bytes Infrastructure::AlphaProtocolDispatcher::CreateClientRequest(Abstractions::ServiceActionCode code, const Abstractions::Bytes& payload)
@@ -14,6 +15,8 @@ Abstractions::Bytes Infrastructure::AlphaProtocolDispatcher::CreateClientRequest
 
 Abstractions::ServiceExecutionResult Infrastructure::AlphaProtocolDispatcher::ParseServiceResponse(const Abstractions::Bytes& payload)
 {
+    if (payload.GetLength() == 0) return Abstractions::ServiceExecutionResult(payload, (unsigned long long)Abstractions::ReturnCode::DEVICE_REMOVED);
+
     const int codeSize = 8;
     unsigned char dataLength = payload.GetLength() - codeSize; //sizeof(long) 64bit
     unsigned char* data = new unsigned char[dataLength];

@@ -51,6 +51,8 @@ namespace Service.Core.Execution
         /// Optional data set by dispatcher
         /// </summary>
         public object OptionalData { get; init; }
+
+        public bool ClosedSession { get; init; }
     }
  
 }

@@ -10,7 +10,7 @@ VirtualToken::VirtualToken(const ServiceProxyReference& serviceProxy)
 
 GetIdentifierResult VirtualToken::GetIdentifier() const
 {
-	return GetIdentifierResult(GetIdentifierResult::Code::OK, VirtualToken::Identifier);
+	return GetIdentifierResult(ReturnCode::OK, VirtualToken::Identifier);
 }
 
 InitialiseResult VirtualToken::Initialise()
@@ -18,14 +18,14 @@ InitialiseResult VirtualToken::Initialise()
 	bool registerResult = this->serviceProxy->Register(this);
 
 	//todo: handle type of messages or do client side validations
-	return InitialiseResult(InitialiseResult::Code::OK, registerResult);
+	return InitialiseResult(registerResult ? ReturnCode::OK : ReturnCode::FUNCTION_FAILED, registerResult);
 }
 
 InitialiseResult VirtualToken::Finalise()
 {
 	bool detachResult = this->serviceProxy->DetachCurrentClient();
 	//todo: handle type of messages or do client side validations
-	return InitialiseResult(InitialiseResult::Code::OK, detachResult);
+	return InitialiseResult(ReturnCode::OK, detachResult);
 }
 
 
@@ -45,7 +45,7 @@ EndSessionResult Abstractions::VirtualToken::EndSession(const unsigned long long
 GetManufacturerResult VirtualToken::GetManufacturer() const
 {
 	//todo: get from proxy?
-	return GetManufacturerResult(GetManufacturerResult::Code::OK, "Virtual token");
+	return GetManufacturerResult(ReturnCode::OK, "Virtual token");
 }
  
 CreateObjectResult VirtualToken::CreateObject(const unsigned long long sessionId, CK_ATTRIBUTE* attributes, const int length) const {

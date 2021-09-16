@@ -1,5 +1,6 @@
 #include "../include/ServiceProxy.h"
 #include "../include/TlvStructure.h"
+#include "../include/ReturnCode.h"
 
 using namespace Abstractions;
 
@@ -23,8 +24,6 @@ bool ServiceProxy::Register(IServiceProxyClient* client) {
 	this->communicationInitialised = this->communicationResolver->InitialiseCommunication();
 
 	return this->communicationInitialised;
-
-	return true;
 }
 
 bool ServiceProxy::Unregister(IServiceProxyClient* client) {
@@ -55,7 +54,7 @@ CreateSessionResult ServiceProxy::BeginSession()
 			[](auto reader, auto code) {
 				unsigned long long result = reader->PeekLong();
 
-				return CreateSessionResult((CreateSessionResult::Code)code, result);
+				return CreateSessionResult((ReturnCode)code, result);
 			}
 	);
 }
@@ -69,7 +68,7 @@ EndSessionResult ServiceProxy::EndSession(const Id sessionId)
 			},
 			[](auto reader, auto code) {
 
-				return EndSessionResult((EndSessionResult::Code)code, true);
+				return EndSessionResult((ReturnCode)code, true);
 			}
 	); 
 }
@@ -83,7 +82,7 @@ CreateObjectResult ServiceProxy::CreateObject(const Id sessionId, const std::lis
 			[](auto reader, auto code) {
 				unsigned long long result = reader->PeekLong();
 
-				return CreateObjectResult((CreateObjectResult::Code)code, result);
+				return CreateObjectResult((ReturnCode)code, result);
 			},
 			sessionId
 	);
@@ -98,7 +97,7 @@ EncryptInitResult Abstractions::ServiceProxy::EncryptInit(const Id sessionId, co
 			},
 			[](auto reader, auto code) {
 
-				return EncryptInitResult((EncryptInitResult::Code)code, true);
+				return EncryptInitResult((ReturnCode)code, true);
 			},
 			sessionId
 	);
@@ -112,7 +111,7 @@ EncryptResult Abstractions::ServiceProxy::Encrypt(const Id sessionId, TlvStructu
 				return dataToEncrypt.GetRaw();
 			},
 			[](auto reader, auto code) {
-				return EncryptResult((EncryptResult::Code)code, reader->PeekBytes());
+				return EncryptResult((ReturnCode)code, reader->PeekBytes());
 			},
 			sessionId
 	); 
@@ -126,7 +125,7 @@ EncryptUpdateResult Abstractions::ServiceProxy::EncryptUpdate(const Id sessionId
 				return dataToEncrypt.GetRaw();
 			},
 			[](auto reader, auto code) {
-				return EncryptUpdateResult((EncryptUpdateResult::Code)code, reader->PeekBytes());
+				return EncryptUpdateResult((ReturnCode)code, reader->PeekBytes());
 			},
 			sessionId
 		); 
@@ -140,7 +139,7 @@ EncryptFinalResult Abstractions::ServiceProxy::EncryptFinal(const Id sessionId)
 				return Bytes();
 			},
 			[](auto reader, auto code) {
-				return EncryptFinalResult((EncryptFinalResult::Code)code, reader->PeekBytes());
+				return EncryptFinalResult((ReturnCode)code, reader->PeekBytes());
 			},
 			sessionId
 		); 
@@ -151,8 +150,10 @@ EncryptFinalResult Abstractions::ServiceProxy::EncryptFinal(const Id sessionId)
 #pragma region Private
 
 BytesReader* ServiceProxy::executeRequest(Abstractions::ServiceActionCode serviceActionCode, unsigned long& resultCode, const unsigned char* data, const unsigned int dataLength) {
-	if (!this->communicationInitialised) return nullptr;
-
+	if (!this->communicationInitialised) {
+		resultCode = (unsigned long)Abstractions::ReturnCode::CRYPTOKI_NOT_INITIALIZED;
+		return nullptr;	
+	}
 	Bytes clientRequest = data == nullptr ?
 		this->protocolDispatcher->CreateClientRequest(serviceActionCode) :
 		this->protocolDispatcher->CreateClientRequest(serviceActionCode, Bytes(data, dataLength));

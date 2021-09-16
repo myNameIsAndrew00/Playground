@@ -101,7 +101,14 @@ namespace Abstractions {
 
 			BytesReader* reader = this->executeRequest(actionCode, resultCode, requestBytes.GetBytes(), requestBytes.GetLength());
 
-			if (reader == nullptr) return ActionResult(resultCode);
+			if (reader == nullptr) 
+				return ActionResult(resultCode);
+			 
+			if (resultCode != (unsigned long)ReturnCode::OK) {
+				delete reader;
+				return ActionResult(resultCode);
+			}
+
 
 			ActionResult result = resultCallback(reader, resultCode);
 

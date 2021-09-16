@@ -95,6 +95,10 @@ namespace Service.Core
                 if (!dispatchResult.SessionCheckPassed)
                     return executor.GetEmptySessionResult(ExecutionResultCode.SESSION_HANDLE_INVALID);
 
+                //if the dispatcher doesn't closed the session in current request and the session is already closed
+                if (!dispatchResult.ClosedSession && dispatchResult.Session.Closed)
+                    return executor.GetEmptySessionResult(ExecutionResultCode.SESSION_CLOSED);
+
                 // initialise the invoked method and bind the parameters using the binder, if exists
                 MethodInfo method = executor.GetType().GetMethod(
                     name: dispatchResult.DispatchedAction.ToString(),

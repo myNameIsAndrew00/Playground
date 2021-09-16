@@ -23,8 +23,8 @@ namespace Service.Core.Infrastructure.Communication
         Dictionary<ulong, SessionType> sessions = new Dictionary<ulong, SessionType>();
 
         public DispatchResultType DispatchClientRequest(byte[] inputBytes)
-
         {
+            bool sessionClosed = false;
             ServiceActionCode requestedAction = (ServiceActionCode)inputBytes[0];
 
             int payloadOffset = 1;
@@ -42,7 +42,7 @@ namespace Service.Core.Infrastructure.Communication
                 sessions.TryGetValue(sessionId, out session);
 
                 if (requestedAction == ServiceActionCode.EndSession)
-                    removeSession(sessionId);
+                    sessionClosed = session.Close(this);
             }
 
             return new DispatchResultType()
@@ -50,7 +50,8 @@ namespace Service.Core.Infrastructure.Communication
                 DispatchedAction = requestedAction,
                 Payload = inputBytes.Skip(payloadOffset).ToArray(),
                 Session = session,
-                RequireSession = requireSession
+                RequireSession = requireSession,
+                ClosedSession = sessionClosed
             };
         }
 
@@ -65,6 +66,17 @@ namespace Service.Core.Infrastructure.Communication
             return resultBytes;
         }
 
+        public bool CloseSession(ISession session)
+        {
+            if (sessions.TryGetValue(session.Id, out SessionType dispatcherSession))
+            {
+                dispatcherSession.Dispose();
+                return true;
+            }
+
+            return false;
+        }
+
         #region Private
 
         private SessionType beginSession()
@@ -77,14 +89,7 @@ namespace Service.Core.Infrastructure.Communication
             return session;
         }
 
-        private void removeSession(ulong sessionId)
-        {
-            if (sessions.TryGetValue(sessionId, out SessionType session))
-                session.Dispose();
-
-            sessions.Remove(sessionId);
-        }
-
+     
         private void handleCommandByte(ServiceActionCode requestedAction, out bool requireSession, out SessionType createdSession)
         {
             createdSession = default;
@@ -109,6 +114,8 @@ namespace Service.Core.Infrastructure.Communication
 
 
         }
+
+  
 
 
         #endregion

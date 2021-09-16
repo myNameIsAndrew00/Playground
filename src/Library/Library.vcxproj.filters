@@ -149,5 +149,8 @@
     <ClInclude Include="include\TlvStructure.h">
       <Filter>Header Files\Abstractions\Structures</Filter>
     </ClInclude>
+    <ClInclude Include="include\ReturnCode.h">
+      <Filter>Header Files\Abstractions\Structures</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

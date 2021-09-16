@@ -29,6 +29,8 @@ namespace Service.Core.Execution
         /// </summary>
         public EncryptionContext RegisteredEncryptionContext { get; private set; }
 
+        public bool Closed { get; private set; } = false;
+
         public Session(ulong id)
         {
             this.Id = id;
@@ -39,6 +41,19 @@ namespace Service.Core.Execution
         {
             //todo: handle authentication
             Authenticated = false;
+            return false;
+        }
+
+
+        public bool Close(IAllowCloseSession sessionHandler)
+        {
+            if (this.Closed) return false;
+
+            if (sessionHandler.CloseSession(this))
+            {
+                Closed = true;
+                return true;
+            }
             return false;
         }
 
@@ -112,6 +127,8 @@ namespace Service.Core.Execution
         {
             foreach (var @object in sessionObjects)
                 @object.Value.Dispose();
+
+            sessionObjects.Clear();
 
             //todo: add disposing code here
             return;

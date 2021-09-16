@@ -48,6 +48,7 @@
     <ClInclude Include="include\pkcs11f.h" />
     <ClInclude Include="include\pkcs11t.h" />
     <ClInclude Include="include\PipeCommunicationResolver.h" />
+    <ClInclude Include="include\ReturnCode.h" />
     <ClInclude Include="include\ServiceActionCode.h" />
     <ClInclude Include="include\ServiceExecutionResult.h" />
     <ClInclude Include="include\ServiceProxy.h" />

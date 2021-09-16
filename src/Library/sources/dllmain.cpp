@@ -42,7 +42,8 @@ int main() {
 	auto initialiseResult = Token->Initialise();
 
 	auto createSessionResult = Token->CreateSession();
-	
+
+
 	CK_BYTE iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 					 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
 
@@ -73,7 +74,7 @@ int main() {
 	auto encryptInitResult = Token->EncryptInit(createSessionResult.GetValue(), createObjectResult.GetValue(), mechanismTemplate);
 	auto encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13);
 	encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13);
-
+	
 	auto endSessionResult = Token->EndSession(createSessionResult.GetValue());
 
 

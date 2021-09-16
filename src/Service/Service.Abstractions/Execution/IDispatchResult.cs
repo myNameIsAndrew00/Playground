@@ -27,7 +27,15 @@ namespace Service.Core.Abstractions.Execution
         /// </summary>
         ServiceActionCode DispatchedAction { get; init; }
 
+        /// <summary>
+        /// A bollean which indicate if the dispatched action requires action.
+        /// </summary>
         bool RequireSession { get; init; }
+
+        /// <summary>
+        /// A boolean which indicate if the dispatcher closed with success the session.
+        /// </summary>
+        bool ClosedSession { get; init; }
     }
      
 }
