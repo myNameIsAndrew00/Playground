@@ -1,34 +1,44 @@
 #include "..\include\TlvParser.h"
 #include "..\include\pkcs11.h";
+#include <algorithm>
+
 using namespace Infrastructure;
 
 
-Abstractions::Bytes TlvParser::ParsePkcs11Attributes(const CK_ATTRIBUTE* attributes, const int attributesCount)
+TlvParser::TlvParser() 
+	: reversedTypes(
+		{
+			CKA_VALUE_LEN,
+			CKA_KEY_TYPE
+		})
+{ 
+}
+
+
+std::list<Abstractions::TlvStructure> TlvParser::ParsePkcs11Attributes(const CK_ATTRIBUTE* attributes, const int attributesCount)
 {
-	Abstractions::Bytes result;
+	std::list<Abstractions::TlvStructure> result;
+
 	if (attributes == nullptr) return result;
 
 	int resultSize = 0;
 
 	for (int i = 0; i < attributesCount; i++) {
-		resultSize += 2 * sizeof(unsigned long);
-		resultSize += attributes[i].ulValueLen;
+		bool releaseData = false;
+		unsigned char* data = (unsigned char*)attributes[i].pValue;
+		 
+		if (reversedTypes.find(attributes[i].type) != reversedTypes.end()) {
+			data = new unsigned char[attributes[i].ulValueLen];
+			memcpy(data, attributes[i].pValue, attributes[i].ulValueLen);
+
+			std::reverse(data, data + attributes[i].ulValueLen);
+			
+			releaseData = true;
+		}
+		result.emplace_back(Abstractions::TlvStructure(attributes[i].type, data, attributes[i].ulValueLen));
+	
+		if (releaseData) delete[] data;
 	}
-
-	unsigned char* resultData = new unsigned char[resultSize];
-	int dataPointer = 0;
-
-	for (int i = 0; i < attributesCount; i++) {
-		memcpy(resultData + dataPointer, &attributes[i].type, sizeof(unsigned long));
-		dataPointer += sizeof(unsigned long);
-		memcpy(resultData + dataPointer, &attributes[i].ulValueLen, sizeof(unsigned long));
-		dataPointer += sizeof(unsigned long);
-		memcpy(resultData + dataPointer, attributes[i].pValue, attributes[i].ulValueLen);
-		dataPointer += attributes[i].ulValueLen;		 
-	}
-
-
-	result.SetFromArray(resultData, resultSize);
-
-	return std::move(result);
+ 
+	return result;
 }

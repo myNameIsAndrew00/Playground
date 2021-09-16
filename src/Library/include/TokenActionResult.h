@@ -3,6 +3,8 @@
 #include <string>
 #include "pkcs11.h"
 #include "Bytes.h"
+#include "ReturnCode.h"
+
 
 namespace Abstractions {
 
@@ -10,21 +12,27 @@ namespace Abstractions {
 	template<typename Object>
 	class TokenActionResult {
 	public:
-		enum class Code {
-			OK = CKR_OK,
-			//handle more codes
-		};
+		
 
-		TokenActionResult(const Code code) {
+        TokenActionResult(unsigned long code) {
+            this->resultCode = (ReturnCode)code;
+        }
+
+		TokenActionResult(const ReturnCode code) {
 			this->resultCode = code;
 		}
 
-		TokenActionResult(const Code code, const Object& value) {
+		TokenActionResult(const ReturnCode code, const Object& value)
+            : resultCode(code), value(value){
 			this->resultCode = code;
-			this->value = std::move(value);
+			this->value = value;
 		}
 
-		const Code& GetCode() const {
+        TokenActionResult(const ReturnCode code, Object&& value)
+           : resultCode(code), value(std::move(value)){
+        }
+
+		const ReturnCode& GetCode() const {
 			return this->resultCode;
 		}
 
@@ -34,7 +42,7 @@ namespace Abstractions {
 
 	private:
 		Object value;
-		Code resultCode;
+		ReturnCode resultCode;
 	};
 
 
@@ -45,8 +53,9 @@ namespace Abstractions {
 	using GetManufacturerResult = TokenActionResult<std::string>;
 	using CreateSessionResult = TokenActionResult<unsigned long long>;
 	using EndSessionResult = TokenActionResult<bool>;
-	using CreateObjectResult = TokenActionResult<unsigned long>;
+	using CreateObjectResult = TokenActionResult<unsigned long long>;
 	using EncryptInitResult = TokenActionResult<bool>;
 	using EncryptResult = TokenActionResult<Bytes>;
-
+    using EncryptUpdateResult = TokenActionResult<Bytes>;
+    using EncryptFinalResult = TokenActionResult<Bytes>;
 }

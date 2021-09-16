@@ -4,8 +4,10 @@
 
 #include "TokenActionResult.h"
 
-namespace Abstractions {
+struct CK_ATTRIBUTE;
+struct CK_MECHANISM;
 
+namespace Abstractions {
 	/*Constants*/
 	static const char Manufacturer[] = "Pkcs11Playground";
 	static const char Description[] = "Pkcs 11 playground";
@@ -24,6 +26,11 @@ namespace Abstractions {
 		virtual GetManufacturerResult GetManufacturer() const = 0;
 		virtual CreateSessionResult CreateSession() const = 0;
 		virtual EndSessionResult EndSession(const unsigned long long) const = 0;
+		virtual CreateObjectResult CreateObject(const unsigned long long sessionId, CK_ATTRIBUTE* attributes, const int length) const = 0;
+		virtual EncryptInitResult EncryptInit(const unsigned long long sessionId, const unsigned long long objectId, const CK_MECHANISM* mechanism) const = 0;
+		virtual EncryptResult Encrypt(const unsigned long long sessionId, const unsigned char* data, const int length) const = 0;
+		virtual EncryptUpdateResult EncryptUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const = 0;
+		virtual EncryptFinalResult EncryptFinal(const unsigned long long sessionId) const = 0;
 
 		virtual ~IPkcs11Token() { }
 	};

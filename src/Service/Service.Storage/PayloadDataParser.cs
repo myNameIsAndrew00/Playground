@@ -108,8 +108,8 @@ namespace Service.Core.Storage
             IDataContainer container = (IDataContainer)Activator.CreateInstance(type);
 
             // parse the type.
-            container.Type = bytes.Skip(cursor).ToUInt32();
-            cursor += sizeof(uint);
+            container.Type = bytes.Skip(cursor).ToULong();
+            cursor += sizeof(ulong);
 
             // parse the value.
             uint dataLength = bytes.Skip(cursor).ToUInt32();

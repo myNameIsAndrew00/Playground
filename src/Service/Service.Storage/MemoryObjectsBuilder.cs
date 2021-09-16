@@ -26,7 +26,7 @@ namespace Service.Core.Storage
         private MemoryObjectsBuilder() { }
 
      
-        public bool Get(IEnumerable<IPkcs11AttributeDataContainer> attributes, out IMemoryObject createdObject, out ExecutionResultCode code)
+        public bool Get(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out IMemoryObject createdObject, out ExecutionResultCode code)
         {
             //todo: check unhandled attributes and better handling for codes
             //todo: check value of the attributes to be valid

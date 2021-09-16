@@ -96,6 +96,14 @@ namespace Service.Runtime
         {
             try
             {
+                int bytesCount = bytes.Count();
+
+                //if bytes count are not of size, padd with zeros
+                if(bytesCount < size)
+                {
+                    bytes = Enumerable.Range(0, size - bytesCount).Select(i => (byte)0).Concat(bytes);
+                }
+                    
                 byte[] parsingBytes = bytes.Take(size).ToArray();
                 if (BitConverter.IsLittleEndian) Array.Reverse(parsingBytes);
 

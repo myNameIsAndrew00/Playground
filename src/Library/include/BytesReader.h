@@ -27,12 +27,19 @@ namespace Abstractions {
 		/// <returns>Long peeked from buffer</returns>
 		long long PeekLong();
 
+		/// <summary>
+		/// Get all remaining bytes from the reader and move the cursor to the end.
+		/// </summary>
+		/// <returns>Bytes peeked from buffer</returns>
+		Bytes PeekBytes();
+
 		/// <summary>	 	
 		/// Get length bytes from reader and move to cursor to the next bytes available
 		/// <summary>
 		/// <param name="length">Number of bytes taken</param>
 		/// <returns>Bytes peeked from buffer</returns>
 		Bytes PeekBytes(unsigned int length);
+
 
 		/// <summary>
 		/// Reset the cursor to the first byte

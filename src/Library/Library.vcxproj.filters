@@ -87,6 +87,9 @@
     <ClCompile Include="sources\TlvParser.cpp">
       <Filter>Source Files\Infrastructure</Filter>
     </ClCompile>
+    <ClCompile Include="sources\TlvStructure.cpp">
+      <Filter>Source Files\Abstractions\Structures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\pkcs11.h">
@@ -142,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="include\TlvParser.h">
       <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TlvStructure.h">
+      <Filter>Header Files\Abstractions\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ReturnCode.h">
+      <Filter>Header Files\Abstractions\Structures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
