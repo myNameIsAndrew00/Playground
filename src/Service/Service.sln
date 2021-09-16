@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Playground", "Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Test", "Service.Test\Service.Test.csproj", "{045D1DF2-3382-4503-94B2-1BA2449F599B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.Abstractions", "Service.Abstractions\Service.Core.Abstractions.csproj", "{32DADA5E-F9BA-4E6F-A77B-112E21937E21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.Abstractions", "Service.Core.Abstractions\Service.Core.Abstractions.csproj", "{32DADA5E-F9BA-4E6F-A77B-112E21937E21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.DefinedTypes", "Storage.DefinedTypes\Service.Core.DefinedTypes.csproj", "{E7620D1A-58C2-4977-9F69-72384C555A48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.DefinedTypes", "Service.Core.DefinedTypes\Service.Core.DefinedTypes.csproj", "{E7620D1A-58C2-4977-9F69-72384C555A48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.Storage", "Service.Storage\Service.Core.Storage.csproj", "{653CB7DD-7ADF-4EF0-A1BF-4893C4226CB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.Storage", "Service.Core.Storage\Service.Core.Storage.csproj", "{653CB7DD-7ADF-4EF0-A1BF-4893C4226CB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.Communication", "Service.Core.Communication\Service.Core.Communication.csproj", "{7B8A8691-06AE-46AD-AD22-66117CEF138F}"
 EndProject

@@ -10,10 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Service.Abstractions\Service.Core.Abstractions.csproj" />
+    <ProjectReference Include="..\Service.Core.Abstractions\Service.Core.Abstractions.csproj" />
     <ProjectReference Include="..\Service.Core.Communication\Service.Core.Communication.csproj" />
-    <ProjectReference Include="..\Service.Storage\Service.Core.Storage.csproj" />
-    <ProjectReference Include="..\Storage.DefinedTypes\Service.Core.DefinedTypes.csproj" />
+    <ProjectReference Include="..\Service.Core.DefinedTypes\Service.Core.DefinedTypes.csproj" />
+    <ProjectReference Include="..\Service.Core.Storage\Service.Core.Storage.csproj" />
   </ItemGroup>
 
 </Project>
