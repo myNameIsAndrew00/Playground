@@ -47,42 +47,46 @@ bool ServiceProxy::DetachCurrentClient() {
 
 CreateSessionResult ServiceProxy::BeginSession()
 {
-	unsigned long resultCode = (unsigned long)Abstractions::CreateSessionResult::Code::OK;
+	return this->InvokeServer<CreateSessionResult>(
+		ServiceActionCode::BeginSession,
+		[]() {
+			return Bytes();
+		},
+		[](auto reader, auto code) {
+			unsigned long long result = reader->PeekLong();
 
-	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::BeginSession, resultCode, nullptr, 0);
-	if (reader == nullptr) return CreateSessionResult(Abstractions::CreateSessionResult::Code::GENERAL_ERROR, -1);
-
-	unsigned long long result = reader->PeekLong();
-
-	delete reader;
-	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OK, result);
+			return CreateSessionResult((CreateSessionResult::Code)code, result);
+		}
+		);
 }
 
 EndSessionResult ServiceProxy::EndSession(const Handler sessionId)
-{
-	unsigned long resultCode = (unsigned long)Abstractions::CreateSessionResult::Code::OK;
+{ 
+	return this->InvokeServer<EndSessionResult>(
+		ServiceActionCode::EndSession,
+		[sessionId]() {
+			return Bytes((const long long)sessionId);
+		},
+		[](auto reader, auto code) {
 
-	Bytes sessionIdBytes((const long long)sessionId);
-
-	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::EndSession, resultCode, sessionIdBytes.GetBytes(), sessionIdBytes.GetLength());
-	 
-	if (reader == nullptr) return EndSessionResult(Abstractions::EndSessionResult::Code::GENERAL_ERROR, false);
-
-	delete reader;
-	return EndSessionResult(Abstractions::EndSessionResult::Code::OK, true);
+			return EndSessionResult((EndSessionResult::Code)code, true);
+		}
+		); 
 }
 
 CreateObjectResult ServiceProxy::CreateObject(const Handler sessionId, const std::list<TlvStructure>& attributes) {
-	unsigned long resultCode = (unsigned long)Abstractions::CreateSessionResult::Code::OK;
+	return this->InvokeServer<CreateObjectResult>(
+		ServiceActionCode::CreateObject,
+		[attributes]() {
+			return Bytes(attributes);
+		},
+		[](auto reader, auto code) {
+			unsigned long long result = reader->PeekLong();
 
-	Bytes requestBytes = Bytes((const long long)sessionId).Append(Bytes(attributes));
-
-	BytesReader* reader = this->executeRequest(Abstractions::ServiceActionCode::CreateObject, resultCode, requestBytes.GetBytes(), requestBytes.GetLength());
-	 
-	if (reader == nullptr) CreateObjectResult(Abstractions::CreateObjectResult::Code::GENERAL_ERROR, 0ll);
-
-	unsigned long long result = reader->PeekLong();
-	return CreateSessionResult(Abstractions::CreateSessionResult::Code::OK, result);
+			return CreateObjectResult((CreateObjectResult::Code)code, result);
+		},
+		sessionId
+		);
 }
 
 

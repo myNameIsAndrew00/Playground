@@ -108,6 +108,10 @@ namespace Abstractions {
             VENDOR_DEFINED = CKR_VENDOR_DEFINED
 		};
 
+        TokenActionResult(unsigned long code) {
+            this->resultCode = (Code)code;
+        }
+
 		TokenActionResult(const Code code) {
 			this->resultCode = code;
 		}

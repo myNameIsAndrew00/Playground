@@ -38,6 +38,31 @@ namespace Abstractions {
 
 
 		Abstractions::BytesReader* executeRequest(Abstractions::ServiceActionCode code, unsigned long& resultCode, const unsigned char* data, const unsigned int dataLength);
+	 
+	 
+		#pragma region Server Invoke Template 
+		
+		template<typename ActionResult, typename CreateRequestBytesFunctor, typename CreateResultFunctor>
+		ActionResult InvokeServer(ServiceActionCode actionCode, CreateRequestBytesFunctor bytesCallback, CreateResultFunctor resultCallback, const Handler sessionId = 0) {
+			unsigned long resultCode;
+
+			Bytes requestBytes = sessionId == 0 ? 				
+				bytesCallback() : 
+				Bytes((long long)sessionId).Append(bytesCallback());
+
+			BytesReader* reader = this->executeRequest(actionCode, resultCode, requestBytes.GetBytes(), requestBytes.GetLength());
+
+			if (reader == nullptr) return ActionResult(resultCode);
+
+			ActionResult result = resultCallback(reader, resultCode);
+
+			delete reader;
+
+			return result;
+		}
+
+		#pragma endregion
+		 
 	};
 
 	using ServiceProxyReference = std::shared_ptr<ServiceProxy>;
