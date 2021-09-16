@@ -12,10 +12,10 @@ namespace Service.Test
     {
         private readonly DispatchResult encryptInitDispatchResult = new DispatchResult(ServiceActionCode.EncryptInit, new byte[] { 
                 /*first param*/
-                    /*expected uint*/ 0x00, 0x00, 0x00, 0x01,  
+                    /*expected ulong*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,  
                     
                 /*second param*/
-                    /*type*/          0x00, 0x00, 0x00, 0x01, 
+                    /*type*/          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 
                     /*length*/        0x00, 0x00, 0x00, 0x01,
                     /*value*/         0x05
             }, false);

@@ -10,7 +10,7 @@ namespace Service.Core.Abstractions.Storage
     /// <summary>
     /// Represents a class which handles in memory or persistent storage operations
     /// </summary>
-    public interface ITokenStorage : IPayloadDataParser
+    public interface ITokenStorage : IDataContainerBuilder
     {
         /// <summary>
         /// Use this method to create a pkcs11 object

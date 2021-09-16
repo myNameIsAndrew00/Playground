@@ -20,12 +20,14 @@ namespace Service.Core.Client
     /// </summary>
     public class TlvServiceExecutorModelBinder : IServiceExecutorModelBinder<DispatchResult, Session>
     {
-        public object[] GetMethodParameters(MethodInfo method, DispatchResult dispatcherResult, IPayloadDataParser parser)
+        private TlvPayloadDataParser tlvPayloadDataParser = new TlvPayloadDataParser();
+
+        public object[] GetMethodParameters(MethodInfo method, DispatchResult dispatcherResult, IDataContainerBuilder parser)
         {
             List<object> result = new List<object>();
              
             int cursor = 0;
-             
+
 
             foreach (ParameterInfo parameter in method.GetParameters())
             {
@@ -39,21 +41,35 @@ namespace Service.Core.Client
                 {
                     cursor += tryParseValueType(parsingBytes, parameter.ParameterType, out parameterBuilt);
                 }
-                //check if parameter is Pkcs11DataContainer 
+                
+                //check if parameter is DataContainer 
                 else if (parameter.ParameterType.Inherits(typeof(IDataContainer)))
-                    cursor += parser.CreatePkcs11DataContainer(
+                {
+                    cursor += tlvPayloadDataParser.TryParseTlvStructure(
                            bytes: parsingBytes,
-                           enumType: parameter.ParameterType.IsGenericType ? parameter.ParameterType.GenericTypeArguments[0] : null,
-                           out parameterBuilt);
-                //check if parameter is a list of Pkcs11DataContainer
+                           out TlvPayloadDataParser.TlvStructure tlvStructure);
+                    if (tlvStructure != null)
+                        parameterBuilt = parser.CreateDataContainer(
+                            tlvStructure.dataType,
+                            tlvStructure.bytes,
+                            parameter.ParameterType.IsGenericType ? parameter.ParameterType.GenericTypeArguments[0] : null);
+                }
+
+                //check if parameter is a list of DataContainer
                 else if (parameter.ParameterType.Inherits(typeof(IEnumerable)))
                 {
                     Type innerType = parameter.ParameterType.GenericTypeArguments.FirstOrDefault();
                     if (innerType.Inherits(typeof(IDataContainer)))
-                        cursor += parser.CreatePkcs11DataContainerCollection(
+                    {
+                        cursor += tlvPayloadDataParser.TryParseTlvStructureCollection(
                             bytes: parsingBytes,
-                            enumType: innerType.IsGenericType ? innerType.GenericTypeArguments[0] : null,
-                            out parameterBuilt);
+                            out List<TlvPayloadDataParser.TlvStructure> tlvStructureCollection);
+                        if (tlvStructureCollection != null)
+                            parameterBuilt = parser.CreateDataContainerCollection(
+                                 tlvStructureCollection.Select(item => (item.dataType, item.bytes)),
+                                 innerType.IsGenericType ? innerType.GenericTypeArguments[0] : null
+                                );
+                    }
                 }
 
                 if (parameterBuilt != null) result.Add(parameterBuilt);
@@ -90,9 +106,110 @@ namespace Service.Core.Client
                 parameterBuilt = 0;
                 return 0;
             }
-           
-           
 
         }
+    }
+
+
+    /// <summary>
+    /// Use this class to create data containers from bytes
+    /// </summary>
+    internal class TlvPayloadDataParser
+    {
+        public record TlvStructure(ulong dataType, byte[] bytes);
+
+        /// <summary>
+        /// Optain a pkcs11 attribute from an array of bytes
+        /// </summary>
+        /// <typeparam name="Type"></typeparam>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public TlvStructure ToTlvStructure(IEnumerable<byte> bytes)
+        {
+            TryParseTlvStructure(bytes, out TlvStructure output);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Optain a set of pkcs11 attributes container from an array of bytes 
+        /// </summary>
+        /// <param name="bytes">Bytes used to provide data</param>
+        /// <returns></returns>
+        public List<TlvStructure> ToTlvStructureCollection(IEnumerable<byte> bytes)
+        {
+            TryParseTlvStructureCollection(bytes, out List<TlvStructure> output);
+
+            return output;
+        }
+
+        public int TryParseTlvStructure(IEnumerable<byte> bytes, out TlvStructure output)
+        {
+            output = null;
+
+            if (bytes == null) return 0;
+
+            int cursor = 0;
+
+            try
+            { 
+                output = parseContainer(bytes, ref cursor);
+
+                return cursor;
+            }
+            catch
+            {
+                return cursor;
+            }
+        }
+
+        public int TryParseTlvStructureCollection(IEnumerable<byte> bytes, out List<TlvStructure> output)
+        {
+            output = null;
+            if (bytes == null) return 0;
+
+            int cursor = 0;
+            try
+            {
+                
+                List<TlvStructure> result = new List<TlvStructure>();
+
+                while (cursor < bytes.Count())
+                    result.Add(parseContainer(bytes, ref cursor));
+
+                output = result;
+                return cursor;
+            }
+            catch
+            {
+                return cursor;
+            }
+        }
+
+
+
+        #region Private
+
+        private TlvStructure parseContainer(IEnumerable<byte> bytes, ref int cursor)
+        { 
+            // parse the type.
+            ulong dataType = bytes.Skip(cursor).ToULong();
+            cursor += sizeof(ulong);
+
+            // parse the value.
+            uint dataLength = bytes.Skip(cursor).ToUInt32();
+            cursor += sizeof(uint);
+
+            // parse the data.
+            byte[] resultBytes = new byte[dataLength];
+            byte[] _bytes = bytes.Skip(cursor).Take((int)dataLength).ToArray();
+            Array.Copy(_bytes, resultBytes, _bytes.Length);
+
+            cursor += (int)dataLength;
+
+            return new TlvStructure(dataType, resultBytes);
+        }
+
+        #endregion
     }
 }

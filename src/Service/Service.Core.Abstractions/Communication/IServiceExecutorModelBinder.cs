@@ -20,6 +20,6 @@ namespace Service.Core.Abstractions.Communication
         /// <param name="method">Method dispatched</param>
         /// <param name="dispatcherResult">Result of the dispatch process execution</param>
         /// <returns></returns>
-        object[] GetMethodParameters(MethodInfo method, DispatchResultType dispatcherResult, IPayloadDataParser dataContainerParser);
+        object[] GetMethodParameters(MethodInfo method, DispatchResultType dispatcherResult, IDataContainerBuilder dataContainerParser);
     }
 }

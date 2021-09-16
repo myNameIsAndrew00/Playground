@@ -1,6 +1,8 @@
 ﻿using Service.Core.Abstractions.Storage;
 using Service.Core.DefinedTypes;
+using Service.Core.Storage.Memory;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,16 +15,42 @@ namespace Service.Core.Storage
     /// </summary>
     public class TokenStorage : ITokenStorage
     {
-        private PayloadDataParser dataParser = new PayloadDataParser();
+        public IDataContainer CreateDataContainer(ulong type, byte[] bytes, Type enumType)
+        {
+            Type containerType = enumType == null ? typeof(DataContainer) : typeof(DataContainer<>).MakeGenericType(enumType);
+
+            IDataContainer container = (IDataContainer)Activator.CreateInstance(containerType);
+
+            container.Type = type;
+            container.Value = bytes;
+
+            return container;
+        }
+
+        public IList CreateDataContainerCollection(IEnumerable<(ulong type, byte[] bytes)> values, Type enumType)
+        {
+            Type containerType = enumType == null ? typeof(DataContainer) : typeof(DataContainer<>).MakeGenericType(enumType);
+
+            Type resultType = typeof(List<>).MakeGenericType(containerType);
+
+            var result = (IList)Activator.CreateInstance(resultType);
+
+            foreach (var value in values)
+            {
+                IDataContainer container = (IDataContainer)Activator.CreateInstance(containerType);
+
+                container.Type = value.type;
+                container.Value = value.bytes;
+
+                result.Add(container);
+            }
+
+            return result;
+        }
 
         public bool CreateInMemoryObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out IMemoryObject createdObject, out ExecutionResultCode code)
         {
             return MemoryObjectsBuilder.Instance.Get(attributes, out createdObject, out code);
         }
-
-        public int CreatePkcs11DataContainer(IEnumerable<byte> bytes, Type enumType, out object output) => dataParser.TryParsePkcs11DataContainer(bytes, enumType, out output);
-        
-
-        public int CreatePkcs11DataContainerCollection(IEnumerable<byte> bytes, Type enumType, out object output) => dataParser.TryParsePkcs11DataContainerCollection(bytes, enumType, out output);
     }
 }
