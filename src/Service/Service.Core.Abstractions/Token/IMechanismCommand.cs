@@ -17,8 +17,8 @@ namespace Service.Core.Abstractions.Token
         /// Use this method to initialise an context initialisation data
         /// </summary>
         /// <param name="contextObject"></param>
-        /// <param name="initialisationBytes"></param>
-        void InitialiseContext(IMemoryObject contextObject, IMechanismDataContainer initialisationData, out ExecutionResultCode resultCode);
+        /// <param name="options"></param>
+        void InitialiseContext(IMemoryObject contextObject, IMechanismOptions options, out ExecutionResultCode resultCode);
 
         /// <summary>
         /// Execute the mechanism implemented by this object

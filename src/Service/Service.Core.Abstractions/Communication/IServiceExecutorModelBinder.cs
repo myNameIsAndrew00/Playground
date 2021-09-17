@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
+using Service.Core.Abstractions.Token;
 using Service.Core.DefinedTypes;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,6 @@ namespace Service.Core.Abstractions.Communication
         /// </summary>
         /// <param name="dataContainer">Data container which provides the bytes</param>
         /// <returns></returns>
-        IMechanismDataContainer CreateMechanismModel(IDataContainer<Pkcs11Mechanism> dataContainer, IMechanismDataContainerBuilder builder);
+        IMechanismOptions CreateMechanismModel(IDataContainer<Pkcs11Mechanism> dataContainer, IMechanismOptionsBuilder builder);
     }
 }

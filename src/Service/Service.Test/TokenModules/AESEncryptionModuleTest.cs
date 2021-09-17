@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Storage;
 using Service.Core.DefinedTypes;
+using Service.Core.Storage.Mechanism;
 using Service.Core.Storage.Memory;
 using Service.Core.Token.Encryption;
 using System;
@@ -41,7 +42,7 @@ namespace Service.Test.TokenModules
                 new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE_LEN, Value = keyLength },
             });
 
-            MechanismDataContainer mechanism = new MechanismDataContainer( new DataContainer<Pkcs11Mechanism>()
+            AesMechanismOptions mechanism = new AesMechanismOptions( new DataContainer<Pkcs11Mechanism>()
             {
                 Type = Pkcs11Mechanism.AES_ECB,
                 Value = iv
@@ -74,7 +75,7 @@ namespace Service.Test.TokenModules
                 new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE_LEN, Value = keyLength }
             });
 
-            MechanismDataContainer mechanism = new MechanismDataContainer(new DataContainer<Pkcs11Mechanism>()
+            AesMechanismOptions mechanism = new AesMechanismOptions(new DataContainer<Pkcs11Mechanism>()
             {
                 Type = Pkcs11Mechanism.AES_ECB,
                 Value = iv

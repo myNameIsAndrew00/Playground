@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Service.Core.Abstractions\Service.Core.Abstractions.csproj" />
+    <ProjectReference Include="..\Service.Core.DefinedTypes\Service.Core.DefinedTypes.csproj" />
+    <ProjectReference Include="..\Service.Runtime\Service.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -37,8 +37,6 @@ namespace Service.Core.Execution
 
         public bool RequireSession { get; init; }
 
-        public bool SessionCheckPassed => (Session == null && !RequireSession) || (Session != null);
-
   
         public Session Session { get; init; }
 

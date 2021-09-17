@@ -1,5 +1,8 @@
 ﻿using Service.Core.Abstractions.Storage;
+using Service.Core.Abstractions.Token;
+using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.DefinedTypes;
+using Service.Core.Storage.Mechanism;
 using Service.Core.Storage.Memory;
 using System;
 using System.Collections;
@@ -53,9 +56,14 @@ namespace Service.Core.Storage
             return MemoryObjectsBuilder.Instance.Get(attributes, out createdObject, out code);
         }
 
-        public IMechanismDataContainer GetDefault(IDataContainer<Pkcs11Mechanism> dataContainer)
+        public IAesMechanismOptions GetAes(IDataContainer<Pkcs11Mechanism> dataContainer)
         {
-            return new MechanismDataContainer(dataContainer);
+            return new AesMechanismOptions(dataContainer);
+        }
+
+        public IMechanismOptions GetDefault(IDataContainer<Pkcs11Mechanism> dataContainer)
+        {
+            return new MechanismOptions(dataContainer);
         }
     }
 }

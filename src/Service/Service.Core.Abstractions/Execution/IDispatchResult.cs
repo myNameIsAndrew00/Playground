@@ -33,6 +33,11 @@ namespace Service.Core.Abstractions.Execution
         bool RequireSession { get; init; }
 
         /// <summary>
+        /// A boolean which specify if the session check passed
+        /// </summary>
+        bool SessionCheckPassed => (Session == null && !RequireSession) || (Session != null);
+
+        /// <summary>
         /// A boolean which indicate if the dispatcher closed with success the session.
         /// </summary>
         bool ClosedSession { get; init; }

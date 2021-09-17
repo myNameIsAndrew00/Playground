@@ -12,7 +12,7 @@ namespace Service.Core.Token.Encryption
     /// <summary>
     /// Represents a base class for aes encrypt mechanism command objects
     /// </summary>
-    internal abstract class AESEncryptMechanismCommand : AESMechanismCommand
+    public abstract class AESEncryptMechanismCommand : AESMechanismCommand
     {
         protected override Func<AesManaged, ICryptoTransform> GetCryptor => (aesContext) => aesContext.CreateEncryptor();
 

@@ -8,6 +8,8 @@ using Service.Core.Infrastructure.Communication;
 using Service.Core.Storage;
 using Service.Core.Token;
 using Service.Core.Token.Encryption;
+using Service.Core.Token.Hashing;
+using Service.Core.Token.Signing;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -64,7 +66,7 @@ namespace Service.Core
         public static IPkcs11Server CreateSocketServer<Executor>(string address, int port)
             where Executor : IServiceExecutor<DispatchResult, Session>, new()
         {
-            return new Server<Executor>(
+            return new Server<Executor, DispatchResult, Session>(
                 new SocketCommunicationResolver<DispatchResult, Session>(
                     address: address,
                     port: port,

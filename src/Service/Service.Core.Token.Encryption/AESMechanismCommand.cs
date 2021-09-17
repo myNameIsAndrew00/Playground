@@ -1,7 +1,6 @@
 ﻿using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.DefinedTypes;
-using Service.Core.Storage.Memory;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,7 @@ namespace Service.Core.Token.Encryption
     /// <summary>
     /// Represents a base class for aes mechanism command objects
     /// </summary>
-    internal abstract class AESMechanismCommand : IMechanismCommand
+    public abstract class AESMechanismCommand : IMechanismCommand
     {        
 
         protected readonly HashSet<uint> allowedKeySizes = new HashSet<uint> { 128, 192, 256 };
@@ -29,7 +28,7 @@ namespace Service.Core.Token.Encryption
         public abstract Pkcs11Mechanism MechanismType { get; }
 
         /// <summary>
-        /// Execute the aes encryption.
+        /// Execute the aes encryption. Expects an encryption context as parameter.
         /// </summary>
         /// <param name="contextObject"></param>
         /// <param name="data"></param>
@@ -90,7 +89,7 @@ namespace Service.Core.Token.Encryption
         /// <param name="contextObject"></param>
         /// <param name="initialisationBytes">An array of bytes representing the IV. Must be of length 16</param>
         /// <param name="resultCode"></param>
-        public virtual void InitialiseContext(IMemoryObject contextObject, IMechanismDataContainer initialisationData, out ExecutionResultCode resultCode)
+        public virtual void InitialiseContext(IMemoryObject contextObject, IMechanismOptions initialisationData, out ExecutionResultCode resultCode)
         {
             EncryptionContext encryptionContext = contextObject as EncryptionContext;
 
@@ -104,17 +103,7 @@ namespace Service.Core.Token.Encryption
             {
                 resultCode = ExecutionResultCode.KEY_TYPE_INCONSISTENT;
                 return;
-            }
-
-            //todo: initialisayion bytes may be a complex structure and not IV.
-            // iv must be of 16 bytes length
-            if (initialisationData.Data.Value.Length != 16)
-            {
-                resultCode = ExecutionResultCode.MECHANISM_PARAM_INVALID;
-                return;
-            }
-
-            encryptionContext.IV = initialisationData.Data.Value;
+            } 
 
             resultCode = ExecutionResultCode.OK;
         }

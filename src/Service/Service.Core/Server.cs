@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
@@ -20,20 +21,22 @@ namespace Service.Core
     /// <summary>
     /// A class which can handle received messages from pkcs11 clients
     /// </summary>
-    public abstract class Server : IPkcs11Server<DispatchResult, Session>
+    public abstract class Server<DispatchResultType, SessionType> : IPkcs11Server<DispatchResultType, SessionType>
+        where DispatchResultType : IDispatchResult<SessionType>
+        where SessionType : ISession
     {
         private ModuleFactory moduleCollection;
 
         private ITokenStorage tokenStorage;
 
 
-        private IServiceCommunicationResolver<DispatchResult, Session> resolver;
+        private IServiceCommunicationResolver<DispatchResultType, SessionType> resolver;
 
-        public IServiceCommunicationResolver<DispatchResult, Session> Resolver => resolver;
+        public IServiceCommunicationResolver<DispatchResultType, SessionType> Resolver => resolver;
 
-        public abstract IServiceExecutor<DispatchResult, Session> CreateExecutor();
+        public abstract IServiceExecutor<DispatchResultType, SessionType> CreateExecutor();
 
-        internal Server(IServiceCommunicationResolver<DispatchResult, Session> resolver)
+        internal Server(IServiceCommunicationResolver<DispatchResultType, SessionType> resolver)
         {
             this.resolver = resolver;
             moduleCollection = new ModuleFactory();
@@ -79,10 +82,10 @@ namespace Service.Core
 
         #region Private
 
-        private IExecutionResult onCommunicationCreated(DispatchResult dispatchResult)
+        private IExecutionResult onCommunicationCreated(DispatchResultType dispatchResult)
         {
             // create an instance of the executor
-            IServiceExecutor<DispatchResult, Session> executor = CreateExecutor();
+            IServiceExecutor<DispatchResultType, SessionType> executor = CreateExecutor();
 
             // initialise the executor
             executor.SetDispatcherResult(dispatchResult);
@@ -140,13 +143,15 @@ namespace Service.Core
     /// A class which can handle received messages from pkcs11 clients
     /// </summary>
     /// <typeparam name="Executor">Executor which handle client requests. For now only one executor is allowed</typeparam>
-    internal class Server<Executor> : Server
-        where Executor : IServiceExecutor<DispatchResult, Session>, new()
+    internal class Server<Executor, DispatchResultType, SessionType> : Server<DispatchResultType, SessionType>
+        where Executor : IServiceExecutor<DispatchResultType, SessionType>, new()
+        where DispatchResultType : IDispatchResult<SessionType>
+        where SessionType : ISession
     {
-        internal Server(IServiceCommunicationResolver<DispatchResult, Session> resolver) : base(resolver)
+        internal Server(IServiceCommunicationResolver<DispatchResultType, SessionType> resolver) : base(resolver)
         {
         }
 
-        public override IServiceExecutor<DispatchResult, Session> CreateExecutor() => new Executor();
+        public override IServiceExecutor<DispatchResultType, SessionType> CreateExecutor() => new Executor();
     }
 }

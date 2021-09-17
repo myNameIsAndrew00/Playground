@@ -1,6 +1,7 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
+using Service.Core.Abstractions.Token;
 using Service.Core.DefinedTypes;
 using Service.Core.Execution;
 using Service.Core.Storage.Memory;
@@ -23,10 +24,19 @@ namespace Service.Core.Client
     {
         private TlvPayloadDataParser tlvPayloadDataParser = new TlvPayloadDataParser();
 
-        public IMechanismDataContainer CreateMechanismModel(IDataContainer<Pkcs11Mechanism> dataContainer, IMechanismDataContainerBuilder builder)
+        public IMechanismOptions CreateMechanismModel(IDataContainer<Pkcs11Mechanism> dataContainer, IMechanismOptionsBuilder builder)
         { 
-            //todo: parse tlv data from dataContainer, improve builder interface
-            return builder.GetDefault(dataContainer);
+            switch (dataContainer.Type)
+            {
+                case Pkcs11Mechanism.AES_CBC:
+                case Pkcs11Mechanism.AES_CFB1:
+                case Pkcs11Mechanism.AES_ECB:
+                case Pkcs11Mechanism.AES_OFB:                
+                    return builder.GetAes(dataContainer);
+                default:
+                    return builder.GetDefault(dataContainer);
+
+            }
         }
 
         public object[] GetMethodParametersModels(MethodInfo method, DispatchResult dispatcherResult, IDataContainerBuilder builder)

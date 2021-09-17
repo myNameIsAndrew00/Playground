@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Service.Core.Storage\Service.Core.Storage.csproj" />
+    <ProjectReference Include="..\Service.Core.Token.Encryption\Service.Core.Token.Encryption.csproj" />
+    <ProjectReference Include="..\Service.Core.Token.Hashing\Service.Core.Token.Hashing.csproj" />
+    <ProjectReference Include="..\Service.Core.Token.Signing\Service.Core.Token.Signing.csproj" />
     <ProjectReference Include="..\Service.Core\Service.Core.csproj" />
   </ItemGroup>
 

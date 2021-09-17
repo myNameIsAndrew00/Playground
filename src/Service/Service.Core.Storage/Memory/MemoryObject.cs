@@ -38,42 +38,5 @@ namespace Service.Core.Storage.Memory
             }
         }
     }
-
-    /// <summary>
-    /// Represents a decorator class for Pkcs 11 memory objects
-    /// </summary>
-    public abstract class ContextDecorator : IMemoryObject
-    {
-        public IMemoryObject ObjectHandler { get; }
-
-        public ContextDecorator(IMemoryObject objectHandler)
-        {
-            this.ObjectHandler = objectHandler;
-            //todo: replace here
-        }
-
-        public IEnumerable<IDataContainer<Pkcs11Attribute>> Attributes
-        {
-            get => ObjectHandler.Attributes;
-            set => ObjectHandler.Attributes = value;
-        }
-
-        public void SetId(ulong id) => ObjectHandler.SetId(id);
-               
-        public ulong Id => ObjectHandler.Id;
-               
-        public void Dispose()
-        {
-            ObjectHandler.Dispose();
-        }
-
-        public IDataContainer<Pkcs11Attribute> this[Pkcs11Attribute type]
-        {
-            get
-            {
-                return ObjectHandler[type];
-            }
-        }
-
-    }
+     
 }

@@ -3,7 +3,6 @@ using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.DefinedTypes;
 using Service.Core.Storage;
-using Service.Core.Storage.Memory;
 using Service.Runtime;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace Service.Core.Token.Encryption
     /// <summary>
     /// Default implementation for encryption handler interface
     /// </summary>
-    internal class EncryptionModule : IEncryptionModule 
+    public class EncryptionModule : IEncryptionModule 
     {
         private IMemoryObject context;
 
@@ -74,7 +73,7 @@ namespace Service.Core.Token.Encryption
         }
 
         public IMemoryObject Initialise<MechanismContainer>(MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
-            where MechanismContainer : IMechanismDataContainer
+            where MechanismContainer : IMechanismOptions
         {
             //check if attribute encrypt is set
             if (!context.IsEncrypt())
@@ -91,7 +90,7 @@ namespace Service.Core.Token.Encryption
                 //initialise the context using the given command
                 result.MechanismCommand.InitialiseContext(
                     contextObject: result,
-                    initialisationData: mechanism,
+                    options: mechanism,
                     out executionResultCode
                     );
 

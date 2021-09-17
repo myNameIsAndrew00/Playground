@@ -9,8 +9,10 @@ using System.Text;
 namespace Service.Core.Abstractions.Communication
 {
     /// <summary>
-    /// Provide methods to execute service actions.
-    /// Other optional methods can be contained which have names of values contained by ServiceActionCode enum.
+    /// This interface provide methods to execute service actions.
+    /// An executor instance must handle and parse the parameters received after the request dispatch.
+    /// 
+    /// Optionaly, other methods which have names of values contained by ServiceActionCode enum, can be implemented.
     /// If a optional method is called, but it is not implemented by executor, service will return not implemented error code.
     /// </summary>
     public interface IServiceExecutor<DispatchResultType, SessionType> 
