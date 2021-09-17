@@ -107,7 +107,7 @@ namespace Service.Core
                 if (method == null)
                     return executor.GetEmptySessionResult(ExecutionResultCode.FUNCTION_NOT_SUPPORTED);
                 
-                object[] methodParameters = executor.ModelBinder?.GetMethodParameters(method, dispatchResult, tokenStorage);
+                object[] methodParameters = executor.ModelBinder?.GetMethodParametersModels(method, dispatchResult, tokenStorage);
 
                 // invoke the method and get the execution result
                 IExecutionResult executionResult = (IExecutionResult)method.Invoke(executor, methodParameters);

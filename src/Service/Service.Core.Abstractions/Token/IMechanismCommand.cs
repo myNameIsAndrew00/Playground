@@ -18,7 +18,7 @@ namespace Service.Core.Abstractions.Token
         /// </summary>
         /// <param name="contextObject"></param>
         /// <param name="initialisationBytes"></param>
-        void InitialiseContext(IMemoryObject contextObject, byte[] initialisationBytes, out ExecutionResultCode resultCode);
+        void InitialiseContext(IMemoryObject contextObject, IMechanismDataContainer initialisationData, out ExecutionResultCode resultCode);
 
         /// <summary>
         /// Execute the mechanism implemented by this object

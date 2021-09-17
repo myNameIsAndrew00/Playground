@@ -30,7 +30,7 @@ namespace Service.Test
             TlvServiceExecutorModelBinder binder = new TlvServiceExecutorModelBinder();
 
             //action
-            var objects = binder.GetMethodParameters(method, dispatchResult, new TokenStorage());
+            var objects = binder.GetMethodParametersModels(method, dispatchResult, new TokenStorage());
 
             //assert
             Assert.Equal(2, objects.Length);

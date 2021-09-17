@@ -90,7 +90,7 @@ namespace Service.Core.Token.Encryption
         /// <param name="contextObject"></param>
         /// <param name="initialisationBytes">An array of bytes representing the IV. Must be of length 16</param>
         /// <param name="resultCode"></param>
-        public void InitialiseContext(IMemoryObject contextObject, byte[] initialisationBytes, out ExecutionResultCode resultCode)
+        public virtual void InitialiseContext(IMemoryObject contextObject, IMechanismDataContainer initialisationData, out ExecutionResultCode resultCode)
         {
             EncryptionContext encryptionContext = contextObject as EncryptionContext;
 
@@ -108,13 +108,13 @@ namespace Service.Core.Token.Encryption
 
             //todo: initialisayion bytes may be a complex structure and not IV.
             // iv must be of 16 bytes length
-            if (initialisationBytes.Length != 16)
+            if (initialisationData.Data.Value.Length != 16)
             {
                 resultCode = ExecutionResultCode.MECHANISM_PARAM_INVALID;
                 return;
             }
 
-            encryptionContext.IV = initialisationBytes;
+            encryptionContext.IV = initialisationData.Data.Value;
 
             resultCode = ExecutionResultCode.OK;
         }

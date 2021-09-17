@@ -74,7 +74,7 @@ namespace Service.Core.Token.Encryption
         }
 
         public IMemoryObject Initialise<MechanismContainer>(MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
-            where MechanismContainer : IDataContainer<Pkcs11Mechanism>
+            where MechanismContainer : IMechanismDataContainer
         {
             //check if attribute encrypt is set
             if (!context.IsEncrypt())
@@ -84,14 +84,14 @@ namespace Service.Core.Token.Encryption
             }
 
             //check if mechanism is allowed for this module
-            if (this.storedMechanisms.ContainsKey(mechanism.Type))
+            if (this.storedMechanisms.ContainsKey(mechanism.Data.Type))
             { 
-                EncryptionContext result = new EncryptionContext(this.storedMechanisms[mechanism.Type], this.context);
+                EncryptionContext result = new EncryptionContext(this.storedMechanisms[mechanism.Data.Type], this.context);
 
                 //initialise the context using the given command
                 result.MechanismCommand.InitialiseContext(
                     contextObject: result,
-                    initialisationBytes: mechanism.Value,
+                    initialisationData: mechanism,
                     out executionResultCode
                     );
 

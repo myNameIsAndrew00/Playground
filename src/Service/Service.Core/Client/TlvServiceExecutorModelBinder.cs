@@ -1,6 +1,7 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
+using Service.Core.DefinedTypes;
 using Service.Core.Execution;
 using Service.Core.Storage.Memory;
 using Service.Runtime;
@@ -22,7 +23,13 @@ namespace Service.Core.Client
     {
         private TlvPayloadDataParser tlvPayloadDataParser = new TlvPayloadDataParser();
 
-        public object[] GetMethodParameters(MethodInfo method, DispatchResult dispatcherResult, IDataContainerBuilder parser)
+        public IMechanismDataContainer CreateMechanismModel(IDataContainer<Pkcs11Mechanism> dataContainer, IMechanismDataContainerBuilder builder)
+        { 
+            //todo: parse tlv data from dataContainer, improve builder interface
+            return builder.GetDefault(dataContainer);
+        }
+
+        public object[] GetMethodParametersModels(MethodInfo method, DispatchResult dispatcherResult, IDataContainerBuilder builder)
         {
             List<object> result = new List<object>();
              
@@ -49,7 +56,7 @@ namespace Service.Core.Client
                            bytes: parsingBytes,
                            out TlvPayloadDataParser.TlvStructure tlvStructure);
                     if (tlvStructure != null)
-                        parameterBuilt = parser.CreateDataContainer(
+                        parameterBuilt = builder.CreateDataContainer(
                             tlvStructure.dataType,
                             tlvStructure.bytes,
                             parameter.ParameterType.IsGenericType ? parameter.ParameterType.GenericTypeArguments[0] : null);
@@ -65,7 +72,7 @@ namespace Service.Core.Client
                             bytes: parsingBytes,
                             out List<TlvPayloadDataParser.TlvStructure> tlvStructureCollection);
                         if (tlvStructureCollection != null)
-                            parameterBuilt = parser.CreateDataContainerCollection(
+                            parameterBuilt = builder.CreateDataContainerCollection(
                                  tlvStructureCollection.Select(item => (item.dataType, item.bytes)),
                                  innerType.IsGenericType ? innerType.GenericTypeArguments[0] : null
                                 );

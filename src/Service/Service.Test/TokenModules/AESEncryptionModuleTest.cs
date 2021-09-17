@@ -41,11 +41,11 @@ namespace Service.Test.TokenModules
                 new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE_LEN, Value = keyLength },
             });
 
-            DataContainer<Pkcs11Mechanism> mechanism = new DataContainer<Pkcs11Mechanism>()
+            MechanismDataContainer mechanism = new MechanismDataContainer( new DataContainer<Pkcs11Mechanism>()
             {
                 Type = Pkcs11Mechanism.AES_ECB,
                 Value = iv
-            };
+            });
 
             // act and assert
             //Test 1: invalid attributes for context
@@ -74,12 +74,12 @@ namespace Service.Test.TokenModules
                 new Pkcs11AttributeContainer(){ Type = Pkcs11Attribute.VALUE_LEN, Value = keyLength }
             });
 
-            DataContainer<Pkcs11Mechanism> mechanism = new DataContainer<Pkcs11Mechanism>()
+            MechanismDataContainer mechanism = new MechanismDataContainer(new DataContainer<Pkcs11Mechanism>()
             {
                 Type = Pkcs11Mechanism.AES_ECB,
                 Value = iv
-            };
-            
+            });
+
             //Pretest - initialisation
             EncryptionModule encryptionModule = new EncryptionModule(contextObject);
             encryptionModule.SetMechanism(new AESECBEncryptMechanismCommand());

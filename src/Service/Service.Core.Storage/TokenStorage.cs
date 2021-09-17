@@ -52,5 +52,10 @@ namespace Service.Core.Storage
         {
             return MemoryObjectsBuilder.Instance.Get(attributes, out createdObject, out code);
         }
+
+        public IMechanismDataContainer GetDefault(IDataContainer<Pkcs11Mechanism> dataContainer)
+        {
+            return new MechanismDataContainer(dataContainer);
+        }
     }
 }

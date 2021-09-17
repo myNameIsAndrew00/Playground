@@ -18,7 +18,7 @@ namespace Service.Core.Abstractions.Token.Encryption
         /// <param name="executionResultCode">Result code. Ok code is returned if handler was initialised with success</param>
         /// <returns>An object representing the context which can be used to do encryption</returns>
         IMemoryObject Initialise<MechanismContainer>(MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
-            where MechanismContainer : IDataContainer<Pkcs11Mechanism>;
+            where MechanismContainer : IMechanismDataContainer;
 
         /// <summary>
         /// Use this method to encrypt data
