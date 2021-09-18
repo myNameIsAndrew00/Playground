@@ -2,17 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Service.Core.Abstractions.Communication
 {
     /// <summary>
     /// Resolve the communication between clients and service
     /// </summary>
-    public interface IServiceCommunicationResolver<DispatchResultType,SessionType>
+    public interface IServiceCommunicationResolver<DispatchResultType,SessionType> : IDisposable
         where DispatchResultType : IDispatchResult<SessionType>
         where SessionType : ISession
     {
-        void Listen();
+        /// <summary>
+        /// Start resolver listening for connections
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task Listen(CancellationToken cancellationToken);
 
         /// <summary>
         /// An event which will trigger when a communication with a client is estanblished

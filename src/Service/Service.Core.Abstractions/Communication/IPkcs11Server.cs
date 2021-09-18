@@ -10,12 +10,17 @@ using System.Text;
 
 namespace Service.Core.Abstractions.Communication
 {
-    public interface IPkcs11Server  
+    public interface IPkcs11Server : IDisposable 
     {
         /// <summary>
         /// Enable server instance to wait for listening client requests.
         /// </summary>
         void Start();
+
+        /// <summary>
+        /// Triger server instance to stop listening
+        /// </summary>
+        void Stop();
 
         /// <summary>
         /// Set the server storage module

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Service.Worker
 {
-    public class Worker : BackgroundService
+    public class Worker : BackgroundService, IDisposable
     {
         private readonly IPkcs11Server server;
 
@@ -19,13 +19,28 @@ namespace Service.Worker
             this.server = server;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             server.Start();
 
-            while (!stoppingToken.IsCancellationRequested)
-            { 
-            }
+            return Task.Run(() =>
+           {
+               while (!stoppingToken.IsCancellationRequested)
+               {
+               }
+           });
+        }
+
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            server.Stop();
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            server.Dispose();
         }
     }
 }

@@ -64,12 +64,12 @@ namespace Service.Core.Token.Encryption
                 {
                     using (CryptoStream cryptoStream = new CryptoStream(memoryStream, GetCryptor(aesContext), CryptoStreamMode.Write))
                     {
-                        using (StreamWriter writer = new StreamWriter(cryptoStream))
-                        {
-                            writer.Write(data);
-                        }
-                        return memoryStream.ToArray();
+                        cryptoStream.Write(data);
+                        cryptoStream.Flush();
                     }
+
+                    memoryStream.Flush();
+                    return memoryStream.ToArray();
                 }
             }
         }

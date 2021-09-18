@@ -15,6 +15,8 @@ using System.Diagnostics;
 using System.IO.Pipes;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Service.Core
 {
@@ -25,30 +27,43 @@ namespace Service.Core
         where DispatchResultType : IDispatchResult<SessionType>
         where SessionType : ISession
     {
+        private bool disposed;
+        private Task listeningTask;
+
         private ModuleFactory moduleCollection;
 
+        private CancellationTokenSource listenTaskTokenSource;
+
         private ITokenStorage tokenStorage;
+         
 
-
-        private IServiceCommunicationResolver<DispatchResultType, SessionType> resolver;
-
-        public IServiceCommunicationResolver<DispatchResultType, SessionType> Resolver => resolver;
+        public IServiceCommunicationResolver<DispatchResultType, SessionType> Resolver { get; }
 
         public abstract IServiceExecutor<DispatchResultType, SessionType> CreateExecutor();
 
         internal Server(IServiceCommunicationResolver<DispatchResultType, SessionType> resolver)
         {
-            this.resolver = resolver;
+            this.disposed = false;
+            this.Resolver = resolver;
             moduleCollection = new ModuleFactory();
+
+            Resolver.OnCommunicationCreated += onCommunicationCreated;
+            Resolver.OnClientConnectionError += onClientConnectionError;
+            Resolver.OnRequestHandlingError += onRequestHandlingError;
         }
 
         public void Start()
         {
-            resolver.OnCommunicationCreated += onCommunicationCreated;
-            resolver.OnClientConnectionError += onClientConnectionError;
-            resolver.OnRequestHandlingError += onRequestHandlingError;
+            if (disposed) return;
 
-            resolver.Listen();
+            listenTaskTokenSource = new CancellationTokenSource();
+           
+            listeningTask = Resolver.Listen(listenTaskTokenSource.Token);
+        }
+
+        public void Stop()
+        {
+            listenTaskTokenSource.Cancel(); 
         }
 
         public IPkcs11Server SetStorage(ITokenStorage storage) { this.tokenStorage = storage; return this; }
@@ -76,6 +91,14 @@ namespace Service.Core
         {
             moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as IMemoryObject));
             return this;
+        }
+
+        public void Dispose()
+        {
+            if (disposed) return;
+            
+            this.Resolver.Dispose();
+            disposed = true;
         }
 
 

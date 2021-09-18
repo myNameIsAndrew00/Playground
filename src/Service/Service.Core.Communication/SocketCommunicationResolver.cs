@@ -8,6 +8,7 @@ using System.IO.Pipes;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Service.Core.Communication.Infrastructure
@@ -20,6 +21,8 @@ namespace Service.Core.Communication.Infrastructure
         where DispatchResultType : IDispatchResult<SessionType>
         where SessionType : ISession
     {
+        private bool disposed;
+
         ///Handles maximum number of bytes which can be read from a client at once before keep them in memory
         private const int RECEIVING_BUFFER_SIZE = 4096;
 
@@ -28,7 +31,7 @@ namespace Service.Core.Communication.Infrastructure
 
         ///Represents the value which will trigger server to close connection
         private const int CONNECTION_CLOSE_TRIGGER = -1;
-         
+
 
         private TcpListener server;
         private byte[] receivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
@@ -43,6 +46,8 @@ namespace Service.Core.Communication.Infrastructure
 
         public SocketCommunicationResolver(string address, int port, IServiceProtocolDispatcher<DispatchResultType, SessionType> dispatcher)
         {
+            this.disposed = false;
+
             this.Dispatcher = dispatcher;
 
             IPAddress addressObject = IPAddress.Parse(address);
@@ -50,26 +55,39 @@ namespace Service.Core.Communication.Infrastructure
             server = new TcpListener(addressObject, port);
         }
 
-        public void Listen()
+        public Task Listen(CancellationToken cancellationToken)
         {
+            if (disposed) throw new ObjectDisposedException("SocketCommunicationResolver", "SocketCommunicationResolver is disposed");
+
+            cancellationToken.Register(() =>
+            {
+                server.Stop();
+            });
+
             server.Start();
 
-            while (true)
+            return Task.Run(() =>
             {
-                TcpClient client = server.AcceptTcpClient();
-
-                Task.Run(() =>
+                while (true)
                 {
-                    try
+                    if (cancellationToken.IsCancellationRequested)
+                        break;
+
+                    TcpClient client = server.AcceptTcpClient();
+
+                    Task.Run(() =>
                     {
-                        handleClient(client);
-                    }
-                    catch(Exception exception)
-                    {
-                        OnClientConnectionError?.Invoke(exception);
-                    }
-                });
-            }
+                        try
+                        {
+                            handleClient(client);
+                        }
+                        catch (Exception exception)
+                        {
+                            OnClientConnectionError?.Invoke(exception);
+                        }
+                    });
+                }
+            });
         }
 
 
@@ -78,7 +96,7 @@ namespace Service.Core.Communication.Infrastructure
         private void handleClient(TcpClient client)
         {
             NetworkStream clientStream = client.GetStream();
-            
+
             while (true)
             {
                 int handledBytesCount = 0;
@@ -108,10 +126,10 @@ namespace Service.Core.Communication.Infrastructure
                         byte[] returnBytes = buildReturnBytes(executionResultBytes);
 
                         clientStream.Write(returnBytes, 0, returnBytes.Length);
-                    } 
+                    }
                     catch (Exception exception)
-                    { 
-                        OnRequestHandlingError?.Invoke(exception); 
+                    {
+                        OnRequestHandlingError?.Invoke(exception);
                     }
                 }
             }
@@ -134,19 +152,27 @@ namespace Service.Core.Communication.Infrastructure
             if (BitConverter.IsLittleEndian) Array.Reverse(entirePacketSize);
 
             return BitConverter.ToInt32(entirePacketSize, 0);
-        } 
+        }
 
         private byte[] buildReturnBytes(byte[] executionResultBytes)
-        { 
+        {
             int packetSize = executionResultBytes.Length;
 
             byte[] resultBytes = new byte[sizeof(int) + packetSize];
             byte[] headerBytes = packetSize.GetBytes();
 
-            headerBytes.CopyTo(resultBytes, 0); 
+            headerBytes.CopyTo(resultBytes, 0);
             executionResultBytes.CopyTo(resultBytes, sizeof(int));
 
             return resultBytes;
+        }
+
+        public void Dispose()
+        {
+            if (disposed) return;
+
+            this.server.Stop();
+            this.disposed = true;
         }
 
 
