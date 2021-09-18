@@ -1,18 +1,13 @@
 ﻿using Service.Core.Abstractions.Communication;
-using Service.Core.Abstractions.Token;
 using Service.Core.Client;
 using Service.Core.Communication.Infrastructure;
 using Service.Core.Execution;
-using Service.Core.Infrastructure;
 using Service.Core.Infrastructure.Communication;
 using Service.Core.Storage;
-using Service.Core.Token;
 using Service.Core.Token.Encryption;
+using Service.Core.Token.Encryption.AES;
 using Service.Core.Token.Hashing;
 using Service.Core.Token.Signing;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Service.Core
 {
@@ -47,6 +42,15 @@ namespace Service.Core
                         .SetMechanism(new AESCFBEncryptMechanismCommand())
                         .SetMechanism(new AESOFBEncryptMechanismCommand())
                         as EncryptionModule;
+                })
+                .RegisterDecryptionModule(options =>
+                {
+                    return new DecryptionModule(options)
+                        .SetMechanism(new AESECBDecryptMechanismCommand())
+                        .SetMechanism(new AESCBCDecryptMechanismCommand())
+                        .SetMechanism(new AESCFBDecryptMechanismCommand())
+                        .SetMechanism(new AESOFBDecryptMechanismCommand())
+                        as DecryptionModule;
                 })
                 .RegisterHashingModule(opt => new HashingModule())
                 .RegisterSigningModule(opt => new SigningModule());

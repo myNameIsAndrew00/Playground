@@ -114,11 +114,12 @@ namespace Service.Core.Client
 
             if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(keyHandler);
+            IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(null);
 
             //todo: better handling for codes
             keyHandler = encryptionHandler.Initialise(
-                this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
+                contextData: keyHandler,
+                mechanism: this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
                 out ExecutionResultCode executionResultCode);
 
             if (keyHandler is not null)
@@ -129,8 +130,9 @@ namespace Service.Core.Client
 
 
         public virtual IExecutionResult Encrypt(bool lengthRequest, IDataContainer dataToEncrypt)
-        {
-            EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+        { 
+            //todo: create an interface for encryption context
+            IKeyContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
             if (context is not null) context.LengthRequest = lengthRequest;
 
@@ -150,7 +152,8 @@ namespace Service.Core.Client
 
         public virtual IExecutionResult EncryptUpdate(bool lengthRequest, IDataContainer dataToEncrypt)
         {
-            EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+            //todo: create an interface for encryption context
+            IKeyContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
             if(context is not null) context.LengthRequest = lengthRequest;
 
@@ -167,7 +170,7 @@ namespace Service.Core.Client
 
         public virtual IExecutionResult EncryptFinal(bool lengthRequest)
         {
-            EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+            IKeyContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
             if (context is not null) context.LengthRequest = lengthRequest;
 

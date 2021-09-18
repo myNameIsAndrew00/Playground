@@ -8,31 +8,34 @@ using System.Threading.Tasks;
 namespace Service.Core.Abstractions.Storage
 {
     /// <summary>
-    /// Provides methods and properties for an context object
+    /// Provides methods and properties for an context object. An context object is used during a mechanism execution or inside a token module.
     /// </summary>
     public interface IContext : IMemoryObject
     {
-        public IMemoryObject ObjectHandler { get; }
+        /// <summary>
+        /// Represents the object which store the actualy sensitive data
+        /// </summary>
+        public IMemoryObject MemoryObject { get; }
 
 
         IEnumerable<IDataContainer<Pkcs11Attribute>> IMemoryObject.Attributes
         {
-            get => ObjectHandler.Attributes;
-            set => ObjectHandler.Attributes = value;
+            get => MemoryObject.Attributes;
+            set => MemoryObject.Attributes = value;
         }
 
 
-        void IMemoryObject.SetId(ulong id) =>ObjectHandler.SetId(id);
+        void IMemoryObject.SetId(ulong id) => MemoryObject.SetId(id);
                
-        ulong IMemoryObject.Id => ObjectHandler.Id;
+        ulong IMemoryObject.Id => MemoryObject.Id;
                
-        void IDisposable.Dispose() => ObjectHandler.Dispose();        
+        void IDisposable.Dispose() => MemoryObject.Dispose();        
                
         IDataContainer<Pkcs11Attribute> IMemoryObject.this[Pkcs11Attribute type]
         {
             get
             {
-                return ObjectHandler[type];
+                return MemoryObject[type];
             }
         }
     }

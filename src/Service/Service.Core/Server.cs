@@ -76,20 +76,26 @@ namespace Service.Core
             return this;
         }
 
-        public IPkcs11Server RegisterEncryptionModule<EncryptionModuleType>(Func<IMemoryObject, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
+        public IPkcs11Server RegisterEncryptionModule<EncryptionModuleType>(Func<IContext, EncryptionModuleType> implementationFactory = null) where EncryptionModuleType : IEncryptionModule
         {
-            moduleCollection.RegisterModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as IMemoryObject));
+            moduleCollection.RegisterModule(typeof(IEncryptionModule), typeof(EncryptionModuleType), (builderParameter) => implementationFactory(builderParameter as IContext));
             return this;
         }
 
-        public IPkcs11Server RegisterHashingModule<HashingModuleType>(Func<IMemoryObject, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
+        public IPkcs11Server RegisterDecryptionModule<DecryptionModuleType>(Func<IContext, DecryptionModuleType> implementationFactory = null) where DecryptionModuleType : IDecryptionModule
         {
-            moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as IMemoryObject));
+            moduleCollection.RegisterModule(typeof(IDecryptionModule), typeof(DecryptionModuleType), (builderParameter) => implementationFactory(builderParameter as IContext));
             return this;
         }
-        public IPkcs11Server  RegisterSigningModule<SigningModuleType>(Func<IMemoryObject, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
+
+        public IPkcs11Server RegisterHashingModule<HashingModuleType>(Func<IContext, HashingModuleType> implementationFactory = null) where HashingModuleType : IHashingModule
         {
-            moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as IMemoryObject));
+            moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as IContext));
+            return this;
+        }
+        public IPkcs11Server  RegisterSigningModule<SigningModuleType>(Func<IContext, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
+        {
+            moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as IContext));
             return this;
         }
 
@@ -157,6 +163,7 @@ namespace Service.Core
             //todo: handle the exception
             Debug.WriteLine(exception);
         }
+
 
 
         #endregion

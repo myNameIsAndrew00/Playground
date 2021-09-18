@@ -12,6 +12,6 @@ namespace Service.Core.Token.Hashing
     /// </summary>
     public class HashingModule : IHashingModule
     {
-        public IMemoryObject Context => throw new NotImplementedException();
+        public IContext Context => throw new NotImplementedException();
     }
 }

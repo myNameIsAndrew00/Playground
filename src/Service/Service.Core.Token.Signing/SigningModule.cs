@@ -11,6 +11,6 @@ namespace Service.Core.Token.Signing
     /// </summary>
     public class SigningModule : ISigningModule
     {
-        public IMemoryObject Context => throw new NotImplementedException();
+        public IContext Context => throw new NotImplementedException();
     }
 }

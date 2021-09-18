@@ -4,27 +4,26 @@ using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.DefinedTypes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Service.Core.Token.Encryption
+namespace Service.Core.Token.Encryption.AES
 {
-    /// <summary>
-    /// Represents a mechanism command object to handle AES with CBC mode
-    /// </summary>
-    public class AESCBCEncryptMechanismCommand : AESEncryptMechanismCommand
+    public class AESCFBDecryptMechanismCommand : AESDecryptMechanismCommand
     {
-        public override Pkcs11Mechanism MechanismType => Pkcs11Mechanism.AES_CBC;
+        public override Pkcs11Mechanism MechanismType => Pkcs11Mechanism.AES_CFB1;
 
-        protected override CipherMode CipherMode => CipherMode.CBC;
+        protected override CipherMode CipherMode => CipherMode.CFB;
 
-        public override void InitialiseContext(IMemoryObject contextObject, IMechanismOptions initialisationData, out ExecutionResultCode resultCode)
+        public override void InitialiseContext(IContext contextObject, IMechanismOptions initialisationData, out ExecutionResultCode resultCode)
         {
             base.InitialiseContext(contextObject, initialisationData, out resultCode);
 
             if (resultCode != ExecutionResultCode.OK) return;
 
-            EncryptionContext encryptionContext = contextObject as EncryptionContext;
+            DecryptionContext encryptionContext = contextObject as DecryptionContext;
             IAesMechanismOptions options = initialisationData as IAesMechanismOptions;
 
             if (options.IV.Length != 16)
@@ -35,6 +34,5 @@ namespace Service.Core.Token.Encryption
 
             encryptionContext.IV = options.IV;
         }
-
     }
 }

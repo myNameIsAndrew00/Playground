@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Service.Runtime
 {
-    public static class IEnumerableExtensions
+    public static class CollectionsExtensions
     {
 
 

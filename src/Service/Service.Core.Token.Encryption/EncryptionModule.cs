@@ -15,7 +15,7 @@ namespace Service.Core.Token.Encryption
     /// </summary>
     public class EncryptionModule : IEncryptionModule 
     {
-        private IMemoryObject context;
+        private IContext context;
 
         private Dictionary<Pkcs11Mechanism, IMechanismCommand> storedMechanisms;
 
@@ -24,13 +24,13 @@ namespace Service.Core.Token.Encryption
         /// </summary>
         private EncryptionContext keyContext => context as EncryptionContext;
 
-        public EncryptionModule(IMemoryObject context)
+        public EncryptionModule(IContext context)
         {
             this.context = context;
             this.storedMechanisms = new Dictionary<Pkcs11Mechanism, IMechanismCommand>();
         }
 
-        public IMemoryObject Context => context;
+        public IContext Context => context;
 
         public byte[] Encrypt(byte[] plainData, bool isPartOperation, out ExecutionResultCode executionResultCode)
         {
@@ -64,19 +64,17 @@ namespace Service.Core.Token.Encryption
 
             keyContext.AddPadding = true;
 
-            byte[] plainData = keyContext.UnprocessedData;
+            byte[] plainData = keyContext.UnprocessedData ?? new byte[0];
             keyContext.UnprocessedData = null;
-
-            if (plainData is null) plainData = new byte[0];
 
             return keyContext.MechanismCommand.Execute(keyContext, plainData, out executionResultCode);
         }
 
-        public IMemoryObject Initialise<MechanismContainer>(MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
+        public IKeyContext Initialise<MechanismContainer>(IMemoryObject contextObject, MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
             where MechanismContainer : IMechanismOptions
         {
             //check if attribute encrypt is set
-            if (!context.IsEncrypt())
+            if (!contextObject.IsEncrypt())
             {
                 executionResultCode = ExecutionResultCode.KEY_FUNCTION_NOT_PERMITTED;
                 return null;
@@ -85,7 +83,7 @@ namespace Service.Core.Token.Encryption
             //check if mechanism is allowed for this module
             if (this.storedMechanisms.ContainsKey(mechanism.Data.Type))
             { 
-                EncryptionContext result = new EncryptionContext(this.storedMechanisms[mechanism.Data.Type], this.context);
+                EncryptionContext result = new EncryptionContext(this.storedMechanisms[mechanism.Data.Type], contextObject);
 
                 //initialise the context using the given command
                 result.MechanismCommand.InitialiseContext(

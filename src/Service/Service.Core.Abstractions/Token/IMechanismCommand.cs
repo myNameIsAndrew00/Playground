@@ -18,13 +18,13 @@ namespace Service.Core.Abstractions.Token
         /// </summary>
         /// <param name="contextObject"></param>
         /// <param name="options"></param>
-        void InitialiseContext(IMemoryObject contextObject, IMechanismOptions options, out ExecutionResultCode resultCode);
+        void InitialiseContext(IContext contextObject, IMechanismOptions options, out ExecutionResultCode resultCode);
 
         /// <summary>
         /// Execute the mechanism implemented by this object
         /// </summary>
         /// <param name="data">Data used as input</param>
         /// <returns>The result of the operation</returns>
-        byte[] Execute(IMemoryObject contextObject, byte[] data, out ExecutionResultCode resultCode);
+        byte[] Execute(IContext contextObject, byte[] data, out ExecutionResultCode resultCode);
     }
 }

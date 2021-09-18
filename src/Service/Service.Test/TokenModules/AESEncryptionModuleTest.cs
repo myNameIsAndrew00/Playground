@@ -3,6 +3,7 @@ using Service.Core.DefinedTypes;
 using Service.Core.Storage.Mechanism;
 using Service.Core.Storage.Memory;
 using Service.Core.Token.Encryption;
+using Service.Core.Token.Encryption.AES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,18 +51,20 @@ namespace Service.Test.TokenModules
 
             // act and assert
             //Test 1: invalid attributes for context
-            EncryptionModule encryptionModule = new EncryptionModule(unitialisedContextObject);
-            encryptionModule.Initialise(mechanism, out ExecutionResultCode code);
+            EncryptionModule encryptionModule = new EncryptionModule(null);
+            encryptionModule.Initialise(unitialisedContextObject, mechanism, out ExecutionResultCode code);
             Assert.Equal(ExecutionResultCode.KEY_FUNCTION_NOT_PERMITTED, code);
 
             //Test 2: invalid mechanism
-            encryptionModule = new EncryptionModule(contextObject);
-            encryptionModule.Initialise(mechanism, out code);
+            encryptionModule = new EncryptionModule(null);
+            encryptionModule.Initialise(contextObject, mechanism, out code); 
             Assert.Equal(ExecutionResultCode.MECHANISM_INVALID, code);
 
             //Test 3: 
+            encryptionModule = new EncryptionModule(null);
             encryptionModule.SetMechanism(new AESECBEncryptMechanismCommand());
-            encryptionModule.Initialise(mechanism, out code);
+            encryptionModule.Initialise(contextObject, mechanism, out code);
+
             Assert.Equal(ExecutionResultCode.OK, code);
         }
 
@@ -82,9 +85,9 @@ namespace Service.Test.TokenModules
             });
 
             //Pretest - initialisation
-            EncryptionModule encryptionModule = new EncryptionModule(contextObject);
+            EncryptionModule encryptionModule = new EncryptionModule(null);
             encryptionModule.SetMechanism(new AESECBEncryptMechanismCommand());
-            IMemoryObject initialisedContext = encryptionModule.Initialise(mechanism, out ExecutionResultCode code);
+            IContext initialisedContext = encryptionModule.Initialise(contextObject, mechanism, out ExecutionResultCode code);
 
             Assert.Equal(ExecutionResultCode.OK, code);
 

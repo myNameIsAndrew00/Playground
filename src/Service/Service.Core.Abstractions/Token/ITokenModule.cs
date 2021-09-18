@@ -13,6 +13,6 @@ namespace Service.Core.Abstractions.Token
         /// <summary>
         /// Represent the context used by this module
         /// </summary>
-        IMemoryObject Context { get; }
+        IContext Context { get; }
     }
 }

@@ -13,5 +13,7 @@ namespace Service.Core.Storage
     public static class MemoryObjectsExtensions
     {
         public static bool IsEncrypt(this IMemoryObject contextObject) => contextObject[Pkcs11Attribute.ENCRYPT]?.Value.ToBoolean() ?? false;
+
+        public static bool IsDecrypt(this IMemoryObject contextObject) => contextObject[Pkcs11Attribute.DECRYPT]?.Value.ToBoolean() ?? false;
     }
 }

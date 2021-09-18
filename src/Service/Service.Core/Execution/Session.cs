@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
+using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.DefinedTypes;
 using Service.Core.Storage.Memory;
 using Service.Core.Token.Encryption;
@@ -27,7 +28,7 @@ namespace Service.Core.Execution
         /// Represents the session key object registered for encryption.
         /// When a encryption session object is added or updated via register, last value added will be provided by this reference.
         /// </summary>
-        public EncryptionContext RegisteredEncryptionContext { get; private set; }
+        public IKeyContext RegisteredEncryptionContext { get; private set; }
 
         public bool Closed { get; private set; } = false;
 
@@ -148,7 +149,7 @@ namespace Service.Core.Execution
 
         private void updateRegisteredObjects(IMemoryObject objectHandler)
         {
-            if (objectHandler is EncryptionContext) RegisteredEncryptionContext = objectHandler as EncryptionContext;
+            if (objectHandler is IKeyContext) RegisteredEncryptionContext = objectHandler as IKeyContext;
         }
 
         #endregion

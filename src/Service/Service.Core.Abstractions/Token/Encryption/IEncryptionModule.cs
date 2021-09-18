@@ -14,10 +14,11 @@ namespace Service.Core.Abstractions.Token.Encryption
         /// <summary>
         /// Use this method to initialise the handler context with certain attributes and mechanism
         /// </summary>
+        /// <param name="contextData">Base object which is used to create the context</param> 
         /// <param name="mechanism">Mechanism specified for encryption</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if handler was initialised with success</param>
         /// <returns>An object representing the context which can be used to do encryption</returns>
-        IMemoryObject Initialise<MechanismContainer>(MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
+        IKeyContext Initialise<MechanismContainer>(IMemoryObject contextData, MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
             where MechanismContainer : IMechanismOptions;
 
         /// <summary>
