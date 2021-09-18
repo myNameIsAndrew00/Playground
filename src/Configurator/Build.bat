@@ -1,15 +1,14 @@
 @echo OFF 
 
-echo -----------------Build started...
+echo -----------------Build started-----------------
 :prerequeries
 	echo:
 	set output=.\deploy
 	set serviceOutputPath=.\deploy\Service
-	set libraryOutputPath=.\deploy\Library	
+	set libraryOutputPath=.\deploy\Library
 	set ServiceLibraryPath=..\Service\Service.Worker
 	set LibraryPath=..\Library\sources
-	
-goto library
+	 
 	echo Pkcs11 Service output directory: %serviceOutputPath%
 	echo Pkcs11 C++ Library output directory: %libraryOutputPath%
 
@@ -22,8 +21,8 @@ goto library
 
 	echo Successufuly created directories...
 	echo:
-echo -----------------Building service...
 :service
+	echo -----------------Building service-----------------
 	echo:
 
 	:: Step 1: check .net
@@ -34,11 +33,11 @@ echo -----------------Building service...
 	set DotNetVersion=%DotNetVersion:~0,1%
 
 	if %DotNetVersion% lss 5 ( 
-		echo "Dot Net Version must be >=5"
+		echo "Dot Net Version must be >=5. Install .net 5 sdk."
 		goto final
 	)
 
-:: Step 2: publish service
+	:: Step 2: publish service
 	echo:
 	
 	echo [2]Building service...
@@ -48,13 +47,25 @@ echo -----------------Building service...
 	echo Service built with success...
 	echo:
 :library  
+	echo -----------------Building library-----------------
+	echo:
+	
+	::Step 3: check cl.exe
+	echo [3]Checking msvc compiler...
+	WHERE cl.exe
+	IF %ERRORLEVEL% NEQ 0 (
+		echo Msvc compiler not found. Install msvc compiler to build pkcs 11 library.
+		goto final
+	)
+	
+	echo [4]Building C library...
 	set sourceFiles="%LibraryPath%\dllmain.cpp"^
  "%LibraryPath%\Bytes.cpp"^
  "%LibraryPath%\BytesReader.cpp"^
  "%LibraryPath%\TlvStructure.cpp"^
  "%LibraryPath%\ServiceProxy.cpp"^
  "%LibraryPath%\VirtualToken.cpp"^
- "%LibraryPath%\AlphaProtoclDispatcher.cpp"^
+ "%LibraryPath%\AlphaProtocolDispatcher.cpp"^
  "%LibraryPath%\PipeCommunicationResolver.cpp"^
  "%LibraryPath%\SocketCommunicationResolver.cpp"^
  "%LibraryPath%\TlvParser.cpp"^
@@ -64,10 +75,16 @@ echo -----------------Building service...
  "%LibraryPath%\Functions\objectManagementFunctions.cpp"^
  "%LibraryPath%\Functions\sessionManagementFunctions.cpp"^
  "%LibraryPath%\Functions\slotManagementFunctions.cpp"
- 
- cl.exe %sourceFiles%^
- /OUT:"%libraryOutputPath%\pkcs11_x32.dll"^
- "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" "ws2_32.lib"^
- /IMPLIB:"%libraryOutputPath%\pkcs11_x32.lib"^
- /LD  
+	set linkFiles="kernel32.lib" "ws2_32.lib"
+	
+	cl.exe /Fo%libraryOutputPath%\ /D_USRDLL /D_WINDLL %sourceFiles% %linkFiles% /link /DLL /OUT:"%libraryOutputPath%\pkcs11.dll" 
+	
+	echo Cleanup...	
+	del *.obj /s /q
+	
+	
+	echo Library built with success...
+	 
+	echo:
+	echo Done!
 :final
