@@ -10,7 +10,7 @@ CK_DEFINE_FUNCTION(CK_RV, C_GetSlotList)(CK_BBOOL tokenPresent, CK_SLOT_ID_PTR s
 { 
 	CK_RV functionResult = CKR_OK;
 
-	if (slotsPointer == NULL_PTR) *slotsCountPointer = 1;
+	if (nullptr == slotsPointer) *slotsCountPointer = 1;
 	else {
 		auto tokenResult = Token->GetIdentifier();
 

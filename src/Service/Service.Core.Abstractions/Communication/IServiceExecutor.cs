@@ -87,19 +87,19 @@ namespace Service.Core.Abstractions.Communication
         /// Function associated with encrypt
         /// </summary>
         /// <returns></returns>
-        IExecutionResult Encrypt(IDataContainer dataToEncrypt);
+        IExecutionResult Encrypt(bool lengthRequest, IDataContainer dataToEncrypt);
 
         /// <summary>
         /// Function associated with encrypt update
         /// </summary>
         /// <returns></returns>
-        IExecutionResult EncryptUpdate(IDataContainer dataToEncrypt);
+        IExecutionResult EncryptUpdate(bool lengthRequest, IDataContainer dataToEncrypt);
 
         /// <summary>
         /// Function associated with PKCS11 encrypt final
         /// </summary>
         /// <returns></returns>
-        IExecutionResult EncryptFinal();
+        IExecutionResult EncryptFinal(bool lengthRequest);
     
 
         #endregion

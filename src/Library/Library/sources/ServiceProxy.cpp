@@ -103,12 +103,12 @@ EncryptInitResult Abstractions::ServiceProxy::EncryptInit(const Id sessionId, co
 	);
 }
 
-EncryptResult Abstractions::ServiceProxy::Encrypt(const Id sessionId, TlvStructure dataToEncrypt)
+EncryptResult Abstractions::ServiceProxy::Encrypt(const Id sessionId, TlvStructure dataToEncrypt, bool requestLength)
 {
 	return this->InvokeServer<EncryptResult>(
 			ServiceActionCode::Encrypt,
-			[dataToEncrypt]() {
-				return dataToEncrypt.GetRaw();
+			[dataToEncrypt, requestLength]() {
+				return Bytes(requestLength).Append(dataToEncrypt);
 			},
 			[](auto reader, auto code) {
 				return EncryptResult((ReturnCode)code, reader->PeekBytes());
@@ -117,12 +117,12 @@ EncryptResult Abstractions::ServiceProxy::Encrypt(const Id sessionId, TlvStructu
 	); 
 }
 
-EncryptUpdateResult Abstractions::ServiceProxy::EncryptUpdate(const Id sessionId, TlvStructure dataToEncrypt)
+EncryptUpdateResult Abstractions::ServiceProxy::EncryptUpdate(const Id sessionId, TlvStructure dataToEncrypt, bool requestLength)
 {
 	return this->InvokeServer<EncryptUpdateResult>(
 			ServiceActionCode::EncryptUpdate,
-			[dataToEncrypt]() {
-				return dataToEncrypt.GetRaw();
+			[dataToEncrypt, requestLength]() {
+				return Bytes(requestLength).Append(dataToEncrypt);
 			},
 			[](auto reader, auto code) {
 				return EncryptUpdateResult((ReturnCode)code, reader->PeekBytes());
@@ -131,12 +131,12 @@ EncryptUpdateResult Abstractions::ServiceProxy::EncryptUpdate(const Id sessionId
 		); 
 }
 
-EncryptFinalResult Abstractions::ServiceProxy::EncryptFinal(const Id sessionId)
+EncryptFinalResult Abstractions::ServiceProxy::EncryptFinal(const Id sessionId, bool requestLength)
 {
 	return this->InvokeServer<EncryptFinalResult>(
 			ServiceActionCode::EncryptUpdate,
-			[]() {
-				return Bytes();
+			[requestLength]() {
+				return Bytes(requestLength);
 			},
 			[](auto reader, auto code) {
 				return EncryptFinalResult((ReturnCode)code, reader->PeekBytes());

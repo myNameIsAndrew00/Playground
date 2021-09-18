@@ -53,5 +53,9 @@ namespace Service.Core.Token.Encryption
         /// </summary>
         public byte[] UnprocessedData { get; set; }
 
+        /// <summary>
+        /// Specify if the encryption should only return the length of the encryption process
+        /// </summary>
+        public bool LengthRequest { get; set; }
     }
 }

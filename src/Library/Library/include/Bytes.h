@@ -20,6 +20,7 @@ namespace Abstractions {
 		Bytes();
 		Bytes(const unsigned char* byteArray, const unsigned int length);
 		Bytes(const char);
+		Bytes(const bool);
 		Bytes(const int);
 		Bytes(const long long);
 		Bytes(const unsigned long long);

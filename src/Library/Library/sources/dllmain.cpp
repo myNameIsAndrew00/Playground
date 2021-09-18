@@ -39,11 +39,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 
 int main() {
 
-	auto initialiseResult = Token->Initialise();
-
-	auto createSessionResult = Token->CreateSession();
-
-
+	//Tests setup...
 	CK_BYTE iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 					 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
 
@@ -64,7 +60,17 @@ int main() {
 		{CKA_KEY_TYPE,  &key_type,		   sizeof(CK_ULONG)},
 		{CKA_VALUE_LEN, &key_length_bytes, sizeof(CK_ULONG)}
 	};
-	
+
+	CK_ULONG slotsCount;
+	char encryptData[] = "Ana are mere";
+	 
+
+	//Tests...
+
+	auto initialiseResult = Token->Initialise();
+
+	auto createSessionResult = Token->CreateSession();
+
 	auto createObjectResult = Token->CreateObject(
 		createSessionResult.GetValue(),
 		_template,
@@ -72,13 +78,14 @@ int main() {
 	);
 
 	auto encryptInitResult = Token->EncryptInit(createSessionResult.GetValue(), createObjectResult.GetValue(), mechanismTemplate);
-	auto encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13);
-	encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13);
+	auto encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13, false);
+	encryptResult = Token->Encrypt(createSessionResult.GetValue(), (const unsigned char*)"ana are mere", 13, false);
 	
 	auto endSessionResult = Token->EndSession(createSessionResult.GetValue());
 
 
 	auto finaliseResult = Token->Finalise();
+
 
   	return 0;
 }

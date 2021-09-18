@@ -24,6 +24,12 @@ Bytes::Bytes(const char character)
 	this->copy((const unsigned char*)&character, sizeof(char));
 }
 
+Bytes::Bytes(const bool boolValue)
+	: byteArray(nullptr), length(0)
+{
+	this->copy((const unsigned char*)&boolValue, sizeof(bool));
+}
+
 Bytes::Bytes(const int integer)
 	: byteArray(nullptr), length(0)
 {

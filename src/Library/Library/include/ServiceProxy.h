@@ -59,23 +59,26 @@ namespace Abstractions {
 		/// </summary>
 		/// <param name="sessionId">Id of the session which contains the initialised encryption object</param>
 		/// <param name="dataToEncrypt">Data which will be encrypted. Type field of the tlv structure will be ignored.</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive encrypted data length</param>
 		/// <returns>An object containing the result of the process. Encrypted data will be returned.</returns>
-		EncryptResult Encrypt(const Id sessionId, TlvStructure dataToEncrypt);
+		EncryptResult Encrypt(const Id sessionId, TlvStructure dataToEncrypt, bool requestLength);
 
 		/// <summary>
 		/// Trigger encrypt update method on the server.
 		/// </summary>
 		/// <param name="sessionId">Id of the session which contains the initialised encryption object</param>
 		/// <param name="dataToEncrypt">Data which will be encrypted. Type field of the tlv structure will be ignored.</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive encrypted data length</param>
 		/// <returns>An object containing the result of the process. Part encrypted data will be returned.</returns>
-		EncryptUpdateResult EncryptUpdate(const Id sessionId, TlvStructure dataToEncrypt);
+		EncryptUpdateResult EncryptUpdate(const Id sessionId, TlvStructure dataToEncrypt, bool requestLength);
 
 		/// <summary>
 		/// Trigger encrypt final method on the server.
 		/// </summary>
 		/// <param name="sessionId">Id of the session which contains the initialised encryption object</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive encrypted data length</param>
 		/// <returns>An object containing the result of the process. Final block of the previous encrypt update will be returned.</returns>
-		EncryptFinalResult EncryptFinal(const Id sessionId);
+		EncryptFinalResult EncryptFinal(const Id sessionId, bool requestLength);
 
 	private:
 		bool communicationInitialised;

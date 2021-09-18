@@ -81,7 +81,7 @@ CK_FUNCTION_LIST functionList = {
 
 CK_DEFINE_FUNCTION(CK_RV, C_GetFunctionList)(CK_FUNCTION_LIST_PTR_PTR ppFunctionList)
 {
-	if (ppFunctionList == nullptr)
+	if (nullptr == ppFunctionList)
 		return CKR_ARGUMENTS_BAD;
 
 	*ppFunctionList = &functionList;
@@ -90,21 +90,23 @@ CK_DEFINE_FUNCTION(CK_RV, C_GetFunctionList)(CK_FUNCTION_LIST_PTR_PTR ppFunction
 
 CK_DEFINE_FUNCTION(CK_RV, C_Initialize)(CK_VOID_PTR pInitArgs)
 {
-	//todo: handle more logic if required
-	return CKR_OK;
+	auto initialiseResult = Token->Initialise();
+
+	return (CK_RV) initialiseResult.GetCode();
 }
 
 
 CK_DEFINE_FUNCTION(CK_RV, C_Finalize)(CK_VOID_PTR pReserved)
 {
-	//todo: handle more logic if required
-	return CKR_OK;
+	auto finaliseResult = Token->Finalise();
+
+	return (CK_RV)finaliseResult.GetCode();
 }
 
 
 CK_DEFINE_FUNCTION(CK_RV, C_GetInfo)(CK_INFO_PTR pInfo)
 {
-	if (NULL == pInfo) return CKR_ARGUMENTS_BAD;
+	if (nullptr == pInfo) return CKR_ARGUMENTS_BAD;
 	 
 	pInfo->cryptokiVersion.major = Abstractions::Major;
 	pInfo->cryptokiVersion.minor = Abstractions::Minor;
@@ -139,26 +141,7 @@ CK_DEFINE_FUNCTION(CK_RV, C_SetOperationState)(CK_SESSION_HANDLE , CK_BYTE_PTR ,
 {
 	return CKR_FUNCTION_NOT_SUPPORTED;
 }
-CK_DEFINE_FUNCTION(CK_RV, C_CreateObject)(CK_SESSION_HANDLE , CK_ATTRIBUTE_PTR , CK_ULONG , CK_OBJECT_HANDLE_PTR )
-{
-	return CKR_FUNCTION_NOT_SUPPORTED;
-}
-CK_DEFINE_FUNCTION(CK_RV, C_CopyObject)(CK_SESSION_HANDLE , CK_OBJECT_HANDLE , CK_ATTRIBUTE_PTR , CK_ULONG , CK_OBJECT_HANDLE_PTR )
-{
-	return CKR_FUNCTION_NOT_SUPPORTED;
-}
-CK_DEFINE_FUNCTION(CK_RV, C_DestroyObject)(CK_SESSION_HANDLE , CK_OBJECT_HANDLE )
-{
-	return CKR_FUNCTION_NOT_SUPPORTED;
-}
-CK_DEFINE_FUNCTION(CK_RV, C_GetObjectSize)(CK_SESSION_HANDLE , CK_OBJECT_HANDLE , CK_ULONG_PTR )
-{
-	return CKR_FUNCTION_NOT_SUPPORTED;
-}
-CK_DEFINE_FUNCTION(CK_RV, C_SetAttributeValue)(CK_SESSION_HANDLE , CK_OBJECT_HANDLE , CK_ATTRIBUTE_PTR , CK_ULONG )
-{
-	return CKR_FUNCTION_NOT_SUPPORTED;
-}
+
 CK_DEFINE_FUNCTION(CK_RV, C_DigestKey)(CK_SESSION_HANDLE , CK_OBJECT_HANDLE )
 {
 	return CKR_FUNCTION_NOT_SUPPORTED;

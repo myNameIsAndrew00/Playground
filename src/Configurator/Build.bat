@@ -7,7 +7,7 @@ echo -----------------Build started-----------------
 	set serviceOutputPath=.\deploy\Service
 	set libraryOutputPath=.\deploy\Library
 	set ServiceLibraryPath=..\Service\Service.Worker
-	set LibraryPath=..\Library\sources
+	set LibraryPath=..\Library\Library\sources
 	 
 	echo Pkcs11 Service output directory: %serviceOutputPath%
 	echo Pkcs11 C++ Library output directory: %libraryOutputPath%

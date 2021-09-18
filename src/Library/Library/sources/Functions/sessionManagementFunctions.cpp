@@ -1,17 +1,32 @@
 #pragma once
 #include "../../include/pkcs11.h" 
-  
+#include "../../include/IPkcs11Token.h"
+#include <stdlib.h>
+#include <string.h>
+
+extern Abstractions::IPkcs11TokenReference Token;
  
 CK_DEFINE_FUNCTION(CK_RV, C_OpenSession)(CK_SLOT_ID slotID, CK_FLAGS flags, CK_VOID_PTR pApplication, CK_NOTIFY Notify, CK_SESSION_HANDLE_PTR phSession)
-{ 
-	return CKR_FUNCTION_NOT_SUPPORTED;
+{
+	if (nullptr == phSession)
+		return CKR_ARGUMENTS_BAD;
+
+	if (slotID != Token->GetIdentifier().GetValue())
+		return CKR_SLOT_ID_INVALID;
+
+	auto createSessionResult = Token->CreateSession();
+
+	*phSession = createSessionResult.GetValue();
+
+	return (CK_RV)createSessionResult.GetCode();
 }
 
 
 CK_DEFINE_FUNCTION(CK_RV, C_CloseSession)(CK_SESSION_HANDLE hSession)
 {
+	auto endSessionResult = Token->EndSession(hSession);
 
-	return CKR_FUNCTION_NOT_SUPPORTED;
+	return (CK_RV)endSessionResult.GetCode();
 }
 
 

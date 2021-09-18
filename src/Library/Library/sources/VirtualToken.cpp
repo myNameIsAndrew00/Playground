@@ -62,22 +62,22 @@ EncryptInitResult Abstractions::VirtualToken::EncryptInit(const unsigned long lo
 	return this->serviceProxy->EncryptInit(sessionId, objectId, TlvStructure((unsigned long long)mechanism->mechanism, (const unsigned char*) mechanism->pParameter, mechanism->ulParameterLen));
 }
 
-EncryptResult Abstractions::VirtualToken::Encrypt(const unsigned long long sessionId, const unsigned char* data, const int length) const
+EncryptResult Abstractions::VirtualToken::Encrypt(const unsigned long long sessionId, const unsigned char* data, const int length, bool encryptedDataLengthRequest) const
 {
 	//todo: handle cases or do client side validations
-	return this->serviceProxy->Encrypt(sessionId, TlvStructure(0, data, length));
+	return this->serviceProxy->Encrypt(sessionId, TlvStructure(0, data, length), encryptedDataLengthRequest);
 }
 
-EncryptUpdateResult Abstractions::VirtualToken::EncryptUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const
+EncryptUpdateResult Abstractions::VirtualToken::EncryptUpdate(const unsigned long long sessionId, const unsigned char* data, const int length, bool encryptedDataLengthRequest) const
 {
 	//todo: handle cases or do client side validations
-	return this->serviceProxy->EncryptUpdate(sessionId, TlvStructure(0, data, length));
+	return this->serviceProxy->EncryptUpdate(sessionId, TlvStructure(0, data, length), encryptedDataLengthRequest);
 }
 
-EncryptFinalResult Abstractions::VirtualToken::EncryptFinal(const unsigned long long sessionId) const
+EncryptFinalResult Abstractions::VirtualToken::EncryptFinal(const unsigned long long sessionId, bool encryptedDataLengthRequest) const
 {
 	//todo: handle cases or do client side validations
-	return this->serviceProxy->EncryptFinal(sessionId);
+	return this->serviceProxy->EncryptFinal(sessionId, encryptedDataLengthRequest);
 }
 
 

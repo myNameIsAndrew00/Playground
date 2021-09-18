@@ -78,7 +78,7 @@ namespace Service.Core.Client
         /// </summary>
         /// <returns></returns>
         public virtual IExecutionResult Authenticate(IDataContainer<Pkcs11UserType> authenticationData)
-        { 
+        {
 
             bool authenticationResult =
                 this.dispatchResult.Session.Authenticate(authenticationData.Type, ASCIIEncoding.UTF8.GetString(authenticationData.Value));
@@ -92,7 +92,7 @@ namespace Service.Core.Client
         /// </summary>
         /// <returns>Bytes representing data. Payload represents 4 bytes for handler id</returns>
         public virtual IExecutionResult CreateObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes)
-        { 
+        {
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
             //todo: inject the builder into server
@@ -102,11 +102,11 @@ namespace Service.Core.Client
             }
 
             ulong handlerId = this.dispatchResult.Session.AddSesionObject(@object);
-            
-            return new BytesResult( handlerId.GetBytes(), ExecutionResultCode.OK);
+
+            return new BytesResult(handlerId.GetBytes(), ExecutionResultCode.OK);
         }
 
- 
+
         public virtual IExecutionResult EncryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
         {
             //todo: handle null and edge cases
@@ -127,27 +127,32 @@ namespace Service.Core.Client
             return new BytesResult(executionResultCode);
         }
 
-         
-        public virtual IExecutionResult Encrypt(IDataContainer dataToEncrypt)
+
+        public virtual IExecutionResult Encrypt(bool lengthRequest, IDataContainer dataToEncrypt)
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
 
             IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
 
             byte[] encryptedData = encryptionHandler.Encrypt(
                 plainData: dataToEncrypt.Value,
-                isPartOperation: false, 
+                isPartOperation: false,
                 out ExecutionResultCode executionResultCode);
 
-            this.dispatchResult.Session.ResetRegisteredEncryptionObject();
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredEncryptionObject();
 
             return new BytesResult(encryptedData, executionResultCode);
         }
 
-         
-        public virtual IExecutionResult EncryptUpdate(IDataContainer dataToEncrypt)
+
+        public virtual IExecutionResult EncryptUpdate(bool lengthRequest, IDataContainer dataToEncrypt)
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+
+            if(context is not null) context.LengthRequest = lengthRequest;
 
             IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
 
@@ -159,16 +164,19 @@ namespace Service.Core.Client
             return new BytesResult(encryptedData, executionResultCode);
         }
 
-   
-        public virtual IExecutionResult EncryptFinal()
+
+        public virtual IExecutionResult EncryptFinal(bool lengthRequest)
         {
             EncryptionContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
 
             IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
 
             byte[] encryptedData = encryptionHandler.EncryptFinalise(out ExecutionResultCode executionResultCode);
-            
-            this.dispatchResult.Session.ResetRegisteredEncryptionObject();
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredEncryptionObject();
 
             return new BytesResult(encryptedData, executionResultCode);
         }

@@ -154,6 +154,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="library.def" />
+    <None Include="library.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
