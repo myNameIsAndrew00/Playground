@@ -95,7 +95,6 @@ namespace Service.Core.Client
         {
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
-            //todo: inject the builder into server
             if (!tokenStorage.CreateInMemoryObject(attributes, out IMemoryObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);
@@ -109,14 +108,12 @@ namespace Service.Core.Client
 
         public virtual IExecutionResult EncryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
         {
-            //todo: handle null and edge cases
             IMemoryObject keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier);
 
             if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
             IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(null);
 
-            //todo: better handling for codes
             keyHandler = encryptionHandler.Initialise(
                 contextData: keyHandler,
                 mechanism: this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
@@ -131,7 +128,6 @@ namespace Service.Core.Client
 
         public virtual IExecutionResult Encrypt(bool lengthRequest, IDataContainer dataToEncrypt)
         { 
-            //todo: create an interface for encryption context
             IKeyContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
             if (context is not null) context.LengthRequest = lengthRequest;
@@ -152,7 +148,6 @@ namespace Service.Core.Client
 
         public virtual IExecutionResult EncryptUpdate(bool lengthRequest, IDataContainer dataToEncrypt)
         {
-            //todo: create an interface for encryption context
             IKeyContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
             if(context is not null) context.LengthRequest = lengthRequest;
