@@ -13,5 +13,7 @@ namespace Service.Core.Abstractions.Token.Encryption
         /// Specify if the operation should only return the length of the data processed
         /// </summary>
         public bool LengthRequest { get; set; }
+
+        public bool EncryptionUsage { get; }
     }
 }

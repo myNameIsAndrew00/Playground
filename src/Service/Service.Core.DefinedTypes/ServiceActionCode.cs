@@ -27,7 +27,7 @@ namespace Service.Core.DefinedTypes
         /// </summary>
         EncryptInit = 0x05,
         /// <summary>
-        /// Use this code to trigger service encryption
+        /// Use this code to trigger service encryption encrypt
         /// </summary>
         Encrypt = 0x06,
         /// <summary>
@@ -37,7 +37,23 @@ namespace Service.Core.DefinedTypes
         /// <summary>
         /// Use this code to trigger service encrypt update
         /// </summary>
-        EncryptUpdate = 0x08
-        
+        EncryptUpdate = 0x08,
+        /// <summary>
+        /// Use this code to trigger service decryption initialisation
+        /// </summary>
+        DecryptInit,
+        /// <summary>
+        /// Use this code to trigger service decryption (decrypt and decrypt update)
+        /// </summary>
+        Decrypt,
+        /// <summary>
+        /// Use this code to trigger service decryption finalisation
+        /// </summary>
+        DecryptFinal,
+        /// <summary>
+        /// Use this code to trigger service decrypt update
+        /// </summary>
+        DecryptUpdate
+
     } 
 }

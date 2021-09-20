@@ -30,6 +30,9 @@ namespace Service.Core.Execution
         /// </summary>
         public IKeyContext RegisteredEncryptionContext { get; private set; }
 
+        public IKeyContext RegisteredDecryptionContext { get; private set; }
+
+
         public bool Closed { get; private set; } = false;
 
         public Session(ulong id)
@@ -120,8 +123,9 @@ namespace Service.Core.Execution
             return updateResult;
         }
 
-        public void ResetRegisteredEncryptionObject() => RegisteredEncryptionContext = null;
+        public void ResetRegisteredEncryptionContext() => RegisteredEncryptionContext = null;
 
+        public void ResetRegisteredDecryptionContext() => RegisteredDecryptionContext = null;
    
 
         public void Dispose()
@@ -149,7 +153,12 @@ namespace Service.Core.Execution
 
         private void updateRegisteredObjects(IMemoryObject objectHandler)
         {
-            if (objectHandler is IKeyContext) RegisteredEncryptionContext = objectHandler as IKeyContext;
+            if (objectHandler is IKeyContext keyContext)
+            {
+                if (keyContext.EncryptionUsage)
+                    RegisteredEncryptionContext = keyContext;
+                else RegisteredDecryptionContext = keyContext;
+            }
         }
 
         #endregion

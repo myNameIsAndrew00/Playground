@@ -140,7 +140,7 @@ namespace Service.Core.Client
                 out ExecutionResultCode executionResultCode);
 
             if (!lengthRequest)
-                this.dispatchResult.Session.ResetRegisteredEncryptionObject();
+                this.dispatchResult.Session.ResetRegisteredEncryptionContext();
 
             return new BytesResult(encryptedData, executionResultCode);
         }
@@ -174,10 +174,79 @@ namespace Service.Core.Client
             byte[] encryptedData = encryptionHandler.EncryptFinalise(out ExecutionResultCode executionResultCode);
 
             if (!lengthRequest)
-                this.dispatchResult.Session.ResetRegisteredEncryptionObject();
+                this.dispatchResult.Session.ResetRegisteredEncryptionContext();
 
             return new BytesResult(encryptedData, executionResultCode);
         }
 
+        public IExecutionResult DecryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
+        {
+            IMemoryObject keyHandler = this.dispatchResult.Session.GetSessionObject(keyIdentifier);
+
+            if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+
+            IDecryptionModule decryptionHandler = moduleCollection.GetDecryptionModule(null);
+
+            keyHandler = decryptionHandler.Initialise(
+                contextData: keyHandler,
+                mechanism: this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
+                out ExecutionResultCode executionResultCode);
+
+            if (keyHandler is not null)
+                this.dispatchResult.Session.UpdateAndRegisterSesionObject(keyIdentifier, keyHandler);
+
+            return new BytesResult(executionResultCode);
+        }
+
+        public IExecutionResult Decrypt(bool lengthRequest, IDataContainer dataToDecrypt)
+        {
+            IKeyContext context = this.dispatchResult.Session.RegisteredDecryptionContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
+
+            IDecryptionModule decryptionHandler = moduleCollection.GetDecryptionModule(context);
+
+            byte[] decryptedData = decryptionHandler.Decrypt(
+                encryptedData: dataToDecrypt.Value,
+                isPartOperation: false,
+                out ExecutionResultCode executionResultCode);
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredDecryptionContext();
+
+            return new BytesResult(decryptedData, executionResultCode);
+        }
+
+        public IExecutionResult DecryptUpdate(bool lengthRequest, IDataContainer dataToDecrypt)
+        {
+            IKeyContext context = this.dispatchResult.Session.RegisteredDecryptionContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
+
+            IDecryptionModule decryptionHandler = moduleCollection.GetDecryptionModule(context);
+
+            byte[] decryptedData = decryptionHandler.Decrypt(
+                encryptedData: dataToDecrypt.Value,
+                isPartOperation: true,
+                out ExecutionResultCode executionResultCode);
+
+            return new BytesResult(decryptedData, executionResultCode);
+        }
+
+        public IExecutionResult DecryptFinal(bool lengthRequest, IDataContainer dataToDecrypt)
+        {
+            IKeyContext context = this.dispatchResult.Session.RegisteredDecryptionContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
+
+            IDecryptionModule decryptionHandler = moduleCollection.GetDecryptionModule(context);
+
+            byte[] decryptedData = decryptionHandler.DecryptFinalise(out ExecutionResultCode executionResultCode);
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredDecryptionContext();
+
+            return new BytesResult(decryptedData, executionResultCode);
+        }
     }
 }

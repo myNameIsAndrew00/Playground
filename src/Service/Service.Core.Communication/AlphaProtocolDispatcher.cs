@@ -99,14 +99,7 @@ namespace Service.Core.Infrastructure.Communication
             {
                 case ServiceActionCode.BeginSession:
                     createdSession = beginSession();
-                    break;
-                case ServiceActionCode.EndSession:
-                case ServiceActionCode.CreateObject:
-                case ServiceActionCode.Authenticate:
-                case ServiceActionCode.EncryptInit:
-                case ServiceActionCode.Encrypt:
-                case ServiceActionCode.EncryptUpdate:
-                case ServiceActionCode.EncryptFinal:
+                    break;            
                 default:
                     requireSession = true;
                     break;

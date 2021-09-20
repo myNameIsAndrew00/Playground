@@ -82,25 +82,61 @@ namespace Service.Core.Abstractions.Communication
         /// </summary>
         /// <returns></returns>
         IExecutionResult EncryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism);
-       
+
         /// <summary>
         /// Function associated with encrypt
         /// </summary>
+        /// <param name="dataToEncrypt">A data container which encapsulates data to be encrypted</param>
+        /// <param name="lengthRequest">A bool which specify if request is made to receive the length of encrypted data</param>
         /// <returns></returns>
         IExecutionResult Encrypt(bool lengthRequest, IDataContainer dataToEncrypt);
 
         /// <summary>
-        /// Function associated with encrypt update
+        /// Function associated with PKCS11 encrypt update        
         /// </summary>
+        /// <param name="dataToEncrypt">A data container which encapsulates data to be encrypted</param>
+        /// <param name="lengthRequest">A bool which specify if request is made to receive the length of encrypted data</param>
         /// <returns></returns>
         IExecutionResult EncryptUpdate(bool lengthRequest, IDataContainer dataToEncrypt);
 
         /// <summary>
         /// Function associated with PKCS11 encrypt final
         /// </summary>
+        /// <param name="lengthRequest">A bool which specify if request is made to receive the length of encrypted data</param> 
         /// <returns></returns>
         IExecutionResult EncryptFinal(bool lengthRequest);
-    
+
+        /// <summary>
+        /// Function associated with decrypt
+        /// </summary>
+        /// <param name="keyIdentifier"></param>
+        /// <param name="mechanism"></param>
+        /// <returns></returns>
+        IExecutionResult DecryptInit(ulong keyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism);
+
+        /// <summary>
+        /// Function associated with decrypt
+        /// </summary>
+        /// <param name="lengthRequest"></param>
+        /// <param name="dataToDecrypt"></param>
+        /// <returns></returns>
+        IExecutionResult Decrypt(bool lengthRequest, IDataContainer dataToDecrypt);
+
+        /// <summary>
+        /// Function associated with PKCS11 decrypt update
+        /// </summary>
+        /// <param name="lengthRequest"></param>
+        /// <param name="dataToDecrypt"></param>
+        /// <returns></returns>
+        IExecutionResult DecryptUpdate(bool lengthRequest, IDataContainer dataToDecrypt);
+
+        /// <summary>
+        /// Function associated with PKCS11 decrypt final
+        /// </summary>
+        /// <param name="lengthRequest"></param>
+        /// <param name="dataToDecrypt"></param>
+        /// <returns></returns>
+        IExecutionResult DecryptFinal(bool lengthRequest, IDataContainer dataToDecrypt);
 
         #endregion
 

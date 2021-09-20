@@ -26,20 +26,27 @@ namespace Service.Core.Abstractions.Token
         /// </summary>
         /// <param name="context">Context used to initialise the module</param>
         /// <returns></returns>
-        ISigningModule GetSigningModule(IMemoryObject context);
+        ISigningModule GetSigningModule(IContext context);
      
         /// <summary>
         /// Get the hashing module from the collection
         /// </summary>
         /// <param name="context">Context used to initialise the module</param>
         /// <returns></returns>
-        IHashingModule  GetHashingModule(IMemoryObject context);
+        IHashingModule  GetHashingModule(IContext context);
 
         /// <summary>
         /// Get the encryption module from the collection
         /// </summary>
         /// <param name="context">Context used to initialise the module</param>
         /// <returns></returns>
-        IEncryptionModule GetEncryptionModule(IMemoryObject context);
+        IEncryptionModule GetEncryptionModule(IContext context);
+
+        /// <summary>
+        /// Get the decryption module from the collection
+        /// </summary>
+        /// <param name="context">Context used to initialise the modul</param>
+        /// <returns></returns>
+        IDecryptionModule GetDecryptionModule(IContext context);
     }
 }
