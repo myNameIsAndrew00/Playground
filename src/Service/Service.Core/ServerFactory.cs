@@ -76,7 +76,7 @@ namespace Service.Core
                     port: port,
                     dispatcher: new AlphaProtocolDispatcher<DispatchResult, Session>()
                 )
-                );
+             );
         }
     }
 }

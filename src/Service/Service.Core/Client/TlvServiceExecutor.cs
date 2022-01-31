@@ -233,7 +233,7 @@ namespace Service.Core.Client
             return new BytesResult(decryptedData, executionResultCode);
         }
 
-        public IExecutionResult DecryptFinal(bool lengthRequest, IDataContainer dataToDecrypt)
+        public IExecutionResult DecryptFinal(bool lengthRequest)
         {
             IKeyContext context = this.dispatchResult.Session.RegisteredDecryptionContext;
 

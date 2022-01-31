@@ -64,20 +64,55 @@ CK_DEFINE_FUNCTION(CK_RV, C_EncryptFinal)(CK_SESSION_HANDLE hSession, CK_BYTE_PT
 
 CK_DEFINE_FUNCTION(CK_RV, C_DecryptInit)(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism, CK_OBJECT_HANDLE hKey)
 {
-	return CKR_FUNCTION_NOT_SUPPORTED;
+	if (nullptr == pMechanism)
+		return CKR_ARGUMENTS_BAD;
+
+	auto encryptInitResult = Token->DecryptInit(hSession, hKey, pMechanism);
+
+	return (CK_RV)encryptInitResult.GetCode();
 }
 
 CK_DEFINE_FUNCTION(CK_RV, C_DecryptUpdate)(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pEncryptedPart, CK_ULONG ulEncryptedPartLen, CK_BYTE_PTR pPart, CK_ULONG_PTR pulPartLen)
 {
-	return CKR_FUNCTION_NOT_SUPPORTED;
+	if (nullptr == pPart || ulEncryptedPartLen == 0)
+		return CKR_ARGUMENTS_BAD;
+
+	auto encrypResult = Token->DecryptUpdate(hSession, pPart, ulEncryptedPartLen, nullptr == pEncryptedPart);
+
+	*pulPartLen = encrypResult.GetValue().GetLength();
+
+	if (nullptr != pPart) {
+		memcpy(pPart, encrypResult.GetValue().GetBytes(), *pulPartLen);
+	}
+
+	return (CK_RV)encrypResult.GetCode();
 }
 
 CK_DEFINE_FUNCTION(CK_RV, C_DecryptFinal)(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pLastPart, CK_ULONG_PTR pulLastPartLen)
 {
-	return CKR_FUNCTION_NOT_SUPPORTED;
+	auto encrypResult = Token->DecryptFinal(hSession, nullptr == pLastPart);
+
+	*pulLastPartLen = encrypResult.GetValue().GetLength();
+
+	if (nullptr != pLastPart) {
+		memcpy(pLastPart, encrypResult.GetValue().GetBytes(), *pulLastPartLen);
+	}
+
+	return (CK_RV)encrypResult.GetCode();
 }
 
 CK_DEFINE_FUNCTION(CK_RV, C_Decrypt)(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pEncryptedData, CK_ULONG ulEncryptedDataLen, CK_BYTE_PTR pData, CK_ULONG_PTR pulDataLen)
 {
-	return CKR_FUNCTION_NOT_SUPPORTED;
+	if (nullptr == pEncryptedData || ulEncryptedDataLen == 0)
+		return CKR_ARGUMENTS_BAD;
+
+	auto encrypResult = Token->DecryptUpdate(hSession, pEncryptedData, ulEncryptedDataLen, nullptr == pEncryptedData);
+
+	*pulDataLen = encrypResult.GetValue().GetLength();
+
+	if (nullptr != pData) {
+		memcpy(pData, encrypResult.GetValue().GetBytes(), *pulDataLen);
+	}
+
+	return (CK_RV)encrypResult.GetCode();
 }

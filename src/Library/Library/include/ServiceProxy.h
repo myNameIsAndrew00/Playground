@@ -80,6 +80,42 @@ namespace Abstractions {
 		/// <returns>An object containing the result of the process. Final block of the previous encrypt update will be returned.</returns>
 		EncryptFinalResult EncryptFinal(const Id sessionId, bool requestLength);
 
+		/// <summary>
+		/// Trigger dencrypt initialisation method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which will contain the initialised encryption object</param>
+		/// <param name="objectId">Id of dencryption object which will be used for dencryption</param>
+		/// <param name="mechanism">Mechanism used for dencryption</param>
+		/// <returns>An object containing the result of the process.</returns>
+		DecryptInitResult DecryptInit(const Id sessionId, const Id objectId, const TlvStructure& mechanism);
+
+		/// <summary>
+		/// Trigger dencrypt method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised dencryption object</param>
+		/// <param name="dataToEncrypt">Data which will be dencrypted. Type field of the tlv structure will be ignored.</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive dencrypted data length</param>
+		/// <returns>An object containing the result of the process. Dencrypted data will be returned.</returns>
+		DecryptResult Decrypt(const Id sessionId, TlvStructure dataToDecrypt, bool requestLength);
+
+		/// <summary>
+		/// Trigger dencrypt update method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised dencryption object</param>
+		/// <param name="dataToEncrypt">Data which will be dencrypted. Type field of the tlv structure will be ignored.</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive dencrypted data length</param>
+		/// <returns>An object containing the result of the process. Part dencrypted data will be returned.</returns>
+		DecryptUpdateResult DecryptUpdate(const Id sessionId, TlvStructure dataToDecrypt, bool requestLength);
+
+		/// <summary>
+		/// Trigger dencrypt final method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised dencryption object</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive dencrypted data length</param>
+		/// <returns>An object containing the result of the process. Final block of the previous dencrypt update will be returned.</returns>
+		DecryptFinalResult DecryptFinal(const Id sessionId, bool requestLength);
+
+
 	private:
 		bool communicationInitialised;
 

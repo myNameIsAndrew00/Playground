@@ -134,9 +134,8 @@ namespace Service.Core.Abstractions.Communication
         /// Function associated with PKCS11 decrypt final
         /// </summary>
         /// <param name="lengthRequest"></param>
-        /// <param name="dataToDecrypt"></param>
         /// <returns></returns>
-        IExecutionResult DecryptFinal(bool lengthRequest, IDataContainer dataToDecrypt);
+        IExecutionResult DecryptFinal(bool lengthRequest);
 
         #endregion
 

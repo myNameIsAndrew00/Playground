@@ -144,6 +144,62 @@ EncryptFinalResult Abstractions::ServiceProxy::EncryptFinal(const Id sessionId, 
 			sessionId
 		); 
 }
+
+DecryptInitResult Abstractions::ServiceProxy::DecryptInit(const Id sessionId, const Id objectId, const TlvStructure& mechanism)
+{
+	return this->InvokeServer<DecryptInitResult>(
+			ServiceActionCode::DecryptInit,
+			[objectId, mechanism]() {
+				return Bytes(objectId).Append(mechanism);
+			},
+			[](auto reader, auto code) {
+				return DecryptInitResult((ReturnCode)code, true);
+			},
+			sessionId
+		);
+}
+
+DecryptResult Abstractions::ServiceProxy::Decrypt(const Id sessionId, TlvStructure dataToDecrypt, bool requestLength)
+{
+	return this->InvokeServer<DecryptResult>(
+			ServiceActionCode::Decrypt,
+			[dataToDecrypt, requestLength]() {
+				return Bytes(requestLength).Append(dataToDecrypt);
+			},
+			[](auto reader, auto code) {
+				return DecryptResult((ReturnCode)code, reader->PeekBytes());
+			},
+			sessionId
+		);
+}
+
+DecryptUpdateResult Abstractions::ServiceProxy::DecryptUpdate(const Id sessionId, TlvStructure dataToDecrypt, bool requestLength)
+{
+	return this->InvokeServer<EncryptUpdateResult>(
+			ServiceActionCode::DecryptUpdate,
+			[dataToDecrypt, requestLength]() {
+				return Bytes(requestLength).Append(dataToDecrypt);
+			},
+			[](auto reader, auto code) {
+				return DecryptUpdateResult((ReturnCode)code, reader->PeekBytes());
+			},
+			sessionId
+		);
+}
+
+DecryptFinalResult Abstractions::ServiceProxy::DecryptFinal(const Id sessionId, bool requestLength)
+{
+	return this->InvokeServer<EncryptFinalResult>(
+			ServiceActionCode::DecryptFinal,
+			[requestLength]() {
+				return Bytes(requestLength);
+			},
+			[](auto reader, auto code) {
+				return DecryptFinalResult((ReturnCode)code, reader->PeekBytes());
+			},
+			sessionId
+		);
+}
  
 
 

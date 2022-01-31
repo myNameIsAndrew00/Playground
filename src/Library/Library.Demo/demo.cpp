@@ -20,6 +20,7 @@ int main() {
 
 	CK_ATTRIBUTE _template[] = {
 		{CKA_ENCRYPT,   &true_val,		   sizeof(CK_BBOOL)},
+		{CKA_DECRYPT,   &true_val,		   sizeof(CK_BBOOL)},
 		{CKA_SENSITIVE, &true_val,         sizeof(CK_BBOOL)},
 		{CKA_TOKEN,     &false_val,        sizeof(CK_BBOOL)},
 		{CKA_VALUE,		iv,				   sizeof(iv) },
@@ -43,7 +44,7 @@ int main() {
 	CK_RV createSessionResponseCode = C_OpenSession(*slots, 0, nullptr, nullptr, &session);
 
 	CK_OBJECT_HANDLE keyObject;
-	CK_RV objectRequestResponseCode = C_CreateObject(session, _template, 6, &keyObject);
+	CK_RV objectRequestResponseCode = C_CreateObject(session, _template, 7, &keyObject);
 
 	CK_RV encryptInitResut = C_EncryptInit(session, mechanismTemplate, keyObject);
 
@@ -52,6 +53,15 @@ int main() {
 	CK_RV encryptResultCode = C_Encrypt(session, (unsigned char*)encryptData, strlen(encryptData) + 1, nullptr, &encryptedDataLength);
 	encryptedData = new unsigned char[encryptedDataLength];
 	encryptResultCode = C_Encrypt(session, (unsigned char*)encryptData, strlen(encryptData) + 1, encryptedData, &encryptedDataLength);
+
+	CK_RV decryptInitResult = C_DecryptInit(session, mechanismTemplate, keyObject);
+
+	unsigned int decryptedDataLength;
+	unsigned char* decryptedData;
+	CK_RV decryptResultCode = C_Decrypt(session, encryptedData, encryptedDataLength, nullptr, &decryptedDataLength);
+	decryptedData = new unsigned char[decryptedDataLength];
+	decryptResultCode = C_Decrypt(session, encryptedData, encryptedDataLength, decryptedData, &decryptedDataLength);
+
 
 	CK_RV endSessionResponseCode = C_CloseSession(session);
 	CK_RV finaliseResponseCode = C_Finalize(nullptr);

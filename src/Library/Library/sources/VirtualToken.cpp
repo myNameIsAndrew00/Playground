@@ -80,6 +80,30 @@ EncryptFinalResult Abstractions::VirtualToken::EncryptFinal(const unsigned long 
 	return this->serviceProxy->EncryptFinal(sessionId, encryptedDataLengthRequest);
 }
 
+DecryptInitResult Abstractions::VirtualToken::DecryptInit(const unsigned long long sessionId, const unsigned long long objectId, const CK_MECHANISM* mechanism) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->DecryptInit(sessionId, objectId, TlvStructure((unsigned long long)mechanism->mechanism, (const unsigned char*)mechanism->pParameter, mechanism->ulParameterLen));
+}
+
+DecryptResult Abstractions::VirtualToken::Decrypt(const unsigned long long sessionId, const unsigned char* data, const int length, bool decryptedDataLengthRequest) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->Decrypt(sessionId, TlvStructure(0, data, length), decryptedDataLengthRequest);
+}
+
+DecryptUpdateResult Abstractions::VirtualToken::DecryptUpdate(const unsigned long long sessionId, const unsigned char* data, const int length, bool decryptedDataLengthRequest) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->DecryptUpdate(sessionId, TlvStructure(0, data, length), decryptedDataLengthRequest);
+}
+
+DecryptFinalResult Abstractions::VirtualToken::DecryptFinal(const unsigned long long sessionId, bool decryptedDataLengthRequest) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->DecryptFinal(sessionId, decryptedDataLengthRequest);
+}
+ 
 
 
 VirtualToken::~VirtualToken() {
