@@ -17,5 +17,6 @@ namespace Service.Core.Token.Encryption
         {
         }
 
+        public override bool EncryptionUsage => false;
     }
 }

@@ -36,6 +36,8 @@ namespace Service.Core.Token
 
         public IEncryptionModule GetEncryptionModule(IMemoryObject objectHandler) => getModule<IEncryptionModule, IMemoryObject>(objectHandler);
 
+        public IDecryptionModule GetDecryptionModule(IMemoryObject objectHandler) => getModule<IDecryptionModule, IMemoryObject>(objectHandler);
+
         public IHashingModule GetHashingModule(IMemoryObject objectHandler) => getModule<IHashingModule, IMemoryObject>(objectHandler);
 
         public ISigningModule GetSigningModule(IMemoryObject objectHandler) => getModule<ISigningModule, IMemoryObject>(objectHandler);
@@ -57,5 +59,7 @@ namespace Service.Core.Token
             }
             return null;
         }
+
+   
     }
 }

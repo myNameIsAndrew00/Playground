@@ -15,7 +15,7 @@ namespace Service.Test.TokenModules
 {
     public class AESEncryptionModuleTest
     {
-        private byte[] data = Encoding.ASCII.GetBytes("Ana are mere");
+        private byte[] data = Encoding.ASCII.GetBytes("Ana are mere si pere");
 
         private byte[] key = new byte[] {
                                0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,

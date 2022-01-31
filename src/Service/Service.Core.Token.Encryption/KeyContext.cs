@@ -14,7 +14,7 @@ namespace Service.Core.Token.Encryption
     /// <summary>
     /// Represents a context class for keys (used on encryption modules)
     /// </summary>
-    internal class KeyContext : IKeyContext
+    internal abstract class KeyContext : IKeyContext
     {
         public IMemoryObject MemoryObject { get; }
 
@@ -29,6 +29,8 @@ namespace Service.Core.Token.Encryption
         public byte[] Key => (this as IContext)[Pkcs11Attribute.VALUE]?.Value;
 
         public uint? KeyLength => (this as IContext)[Pkcs11Attribute.VALUE_LEN]?.Value.ToUInt32();
+
+        public abstract bool EncryptionUsage { get; }
 
         public Pkcs11KeyType? KeyType
         {
@@ -50,5 +52,6 @@ namespace Service.Core.Token.Encryption
         /// Store data which was not processed by an encryption/decryption mechanism. The most common usecase is for multi part encryption/decryption.
         /// </summary>
         public byte[] UnprocessedData { get; set; }
+
     }
 }

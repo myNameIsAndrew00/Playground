@@ -22,7 +22,6 @@ namespace Service.Core.Token.Encryption
         /// </summary>
         public bool AddPadding { get; set; } = false;
 
-
-     
+        public override bool EncryptionUsage => true;
     }
 }

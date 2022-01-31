@@ -41,19 +41,18 @@ namespace Service.Core.DefinedTypes
         /// <summary>
         /// Use this code to trigger service decryption initialisation
         /// </summary>
-        DecryptInit,
+        DecryptInit = 0x09,
         /// <summary>
         /// Use this code to trigger service decryption (decrypt and decrypt update)
         /// </summary>
-        Decrypt,
+        Decrypt = 0x0A,
         /// <summary>
         /// Use this code to trigger service decryption finalisation
         /// </summary>
-        DecryptFinal,
+        DecryptFinal = 0x0B,
         /// <summary>
         /// Use this code to trigger service decrypt update
         /// </summary>
-        DecryptUpdate
-
+        DecryptUpdate = 0x0C
     } 
 }
