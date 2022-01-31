@@ -51,7 +51,7 @@ namespace Service.Core.Token.Encryption
             }
 
             //execute the command
-            return keyContext.MechanismCommand.Execute(keyContext, plainData, out executionResultCode);
+            return this.storedMechanisms[keyContext.Mechanism].Execute(keyContext, plainData, out executionResultCode);
         }
 
         public byte[] EncryptFinalise(out ExecutionResultCode executionResultCode)
@@ -65,9 +65,8 @@ namespace Service.Core.Token.Encryption
             keyContext.AddPadding = true;
 
             byte[] plainData = keyContext.UnprocessedData ?? new byte[0];
-            keyContext.UnprocessedData = null;
 
-            return keyContext.MechanismCommand.Execute(keyContext, plainData, out executionResultCode);
+            return this.storedMechanisms[keyContext.Mechanism].Execute(keyContext, plainData, out executionResultCode);
         }
 
         public IKeyContext Initialise<MechanismContainer>(IMemoryObject contextObject, MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
@@ -81,19 +80,20 @@ namespace Service.Core.Token.Encryption
             }
 
             //check if mechanism is allowed for this module
-            if (this.storedMechanisms.ContainsKey(mechanism.Data.Type))
+            if (this.storedMechanisms.TryGetValue(mechanism.Data.Type, out IMechanismCommand mechanismCommand))
             { 
-                EncryptionContext result = new EncryptionContext(this.storedMechanisms[mechanism.Data.Type], contextObject);
+                EncryptionContext result = new EncryptionContext(mechanism.Data.Type, contextObject);
 
                 //initialise the context using the given command
-                result.MechanismCommand.InitialiseContext(
+                mechanismCommand.InitialiseContext(
                     contextObject: result,
                     options: mechanism,
                     out executionResultCode
                     );
 
                 //check if initialisation was with success and return the context built
-                if (executionResultCode == ExecutionResultCode.OK) return result;
+                if (executionResultCode == ExecutionResultCode.OK) 
+                    return result;
             }
             else executionResultCode = ExecutionResultCode.MECHANISM_INVALID;
 

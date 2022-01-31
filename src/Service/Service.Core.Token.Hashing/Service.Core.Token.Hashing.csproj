@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Service.Core.Abstractions\Service.Core.Abstractions.csproj" />
+    <ProjectReference Include="..\Service.Runtime\Service.Runtime.csproj" />
   </ItemGroup>
 
 </Project>

@@ -23,5 +23,7 @@ namespace Service.Core.Abstractions.Token
         /// <param name="mechanismCommand"></param>
         /// <returns>An updated version of this instance</returns>
         IAllowMechanism SetMechanism(IMechanismCommand mechanismCommand);
+
+
     }
 }

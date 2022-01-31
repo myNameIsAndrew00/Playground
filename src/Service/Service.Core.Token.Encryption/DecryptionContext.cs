@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
+using Service.Core.DefinedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Service.Core.Token.Encryption
     /// </summary>
     internal class DecryptionContext : KeyContext
     {
-        internal DecryptionContext(IMechanismCommand mechanismCommand, IMemoryObject memoryObject) : base(mechanismCommand, memoryObject)
+        internal DecryptionContext(Pkcs11Mechanism mechanism, IMemoryObject memoryObject) : base(mechanism, memoryObject)
         {
         }
 

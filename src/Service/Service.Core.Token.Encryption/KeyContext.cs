@@ -18,13 +18,13 @@ namespace Service.Core.Token.Encryption
     {
         public IMemoryObject MemoryObject { get; }
 
-        internal KeyContext(IMechanismCommand mechanismCommand, IMemoryObject objectHandler)
+        internal KeyContext(Pkcs11Mechanism mechanism, IMemoryObject objectHandler)
         {
             this.MemoryObject = objectHandler;
-            this.MechanismCommand = mechanismCommand;
+            this.Mechanism = mechanism;
         }
 
-        public IMechanismCommand MechanismCommand { get; }
+        public Pkcs11Mechanism Mechanism { get; }
 
         public byte[] Key => (this as IContext)[Pkcs11Attribute.VALUE]?.Value;
 

@@ -87,16 +87,18 @@ namespace Service.Test.TokenModules
             //Pretest - initialisation
             EncryptionModule encryptionModule = new EncryptionModule(null);
             encryptionModule.SetMechanism(new AESECBEncryptMechanismCommand());
-            IContext initialisedContext = encryptionModule.Initialise(contextObject, mechanism, out ExecutionResultCode code);
-
-            Assert.Equal(ExecutionResultCode.OK, code);
 
             //Test 1: unitialised
-            encryptionModule.Encrypt(data, false, out code);
+            encryptionModule.Encrypt(data, false, out ExecutionResultCode code);
             Assert.Equal(ExecutionResultCode.OPERATION_NOT_INITIALIZED, code);
 
             //Test 2: all at once
+            IContext initialisedContext = encryptionModule.Initialise(contextObject, mechanism, out  code);
+            Assert.Equal(ExecutionResultCode.OK, code);
+
             encryptionModule = new EncryptionModule(initialisedContext);
+            encryptionModule.SetMechanism(new AESECBEncryptMechanismCommand());
+
             byte[] encryptedData = encryptionModule.Encrypt(data, false, out code);
 
             Assert.Equal(ExecutionResultCode.OK, code);
@@ -104,6 +106,7 @@ namespace Service.Test.TokenModules
 
             //Test 3: multi part
             encryptionModule = new EncryptionModule(initialisedContext);
+            encryptionModule.SetMechanism(new AESECBEncryptMechanismCommand());
             encryptedData = encryptionModule.Encrypt(data.Take(4).ToArray(), true, out code);
             Assert.Equal(ExecutionResultCode.OK, code);
             encryptedData = encryptionModule.Encrypt(data.Skip(4).ToArray(), true, out code);

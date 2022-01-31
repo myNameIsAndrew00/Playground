@@ -1,6 +1,7 @@
 ﻿using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token.Encryption;
+using Service.Core.Abstractions.Token.Hashing;
 using Service.Core.DefinedTypes;
 using Service.Core.Storage.Memory;
 using Service.Core.Token.Encryption;
@@ -32,6 +33,7 @@ namespace Service.Core.Execution
 
         public IKeyContext RegisteredDecryptionContext { get; private set; }
 
+        public IDigestContext RegisteredDigestContext { get; private set; }
 
         public bool Closed { get; private set; } = false;
 
@@ -123,10 +125,24 @@ namespace Service.Core.Execution
             return updateResult;
         }
 
+        /// <summary>
+        /// Update an object registered in context.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public IContext RegisterContext(IContext context)
+        {
+            updateRegisteredObjects(context);
+
+            return context;
+        }
+
         public void ResetRegisteredEncryptionContext() => RegisteredEncryptionContext = null;
 
         public void ResetRegisteredDecryptionContext() => RegisteredDecryptionContext = null;
-   
+
+        public void ResetRegisteredDigestContext() => RegisteredDigestContext = null;
+
 
         public void Dispose()
         {
@@ -158,6 +174,11 @@ namespace Service.Core.Execution
                 if (keyContext.EncryptionUsage)
                     RegisteredEncryptionContext = keyContext;
                 else RegisteredDecryptionContext = keyContext;
+            }
+
+            if(objectHandler is IDigestContext digestContext)
+            {
+                RegisteredDigestContext = digestContext;
             }
         }
 

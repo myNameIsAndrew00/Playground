@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Service.Core.DefinedTypes
-{ 
+{
     public enum ServiceActionCode : byte
     {
         /// <summary>
@@ -53,6 +53,22 @@ namespace Service.Core.DefinedTypes
         /// <summary>
         /// Use this code to trigger service decrypt update
         /// </summary>
-        DecryptUpdate = 0x0C
-    } 
+        DecryptUpdate = 0x0C,
+        /// <summary>
+        /// Use this code to trigger service digest initialisation
+        /// </summary>
+        DigestInit = 0x0D,
+        /// <summary>
+        /// Use this code to trigger service digest
+        /// </summary>
+        Digest = 0x0E,
+        /// <summary>
+        /// Use this code to trigger service digest finalisation
+        /// </summary>
+        DigestFinal = 0x0F,
+        /// <summary>
+        /// Use this code to trigger service digest update
+        /// </summary>
+        DigestUpdate = 0x10
+    }
 }

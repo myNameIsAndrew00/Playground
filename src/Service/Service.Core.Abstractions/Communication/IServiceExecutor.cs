@@ -137,6 +137,35 @@ namespace Service.Core.Abstractions.Communication
         /// <returns></returns>
         IExecutionResult DecryptFinal(bool lengthRequest);
 
+        /// <summary>
+        /// Function associated with PKCS11 digest init
+        /// </summary>
+        /// <param name="mechanism"></param>
+        /// <returns></returns>
+        IExecutionResult DigestInit(IDataContainer<Pkcs11Mechanism> mechanism);
+
+        /// <summary>
+        /// Function associated with PKCS11 digest
+        /// </summary>
+        /// <param name="lengthRequest"></param>
+        /// <param name="dataToDigest"></param>
+        /// <returns></returns>
+        IExecutionResult Digest(bool lengthRequest, IDataContainer dataToDigest);
+
+        /// <summary>
+        /// Function associated with PKCS11 digest update
+        /// </summary>
+        /// <param name="dataToDigest"></param>
+        /// <returns></returns>
+        IExecutionResult DigestUpdate(IDataContainer dataToDigest);
+
+        /// <summary>
+        /// Function associated with PKCS11 digest final
+        /// </summary>
+        /// <param name="lengthRequest"></param>
+        /// <returns></returns>
+        IExecutionResult DigestFinal(bool lengthRequest);
+
         #endregion
 
     }

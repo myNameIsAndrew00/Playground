@@ -3,6 +3,7 @@ using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
+using Service.Core.Abstractions.Token.Hashing;
 using Service.Core.Communication.Infrastructure;
 using Service.Core.DefinedTypes;
 using Service.Core.Execution;
@@ -127,7 +128,7 @@ namespace Service.Core.Client
 
 
         public virtual IExecutionResult Encrypt(bool lengthRequest, IDataContainer dataToEncrypt)
-        { 
+        {
             IKeyContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
             if (context is not null) context.LengthRequest = lengthRequest;
@@ -150,7 +151,7 @@ namespace Service.Core.Client
         {
             IKeyContext context = this.dispatchResult.Session.RegisteredEncryptionContext;
 
-            if(context is not null) context.LengthRequest = lengthRequest;
+            if (context is not null) context.LengthRequest = lengthRequest;
 
             IEncryptionModule encryptionHandler = moduleCollection.GetEncryptionModule(context);
 
@@ -247,6 +248,62 @@ namespace Service.Core.Client
                 this.dispatchResult.Session.ResetRegisteredDecryptionContext();
 
             return new BytesResult(decryptedData, executionResultCode);
+        }
+
+        public IExecutionResult DigestInit(IDataContainer<Pkcs11Mechanism> mechanism)
+        {
+            IHashingModule hashingHandler = moduleCollection.GetHashingModule(null);
+
+            var digestHandler = hashingHandler.Initialise(
+                mechanism: this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
+                out ExecutionResultCode executionResultCode);
+
+            if (digestHandler is not null)
+                this.dispatchResult.Session.RegisterContext(digestHandler);
+
+            return new BytesResult(executionResultCode);
+
+        }
+
+        public IExecutionResult Digest(bool lengthRequest, IDataContainer dataToDigest)
+        {
+            IDigestContext context = this.dispatchResult.Session.RegisteredDigestContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
+
+            IHashingModule hashingHandler = moduleCollection.GetHashingModule(context);
+
+            byte[] digest = hashingHandler.Hash(dataToDigest.Value, false, out ExecutionResultCode executionResultCode);
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredDigestContext();
+
+            return new BytesResult(digest, executionResultCode);
+        }
+
+        public IExecutionResult DigestUpdate(IDataContainer dataToDigest)
+        {
+            IDigestContext context = this.dispatchResult.Session.RegisteredDigestContext;
+
+            IHashingModule hashingHandler = moduleCollection.GetHashingModule(context);
+
+            hashingHandler.Hash(dataToDigest.Value, true, out ExecutionResultCode executionResultCode);
+
+            return new BytesResult(executionResultCode);
+        }
+
+        public IExecutionResult DigestFinal(bool lengthRequest)
+        {
+            IDigestContext context = this.dispatchResult.Session.RegisteredDigestContext;
+
+            IHashingModule hashingHandler = moduleCollection.GetHashingModule(context);
+
+            byte[] digest = hashingHandler.HashFinalise(out ExecutionResultCode executionResultCode);
+        
+            if(!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredDigestContext();
+
+            return new BytesResult(digest, executionResultCode);
         }
     }
 }

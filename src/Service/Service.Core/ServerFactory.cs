@@ -7,6 +7,7 @@ using Service.Core.Storage;
 using Service.Core.Token.Encryption;
 using Service.Core.Token.Encryption.AES;
 using Service.Core.Token.Hashing;
+using Service.Core.Token.Hashing.SHA;
 using Service.Core.Token.Signing;
 
 namespace Service.Core
@@ -52,7 +53,14 @@ namespace Service.Core
                         .SetMechanism(new AESOFBDecryptMechanismCommand())
                         as DecryptionModule;
                 })
-                .RegisterHashingModule(opt => new HashingModule())
+                .RegisterHashingModule(options => {
+                     return new HashingModule(options)
+                        .SetMechanism(new SHA1MechanismCommand())
+                        .SetMechanism(new SHA256MechanismCommand())
+                        .SetMechanism(new SHA384MechanismCommand())
+                        .SetMechanism(new SHA512MechanismCommand())
+                        as HashingModule;
+                 })
                 .RegisterSigningModule(opt => new SigningModule());
             
 

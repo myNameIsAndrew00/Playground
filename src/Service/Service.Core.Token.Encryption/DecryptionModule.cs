@@ -41,12 +41,12 @@ namespace Service.Core.Token.Encryption
             }
 
             //check if mechanism is allowed for this module
-            if (this.storedMechanisms.ContainsKey(mechanism.Data.Type))
+            if (this.storedMechanisms.TryGetValue(mechanism.Data.Type, out IMechanismCommand mechanismCommand))
             {
-                DecryptionContext result = new DecryptionContext(this.storedMechanisms[mechanism.Data.Type], contextObject);
+                DecryptionContext result = new DecryptionContext(mechanism.Data.Type, contextObject);
 
                 //initialise the context using the given command
-                result.MechanismCommand.InitialiseContext(
+                mechanismCommand.InitialiseContext(
                     contextObject: result,
                     options: mechanism,
                     out executionResultCode
@@ -69,15 +69,15 @@ namespace Service.Core.Token.Encryption
                 return null;
             }
 
-            //if a part operation is made and unprocessed data from previous execution exists, append that data to the current processing data
+            // if a part operation is made and unprocessed data from previous execution exists, append that data to the current processing data.
             if (isPartOperation && keyContext.UnprocessedData is not null && keyContext.UnprocessedData.Length > 0)
             {
                 encryptedData = keyContext.UnprocessedData.Concat(encryptedData);
                 keyContext.UnprocessedData = null;
             }
 
-            //execute the command
-            return keyContext.MechanismCommand.Execute(keyContext, encryptedData, out executionResultCode);
+            // execute the command.
+            return storedMechanisms[keyContext.Mechanism].Execute(keyContext, encryptedData, out executionResultCode);
         }
 
         public byte[] DecryptFinalise(out ExecutionResultCode executionResultCode)
@@ -89,7 +89,6 @@ namespace Service.Core.Token.Encryption
             }
 
             byte[] plainData = keyContext.UnprocessedData;
-            keyContext.UnprocessedData = null;
             
             if(plainData == null)
             {
@@ -97,14 +96,15 @@ namespace Service.Core.Token.Encryption
                 return null;
             }
 
-            return keyContext.MechanismCommand.Execute(keyContext, plainData, out executionResultCode);
+            // execute the command.
+            return storedMechanisms[keyContext.Mechanism].Execute(keyContext, plainData, out executionResultCode);
         }
 
         public IEnumerable<Pkcs11Mechanism> GetMechanisms() => storedMechanisms.Keys;
 
         public IAllowMechanism SetMechanism(IMechanismCommand mechanismCommand)
         {
-            //todo: maybe not all mechanism should be allowed?
+            //todo: maybe not all mechanism should be allowed? R: definetly, here must be filters to prevent bad use of mechanisms.
             storedMechanisms[mechanismCommand.MechanismType] = mechanismCommand;
             return this;
         }

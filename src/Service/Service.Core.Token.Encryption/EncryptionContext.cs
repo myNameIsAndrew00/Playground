@@ -13,7 +13,7 @@ namespace Service.Core.Token.Encryption
     /// </summary>
     internal class EncryptionContext : KeyContext
     {
-        internal EncryptionContext(IMechanismCommand mechanismCommand, IMemoryObject memoryObject) : base(mechanismCommand, memoryObject)
+        internal EncryptionContext(Pkcs11Mechanism mechanism, IMemoryObject memoryObject) : base(mechanism, memoryObject)
         {
         }
 

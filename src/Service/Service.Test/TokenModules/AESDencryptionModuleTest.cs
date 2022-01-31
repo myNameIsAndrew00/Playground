@@ -73,26 +73,27 @@ namespace Service.Test.TokenModules
         [Fact]
         public void TestDecrypt()
         { 
-
             AesMechanismOptions mechanism = new AesMechanismOptions(new DataContainer<Pkcs11Mechanism>()
             {
                 Type = Pkcs11Mechanism.AES_ECB,
                 Value = iv
             });
 
-            //Pretest - initialisation
             DecryptionModule decryptionModule = new DecryptionModule(null);
             decryptionModule.SetMechanism(new AESECBDecryptMechanismCommand());
-            IContext initialisedContext = decryptionModule.Initialise(createNewContext(), mechanism, out ExecutionResultCode code);
-
-            Assert.Equal(ExecutionResultCode.OK, code);
 
             //Test 1: unitialised
-            decryptionModule.Decrypt(this.encryptedData, false, out code);
+            decryptionModule.Decrypt(this.encryptedData, false, out ExecutionResultCode code);
             Assert.Equal(ExecutionResultCode.OPERATION_NOT_INITIALIZED, code);
 
             //Test 2: all at once
+            //Pretest - initialisation
+            IContext initialisedContext = decryptionModule.Initialise(createNewContext(), mechanism, out code);
+            Assert.Equal(ExecutionResultCode.OK, code);
+
             decryptionModule = new DecryptionModule(initialisedContext);
+            decryptionModule.SetMechanism(new AESECBDecryptMechanismCommand());
+
             byte[] dencryptedData = decryptionModule.Decrypt(this.encryptedData, false, out code);
 
             Assert.Equal(ExecutionResultCode.OK, code);
@@ -101,6 +102,7 @@ namespace Service.Test.TokenModules
 
             //Test 3: multi part with wrong data size
             decryptionModule = new DecryptionModule(initialisedContext);
+            decryptionModule.SetMechanism(new AESECBDecryptMechanismCommand());
             dencryptedData = decryptionModule.Decrypt(encryptedData.Take(4).ToArray(), true, out code);
             Assert.Equal(ExecutionResultCode.ENCRYPTED_DATA_LEN_RANGE, code);
         }
