@@ -5,8 +5,10 @@ echo -----------------Build started-----------------
 	echo:
 	set output=.\deploy
 	set serviceOutputPath=.\deploy\Service
+	set serviceConfiguratorOutputPath=.\deploy\ConfiguratorAPI
 	set libraryOutputPath=.\deploy\Library
 	set ServiceLibraryPath=..\Service\Service.Worker
+	set ServiceConfiguratorAPIPath=..\Service\Service.ConfigurationAPI
 	set LibraryPath=..\Library\Library\sources
 	 
 	echo Pkcs11 Service output directory: %serviceOutputPath%
@@ -42,6 +44,9 @@ echo -----------------Build started-----------------
 	
 	echo [2]Building service...
 	dotnet publish %ServiceLibraryPath% --output %serviceOutputPath%
+	
+	echo [3]Building service configuration API
+	dotnet publish %ServiceConfiguratorAPIPath% --output %serviceConfiguratorOutputPath%
 	
 	echo:
 	echo Service built with success...

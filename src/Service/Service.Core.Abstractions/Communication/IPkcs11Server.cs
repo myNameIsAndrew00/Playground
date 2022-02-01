@@ -1,4 +1,5 @@
-﻿using Service.Core.Abstractions.Execution;
+﻿using Service.Core.Abstractions.Configuration;
+using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
@@ -28,6 +29,8 @@ namespace Service.Core.Abstractions.Communication
         /// <param name="storage"></param>
         /// <returns></returns>
         IPkcs11Server SetStorage(ITokenStorage storage);
+
+        IPkcs11Server SetConfiguratorAPI(IConfigurationAPI configurationApi);
 
         /// <summary>
         /// Register an module to the server which may be used by executor to handle the request invoked.

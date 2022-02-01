@@ -3,6 +3,7 @@ using System.Net;
 using Service.Core;
 using Service.Core.Abstractions;
 using Service.Core.Abstractions.Communication;
+using Service.Core.Configuration;
 using Service.Core.Infrastructure;
 
 namespace Service.Playground
@@ -13,7 +14,9 @@ namespace Service.Playground
         static void Main(string[] args)
         {
              
-            using IPkcs11Server server = ServerFactory.CreateDefaultServer("127.0.0.1", 5123);
+            using IPkcs11Server server = ServerFactory.CreateDefaultServer("127.0.0.1", 5123)
+                                                      .SetConfiguratorAPI(new ConfigurationAPI(@"..\..\..\..\Service.ConfigurationAPI\bin\Debug\net5.0\Service.ConfigurationAPI.exe"));
+          
             Console.WriteLine("Waiting for clients...");
              
             server.Start();

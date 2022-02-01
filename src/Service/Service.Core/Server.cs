@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Communication;
+using Service.Core.Abstractions.Configuration;
 using Service.Core.Abstractions.Execution;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
@@ -35,7 +36,8 @@ namespace Service.Core
         private CancellationTokenSource listenTaskTokenSource;
 
         private ITokenStorage tokenStorage;
-         
+
+        private IConfigurationAPI configurationAPI;
 
         public IServiceCommunicationResolver<DispatchResultType, SessionType> Resolver { get; }
 
@@ -57,20 +59,30 @@ namespace Service.Core
             if (disposed) return;
 
             listenTaskTokenSource = new CancellationTokenSource();
-           
+
             listeningTask = Resolver.Listen(listenTaskTokenSource.Token);
+
+            if (this.configurationAPI is not null)
+                this.configurationAPI.Launch();
+
         }
 
         public void Stop()
         {
-            listenTaskTokenSource.Cancel(); 
+            listenTaskTokenSource.Cancel();
+
+            if (this.configurationAPI is not null)
+                this.configurationAPI.Stop();
         }
 
         public IPkcs11Server SetStorage(ITokenStorage storage) { this.tokenStorage = storage; return this; }
 
+        public IPkcs11Server SetConfiguratorAPI(IConfigurationAPI configurationApi) { this.configurationAPI = configurationApi; return this; }
+
+
         public IPkcs11Server RegisterModule<ModuleType, ImplementationType>()
-            where ModuleType : ITokenModule 
-            where ImplementationType : ITokenModule 
+            where ModuleType : ITokenModule
+            where ImplementationType : ITokenModule
         {
             moduleCollection.RegisterModule(typeof(ModuleType), typeof(ImplementationType));
             return this;
@@ -93,7 +105,7 @@ namespace Service.Core
             moduleCollection.RegisterModule(typeof(IHashingModule), typeof(HashingModuleType), (builderParameter) => implementationFactory(builderParameter as IContext));
             return this;
         }
-        public IPkcs11Server  RegisterSigningModule<SigningModuleType>(Func<IContext, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
+        public IPkcs11Server RegisterSigningModule<SigningModuleType>(Func<IContext, SigningModuleType> implementationFactory = null) where SigningModuleType : ISigningModule
         {
             moduleCollection.RegisterModule(typeof(ISigningModule), typeof(SigningModuleType), (builderParameter) => implementationFactory(builderParameter as IContext));
             return this;
@@ -102,8 +114,12 @@ namespace Service.Core
         public void Dispose()
         {
             if (disposed) return;
-            
+
             this.Resolver.Dispose();
+
+            if (this.configurationAPI is not null)
+                this.configurationAPI.Dispose();
+
             disposed = true;
         }
 
@@ -135,10 +151,10 @@ namespace Service.Core
                 MethodInfo method = executor.GetType().GetMethod(
                     name: dispatchResult.DispatchedAction.ToString(),
                     bindingAttr: BindingFlags.Public | BindingFlags.Instance);
-                
+
                 if (method == null)
                     return executor.GetEmptySessionResult(ExecutionResultCode.FUNCTION_NOT_SUPPORTED);
-                
+
                 object[] methodParameters = executor.ModelBinder?.GetMethodParametersModels(method, dispatchResult, tokenStorage);
 
                 // invoke the method and get the execution result
@@ -163,6 +179,7 @@ namespace Service.Core
             //todo: handle the exception
             Debug.WriteLine(exception);
         }
+
 
 
 
