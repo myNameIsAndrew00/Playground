@@ -22,6 +22,8 @@ namespace Service.Core.Infrastructure.Communication
 
         Dictionary<ulong, SessionType> sessions = new Dictionary<ulong, SessionType>();
 
+        public IEnumerable<IReadOnlySession> GetSessions() => sessions.Values.Select(session => session as IReadOnlySession).ToList();
+
         public DispatchResultType DispatchClientRequest(byte[] inputBytes)
         {
             bool sessionClosed = false;
@@ -77,6 +79,7 @@ namespace Service.Core.Infrastructure.Communication
             return false;
         }
 
+
         #region Private
 
         private SessionType beginSession()
@@ -108,7 +111,7 @@ namespace Service.Core.Infrastructure.Communication
 
         }
 
-  
+
 
 
         #endregion

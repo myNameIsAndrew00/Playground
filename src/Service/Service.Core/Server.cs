@@ -37,7 +37,7 @@ namespace Service.Core
 
         private ITokenStorage tokenStorage;
 
-        private IConfigurationAPI configurationAPI;
+        private IConfigurationAPIProxy configurationAPI;
 
         public IServiceCommunicationResolver<DispatchResultType, SessionType> Resolver { get; }
 
@@ -48,7 +48,7 @@ namespace Service.Core
             this.disposed = false;
             this.Resolver = resolver;
             moduleCollection = new ModuleFactory();
-
+            
             Resolver.OnCommunicationCreated += onCommunicationCreated;
             Resolver.OnClientConnectionError += onClientConnectionError;
             Resolver.OnRequestHandlingError += onRequestHandlingError;
@@ -77,7 +77,7 @@ namespace Service.Core
 
         public IPkcs11Server SetStorage(ITokenStorage storage) { this.tokenStorage = storage; return this; }
 
-        public IPkcs11Server SetConfiguratorAPI(IConfigurationAPI configurationApi) { this.configurationAPI = configurationApi; return this; }
+        public IPkcs11Server SetConfigurationAPI(IConfigurationAPIProxy configurationApi) { this.configurationAPI = configurationApi; return this; }
 
 
         public IPkcs11Server RegisterModule<ModuleType, ImplementationType>()

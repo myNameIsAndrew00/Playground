@@ -30,8 +30,12 @@ namespace Service.Worker
                     services.AddScoped<IPkcs11Server>(serviceProvider =>
                     {
                         IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
-                        return ServerFactory.CreateDefaultServer("127.0.0.1", int.Parse(configuration["Pkcs11Service:Port"]))
-                                            .SetConfiguratorAPI(new ConfigurationAPI(configuration["Pkcs11ConfigurationService:Path"]));
+
+                        var server = ServerFactory.CreateDefaultServer("127.0.0.1", int.Parse(configuration["Pkcs11Service:Port"]));
+                                    
+                        server = server.SetConfigurationAPI(new ConfigurationAPIProxy(server, configuration["Pkcs11ConfigurationService:Path"]));
+
+                        return server;
                     });
                 });
     }

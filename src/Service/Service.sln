@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Core.Communication"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Runtime", "Service.Runtime\Service.Runtime.csproj", "{206587A7-A97A-4670-9756-3600995B3A6D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TokenModules", "TokenModules", "{E6AC9717-E5C9-4743-9AA5-A14DC7144823}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E6AC9717-E5C9-4743-9AA5-A14DC7144823}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Core.Token.Encryption", "Service.Core.Token.Encryption\Service.Core.Token.Encryption.csproj", "{097BC241-8007-4A3D-98B8-2743A0101CB5}"
 EndProject
@@ -29,7 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Core.Token.Signing"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Worker", "Service.Worker\Service.Worker.csproj", "{6E764932-E321-4481-8CD8-5A1BB6605CA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.ConfigurationAPI", "Service.ConfigurationAPI\Service.ConfigurationAPI.csproj", "{87D93F3B-2C74-42CB-ADA8-5FF89F5485F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.ConfigurationAPI", "Service.ConfigurationAPI\Service.ConfigurationAPI.csproj", "{87D93F3B-2C74-42CB-ADA8-5FF89F5485F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.Configuration", "Service.Core.Configuration\Service.Core.Configuration.csproj", "{0200E4D0-60D5-45E5-B811-C2EE64925CBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{B5DDD47C-0470-4E72-8939-36E72DC78BB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +93,10 @@ Global
 		{87D93F3B-2C74-42CB-ADA8-5FF89F5485F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87D93F3B-2C74-42CB-ADA8-5FF89F5485F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87D93F3B-2C74-42CB-ADA8-5FF89F5485F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0200E4D0-60D5-45E5-B811-C2EE64925CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0200E4D0-60D5-45E5-B811-C2EE64925CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0200E4D0-60D5-45E5-B811-C2EE64925CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0200E4D0-60D5-45E5-B811-C2EE64925CBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +105,8 @@ Global
 		{097BC241-8007-4A3D-98B8-2743A0101CB5} = {E6AC9717-E5C9-4743-9AA5-A14DC7144823}
 		{5FF823AC-E4E9-4FC3-B977-F9D9B54306D2} = {E6AC9717-E5C9-4743-9AA5-A14DC7144823}
 		{E9D29B81-2447-45F4-A86B-C6DFCF89BDBD} = {E6AC9717-E5C9-4743-9AA5-A14DC7144823}
+		{87D93F3B-2C74-42CB-ADA8-5FF89F5485F9} = {B5DDD47C-0470-4E72-8939-36E72DC78BB8}
+		{0200E4D0-60D5-45E5-B811-C2EE64925CBF} = {B5DDD47C-0470-4E72-8939-36E72DC78BB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {671D15F5-EA26-427E-B862-AA98762B07DE}

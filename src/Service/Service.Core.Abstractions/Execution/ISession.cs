@@ -5,14 +5,21 @@ using System.Text;
 
 namespace Service.Core.Abstractions.Execution
 {
-    public interface ISession : IDisposable
+    public interface IReadOnlySession: IDisposable
     {
         ulong Id { get; init; }
 
         bool Authenticate(Pkcs11UserType userType, string password);
 
         bool Closed { get; }
+    }
 
+    /// <summary>
+    /// Provides properties and methods to Handle a token session.
+    /// </summary>
+    public interface ISession : IReadOnlySession
+    {
+     
         /// <summary>
         /// Close the current session using a session handler.
         /// </summary>

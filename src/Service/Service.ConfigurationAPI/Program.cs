@@ -20,7 +20,7 @@ namespace Service.ConfigurationAPI
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>(host => new Startup(host.Configuration, args[0]));
                 });
     }
 }

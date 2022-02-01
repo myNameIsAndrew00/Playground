@@ -7,8 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Service.ConfigurationAPI.Proxy;
 using System;
 using System.Collections.Generic;
+using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,20 +18,22 @@ namespace Service.ConfigurationAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private string pipeHandler;
+
+        public Startup(IConfiguration configuration, string pipeHandler)
         {
             Configuration = configuration;
+            this.pipeHandler = pipeHandler;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton(new CommunicationChannel(pipeHandler));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

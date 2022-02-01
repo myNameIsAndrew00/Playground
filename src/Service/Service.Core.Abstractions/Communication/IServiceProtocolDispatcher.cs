@@ -14,6 +14,11 @@ namespace Service.Core.Abstractions.Communication
         where SessionType : ISession
         
     {
+        /// <summary>
+        /// Returns all sessions from memory.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IReadOnlySession> GetSessions();
 
         ///Dispatch messages received from clients to the server. This method can handle session close operation.
         public DispatchResultType DispatchClientRequest(byte[] inputBytes);

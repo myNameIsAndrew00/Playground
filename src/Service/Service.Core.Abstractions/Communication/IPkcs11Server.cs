@@ -30,7 +30,12 @@ namespace Service.Core.Abstractions.Communication
         /// <returns></returns>
         IPkcs11Server SetStorage(ITokenStorage storage);
 
-        IPkcs11Server SetConfiguratorAPI(IConfigurationAPI configurationApi);
+        /// <summary>
+        /// Set the service configuration api
+        /// </summary>
+        /// <param name="configurationApi"></param>
+        /// <returns></returns>
+        IPkcs11Server SetConfigurationAPI(IConfigurationAPIProxy configurationApi);
 
         /// <summary>
         /// Register an module to the server which may be used by executor to handle the request invoked.

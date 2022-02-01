@@ -13,10 +13,11 @@ namespace Service.Playground
 
         static void Main(string[] args)
         {
-             
-            using IPkcs11Server server = ServerFactory.CreateDefaultServer("127.0.0.1", 5123)
-                                                      .SetConfiguratorAPI(new ConfigurationAPI(@"..\..\..\..\Service.ConfigurationAPI\bin\Debug\net5.0\Service.ConfigurationAPI.exe"));
-          
+
+            IPkcs11Server server = ServerFactory.CreateDefaultServer("127.0.0.1", 5123);
+            server = server.SetConfigurationAPI(new ConfigurationAPIProxy(server, @"..\..\..\..\Service.ConfigurationAPI\bin\Debug\net5.0\Service.ConfigurationAPI.exe"));
+ 
+            
             Console.WriteLine("Waiting for clients...");
              
             server.Start();
@@ -30,6 +31,8 @@ namespace Service.Playground
             while (keyinfo.Key != ConsoleKey.X);
 
             server.Stop();
+
+            server.Dispose();
         }
     }
 }

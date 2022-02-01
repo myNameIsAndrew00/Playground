@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Service.Core.Configuration\Service.Core.Configuration.csproj" />
     <ProjectReference Include="..\Service.Core\Service.Core.csproj" />
   </ItemGroup>
 
