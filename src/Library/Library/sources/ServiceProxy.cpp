@@ -200,6 +200,62 @@ DecryptFinalResult Abstractions::ServiceProxy::DecryptFinal(const Id sessionId, 
 			sessionId
 		);
 }
+
+DigestInitResult Abstractions::ServiceProxy::DigestInit(const Id sessionId, const TlvStructure& mechanism)
+{
+	return this->InvokeServer<DigestInitResult>(
+			ServiceActionCode::DigestInit,
+			[mechanism]() {
+				return Bytes(mechanism);
+			},
+			[](auto reader, auto code) {
+				return DigestInitResult((ReturnCode)code, true);
+			},
+			sessionId
+		);
+}
+
+DigestResult Abstractions::ServiceProxy::Digest(const Id sessionId, TlvStructure dataToDigest, bool requestLength)
+{
+	return this->InvokeServer<DigestResult>(
+			ServiceActionCode::Digest,
+			[requestLength, dataToDigest]() {
+				return Bytes(requestLength).Append(dataToDigest);
+			},
+			[](auto reader, auto code) {
+				return DigestResult((ReturnCode)code, reader->PeekBytes());
+			},
+			sessionId
+		);
+}
+
+DigestUpdateResult Abstractions::ServiceProxy::DigestUpdate(const Id sessionId, TlvStructure dataToDigest)
+{
+	return this->InvokeServer<DigestUpdateResult>(
+			ServiceActionCode::DigestUpdate,
+			[dataToDigest]() {
+				return Bytes(dataToDigest);
+			},
+			[](auto reader, auto code) {
+				return DigestUpdateResult((ReturnCode)code, true);
+			},
+			sessionId
+		);
+}
+
+DigestFinalResult Abstractions::ServiceProxy::DigestFinal(const Id sessionId, bool lengthRequest)
+{
+	return this->InvokeServer<DigestFinalResult>(
+			ServiceActionCode::DigestFinal,
+			[lengthRequest]() {
+				return Bytes(lengthRequest);
+			},
+			[](auto reader, auto code) {
+				return DigestFinalResult((ReturnCode)code, reader->PeekBytes());
+			},
+			sessionId
+		);
+}
  
 
 

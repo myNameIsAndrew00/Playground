@@ -62,5 +62,8 @@ namespace Abstractions {
 	using DecryptResult = TokenActionResult<Bytes>;
 	using DecryptUpdateResult = TokenActionResult<Bytes>;
 	using DecryptFinalResult = TokenActionResult<Bytes>;
-
+	using DigestInitResult = TokenActionResult<bool>;
+	using DigestResult = TokenActionResult<Bytes>;
+	using DigestUpdateResult = TokenActionResult<bool>;
+	using DigestFinalResult = TokenActionResult<Bytes>;
 }

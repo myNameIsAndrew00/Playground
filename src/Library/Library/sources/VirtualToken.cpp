@@ -103,6 +103,30 @@ DecryptFinalResult Abstractions::VirtualToken::DecryptFinal(const unsigned long 
 	//todo: handle cases or do client side validations
 	return this->serviceProxy->DecryptFinal(sessionId, decryptedDataLengthRequest);
 }
+
+DigestInitResult Abstractions::VirtualToken::DigestInit(const unsigned long long sessionId, const CK_MECHANISM* mechanism) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->DigestInit(sessionId, TlvStructure((unsigned long long)mechanism->mechanism, (const unsigned char*)mechanism->pParameter, mechanism->ulParameterLen));
+}
+
+DigestResult Abstractions::VirtualToken::Digest(const unsigned long long sessionId, const unsigned char* data, const int length, bool digestLengthRequest) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->Digest(sessionId, TlvStructure(0, data, length), digestLengthRequest);
+}
+
+DigestUpdateResult Abstractions::VirtualToken::DigestUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->DigestUpdate(sessionId, TlvStructure(0, data, length));
+}
+
+DigestFinalResult Abstractions::VirtualToken::DigestFinal(const unsigned long long sessionId, bool digestLengthRequest) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->DigestFinal(sessionId, digestLengthRequest);
+}
  
 
 

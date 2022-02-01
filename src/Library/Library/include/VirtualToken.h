@@ -27,7 +27,11 @@ namespace Abstractions {
 		DecryptResult Decrypt(const unsigned long long sessionId, const unsigned char* data, const int length, bool decryptedDataLengthRequest) const override;
 		DecryptUpdateResult DecryptUpdate(const unsigned long long sessionId, const unsigned char* data, const int length, bool decryptedDataLengthRequest) const override;
 		DecryptFinalResult DecryptFinal(const unsigned long long sessionId, bool decryptedDataLengthRequest) const override;
-
+		DigestInitResult DigestInit(const unsigned long long sessionId, const CK_MECHANISM* mechanism) const override;
+		DigestResult Digest(const unsigned long long sessionId, const unsigned char* data, const int length, bool digestLengthRequest) const override;
+		DigestUpdateResult DigestUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const override;
+		DigestFinalResult DigestFinal(const unsigned long long sessionId, bool digestLengthRequest) const override;
+		
 		~VirtualToken();
 	private:
 

@@ -1,11 +1,11 @@
 #include "../Library/include/pkcs11.h"
 #include <string.h> 
 
-//reminder: make sure to copy compile debug/release version of Library proj to generate dll file.
+//REMINDER: make sure to copy compile debug/release version of Library proj to generate dll file.
 
 int main() {
-	//setup
-
+	
+	// setup
 	CK_BYTE iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 					 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
 
@@ -16,6 +16,10 @@ int main() {
 
 	CK_MECHANISM mechanismTemplate[] = {
 		{CKM_AES_CBC, iv, sizeof(iv)}
+	};
+
+	CK_MECHANISM digestMechanismTemplate[] = {
+		{CKM_SHA_1, 0, 0}
 	};
 
 	CK_ATTRIBUTE _template[] = {
@@ -31,8 +35,9 @@ int main() {
 	CK_ULONG slotsCount;
 	char encryptData[] = "Ana are mere si pere si de toate balbal blbdla al ";
 
+	// ---------------- PKCS11 DEMO below ----------------
 
-
+	// --> Initialisation demo
 	CK_RV initResponseCode = C_Initialize(nullptr);
 
 
@@ -43,6 +48,7 @@ int main() {
 	CK_SESSION_HANDLE session;
 	CK_RV createSessionResponseCode = C_OpenSession(*slots, 0, nullptr, nullptr, &session);
 
+	// --> Encryption module demo
 	CK_OBJECT_HANDLE keyObject;
 	CK_RV objectRequestResponseCode = C_CreateObject(session, _template, 7, &keyObject);
 
@@ -62,7 +68,22 @@ int main() {
 	decryptedData = new unsigned char[decryptedDataLength];
 	decryptResultCode = C_Decrypt(session, encryptedData, encryptedDataLength, decryptedData, &decryptedDataLength);
 
+	// --> Messaging module demo 
+	CK_RV digestInitResult = C_DigestInit(session, digestMechanismTemplate);
+	unsigned int digestLength;
+	unsigned char* digest;
 
+	CK_RV digestResultCode = C_Digest(session, (unsigned char*)encryptData, strlen(encryptData) + 1, nullptr, &digestLength);
+	digest = new unsigned char[digestLength];
+	digestResultCode = C_Digest(session, (unsigned char*)encryptData, strlen(encryptData) + 1, digest, &digestLength);
+
+	// -- Finalisation demo
 	CK_RV endSessionResponseCode = C_CloseSession(session);
 	CK_RV finaliseResponseCode = C_Finalize(nullptr);
+
+	// clean up
+	delete[] decryptedData;
+	delete[] encryptedData;
+	delete[] digest;
+	delete[] slots;
 }

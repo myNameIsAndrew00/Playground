@@ -35,6 +35,10 @@ namespace Abstractions {
 		virtual DecryptResult Decrypt(const unsigned long long sessionId, const unsigned char* data, const int length, bool decryptedDataLengthRequest) const = 0;
 		virtual DecryptUpdateResult DecryptUpdate(const unsigned long long sessionId, const unsigned char* data, const int length, bool decryptedDataLengthRequest) const = 0;
 		virtual DecryptFinalResult DecryptFinal(const unsigned long long sessionId, bool decryptedDataLengthRequest) const = 0;
+		virtual DigestInitResult DigestInit(const unsigned long long sessionId, const CK_MECHANISM* mechanism) const = 0;
+		virtual DigestResult Digest(const unsigned long long sessionId, const unsigned char* data, const int length, bool digestLengthRequest) const = 0;
+		virtual DigestUpdateResult DigestUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const = 0;
+		virtual DigestFinalResult DigestFinal(const unsigned long long sessionId, bool digestLengthRequest) const = 0;
 
 		virtual ~IPkcs11Token() { }
 	};

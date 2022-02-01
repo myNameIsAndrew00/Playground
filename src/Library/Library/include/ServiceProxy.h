@@ -115,6 +115,38 @@ namespace Abstractions {
 		/// <returns>An object containing the result of the process. Final block of the previous dencrypt update will be returned.</returns>
 		DecryptFinalResult DecryptFinal(const Id sessionId, bool requestLength);
 
+		/// <summary>
+		/// Trigger digest initialisation method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which will contain the initialised mechanism</param>
+		/// <param name="mechanism">Mechanism used for digest</param>
+		/// <returns>An object containing the result of the process.</returns>
+		DigestInitResult DigestInit(const Id sessionId, const TlvStructure& mechanism);
+
+		/// <summary>
+		/// Trigger digest method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised digest object</param>
+		/// <param name="dataToDigest">Data which will be hashed. Type field of the tlv structure will be ignored.</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive hashed data length</param>
+		/// <returns>An object containing the result of the process. Hashed data will be returned.</returns>
+		DigestResult Digest(const Id sessionId, TlvStructure dataToDigest, bool requestLength);
+
+		/// <summary>
+		/// Trigger digest update method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised digest object</param>
+		/// <param name="dataToDigest">Data which will be hashed. Type field of the tlv structure will be ignored.</param>
+		/// <returns>An object containing the result of the process.</returns>
+		DigestUpdateResult DigestUpdate(const Id sessionId, TlvStructure dataToDigest);
+
+		/// <summary>
+		/// Trigger digest finall method ont the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised digest object</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive hashed data length</param>
+		/// <returns>An object containing the result of the process. Hashed data will be returned.</returns>
+		DigestFinalResult DigestFinal(const Id sessionId, bool lengthRequest);
 
 	private:
 		bool communicationInitialised;

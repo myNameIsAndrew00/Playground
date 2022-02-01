@@ -14,5 +14,9 @@ namespace Abstractions {
 		Decrypt = 0x0A,
 		DecryptFinal = 0x0B,
 		DecryptUpdate = 0x0C,
+		DigestInit = 0x0D,
+		Digest = 0x0E,
+		DigestFinal = 0x0F,
+		DigestUpdate = 0x10
 	};
 }
