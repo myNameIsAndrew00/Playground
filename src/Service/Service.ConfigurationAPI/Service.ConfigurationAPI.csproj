@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Service.ConfigurationAPI.Models\Service.ConfigurationAPI.Models.csproj" />
     <ProjectReference Include="..\Service.Core.Abstractions\Service.Core.Abstractions.csproj" />
     <ProjectReference Include="..\Service.Core.Configuration\Service.Core.Configuration.csproj" />
   </ItemGroup>

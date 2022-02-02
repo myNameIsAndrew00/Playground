@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurator", "Configurator\Configurator.csproj", "{AE581DEB-A25F-4A38-8A62-F82526B8CA03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator", "Configurator\Configurator.csproj", "{AE581DEB-A25F-4A38-8A62-F82526B8CA03}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConfigurationAPI", "ConfigurationAPI", "{648117FA-ED40-4708-92C0-A513135AA5A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.ConfigurationAPI.Models", "..\Service\Service.ConfigurationAPI.Models\Service.ConfigurationAPI.Models.csproj", "{C105D55B-A817-4CEE-A659-6A4C9C8147D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurator.ViewModel", "Configurator.ViewModel\Configurator.ViewModel.csproj", "{1751F606-DF42-46AD-98AE-7E3705A93FEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +21,20 @@ Global
 		{AE581DEB-A25F-4A38-8A62-F82526B8CA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE581DEB-A25F-4A38-8A62-F82526B8CA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE581DEB-A25F-4A38-8A62-F82526B8CA03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C105D55B-A817-4CEE-A659-6A4C9C8147D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C105D55B-A817-4CEE-A659-6A4C9C8147D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C105D55B-A817-4CEE-A659-6A4C9C8147D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C105D55B-A817-4CEE-A659-6A4C9C8147D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1751F606-DF42-46AD-98AE-7E3705A93FEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1751F606-DF42-46AD-98AE-7E3705A93FEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1751F606-DF42-46AD-98AE-7E3705A93FEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1751F606-DF42-46AD-98AE-7E3705A93FEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C105D55B-A817-4CEE-A659-6A4C9C8147D4} = {648117FA-ED40-4708-92C0-A513135AA5A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3865126-84BA-4182-BF1D-27F6F42C95E9}
