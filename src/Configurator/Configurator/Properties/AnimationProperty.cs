@@ -44,7 +44,7 @@ namespace Configurator.Properties
 
             }
             else DoAnimation(element, (bool)value);
-
+          
         }
 
         protected virtual void DoAnimation(FrameworkElement element, bool value) { }

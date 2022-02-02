@@ -8,5 +8,14 @@
              xmlns:core="clr-namespace:Configurator.ViewModel.Pages;assembly=Configurator.ViewModel"
              xmlns:config="clr-namespace:Configurator"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:converters="clr-namespace:Configurator.Converters"
+             xmlns:property="clr-namespace:Configurator.Properties">
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel>
+            <TextBox property:TextBoxIconProperty.Value="Server" Width="200" Tag="Enter service IP..."></TextBox>
+            <Button Margin="0 5 0 0" Width="200" >Connect</Button>
+        </StackPanel>
+        
+    </Grid>
 </config:BasePage>

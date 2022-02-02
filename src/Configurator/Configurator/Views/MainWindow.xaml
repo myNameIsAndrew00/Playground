@@ -12,28 +12,29 @@
         WindowStyle="None" 
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         >
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Border BorderThickness="0.5" BorderBrush="#333333">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Button 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button  
                     Command="{Binding CloseCommand}"
-                    Grid.Column="1"                 
-                    Style="{StaticResource MenuBarButtonStyle}"
-                    HorizontalAlignment="Right">
-                <fa:IconBlock FontSize="15" Icon="Times" Foreground="Black" ></fa:IconBlock>
-            </Button>
-        </Grid>
-        <Grid Grid.Row="1">
-            <UserControl property:ShouldAnimateOutProperty.Value="{Binding ApplicationViewModel.CurrentPageShouldAnimateOut }"
+                    Grid.Column="1"      
+                    Style="{StaticResource MenuBarCloseButtonStyle}"
+                    HorizontalAlignment="Right"
+                    >X
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1">
+                <UserControl property:ShouldAnimateOutProperty.Value="{Binding ApplicationViewModel.CurrentPageShouldAnimateOut }"
             Content="{Binding ApplicationViewModel.CurrentPage, Converter={converters:PageValueConverter}}"/>
+            </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Window>
