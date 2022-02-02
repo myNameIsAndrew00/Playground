@@ -34,8 +34,8 @@ echo -----------------Build started-----------------
 
 	set DotNetVersion=%DotNetVersion:~0,1%
 
-	if %DotNetVersion% lss 5 ( 
-		echo "Dot Net Version must be >=5. Install .net 5 sdk."
+	if %DotNetVersion% lss 6 ( 
+		echo "Dot Net Version must be >=6. Install .net 6 sdk."
 		goto final
 	)
 
@@ -58,11 +58,15 @@ echo -----------------Build started-----------------
 	::Step 3: check cl.exe
 	echo [3]Checking msvc compiler...
 	WHERE cl.exe
+	echo %ERRORLEVEL%
+	
 	IF %ERRORLEVEL% NEQ 0 (
-		echo Msvc compiler not found. Install msvc compiler to build pkcs 11 library.
+		echo Msvc compiler not found. Install msvc compiler to build pkcs 11 library. 
+		echo "If you installed the compiler, please make sure that cl.exe exists on your PATH and the compile environment is valid. Run vcvars32.bat, usually found at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build to setup environment."
+
 		goto final
 	)
-	
+
 	echo [4]Building C library...
 	set sourceFiles="%LibraryPath%\dllmain.cpp"^
  "%LibraryPath%\Bytes.cpp"^
@@ -81,7 +85,7 @@ echo -----------------Build started-----------------
  "%LibraryPath%\Functions\sessionManagementFunctions.cpp"^
  "%LibraryPath%\Functions\slotManagementFunctions.cpp"
 	set linkFiles="kernel32.lib" "ws2_32.lib"
-	
+	  
 	cl.exe /Fo%libraryOutputPath%\ /D_USRDLL /D_WINDLL %sourceFiles% %linkFiles% /link /DLL /OUT:"%libraryOutputPath%\pkcs11.dll" 
 	
 	echo Cleanup...	

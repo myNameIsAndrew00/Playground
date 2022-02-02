@@ -8,17 +8,17 @@ Files in this directory can be used to generates de executables and libraries au
 >Run `Unistall.bat` to unistall the platform service.
 
 # Setup
-For now, platform requires **Windows OS** as host for building and runing. To build the  service, **.NET 5 SDK tools** are required to be installed on the development machine. **.NET 5 runtime** is required to be installed on service server machine, for runing the PKCS11 service.
+For now, platform requires **Windows OS** as host for building and runing. To build the  service, **.NET 6 SDK tools** are required to be installed on the development machine. **.NET 6 runtime** is required to be installed on service server machine, for runing the PKCS11 service.
 
 To build the client library, **Microsoft Visual C++** (MSVC) is required to be installed.
 
 ### Download building tools
-.NET 5 SDK installer can be downloaded from here   [Download .NET 5 SDK](https://dotnet.microsoft.com/download/dotnet/5.0).
+.NET 6 SDK installer can be downloaded from here   [Download .NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0).
 
 MSVC installer can be downloaded from here [Download Visual Build Tools](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
 
 ### Download runtime tools
-.NET runtime installer can be downloaded from here [Download .NET 5 runtime](https://dotnet.microsoft.com/download/dotnet/5.0).
+.NET runtime installer can be downloaded from here [Download .NET 6 runtime](https://dotnet.microsoft.com/download/dotnet/6.0).
 
 # Build Output
 After runing `Build.bat`, a directory named `deploy` will be created. It will contain
