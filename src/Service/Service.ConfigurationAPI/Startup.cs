@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace Service.ConfigurationAPI
         {
             services.AddControllers();
             services.AddSingleton(new CommunicationChannel(pipeHandler));
+            services.AddSingleton(new MapperConfiguration(c => c.AddProfile(new ModelsMappingProfile())).CreateMapper());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

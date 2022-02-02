@@ -35,7 +35,7 @@ namespace Service.Core.Abstractions.Communication
         /// </summary>
         /// <param name="configurationApi"></param>
         /// <returns></returns>
-        IPkcs11Server SetConfigurationAPI(IConfigurationAPIProxy configurationApi);
+        IPkcs11Server SetConfigurationAPI(Func<IConfigurablePkcs11Server, IConfigurationAPIProxy> configurationApiFactory);
 
         /// <summary>
         /// Register an module to the server which may be used by executor to handle the request invoked.

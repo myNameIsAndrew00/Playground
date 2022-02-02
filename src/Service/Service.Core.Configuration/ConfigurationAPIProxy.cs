@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Configuration;
+using Service.Core.Configuration.Commands;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,9 +24,9 @@ namespace Service.Core.Configuration
         private string executablePath;
         private string pipeName;
 
-        public IPkcs11Server Server { get; }
+        public IConfigurablePkcs11Server Server { get; }
 
-        public ConfigurationAPIProxy(IPkcs11Server server, string executablePath)
+        public ConfigurationAPIProxy(IConfigurablePkcs11Server server, string executablePath)
         {
             this.Server = server;
             this.executablePath = executablePath;
@@ -49,7 +50,8 @@ namespace Service.Core.Configuration
 
                 configuratorApiProcess.Start();
             }
-            catch(Exception e) { 
+            catch (Exception e)
+            {
             }
         }
 
@@ -59,7 +61,8 @@ namespace Service.Core.Configuration
             {
                 StopProcess();
             }
-            catch(Exception e) { 
+            catch (Exception e)
+            {
             }
         }
 
@@ -79,12 +82,15 @@ namespace Service.Core.Configuration
 
         private void Executor(NamedPipeServerStream pipeServerStream)
         {
-            using StreamWriter writer = new StreamWriter(pipeServerStream);
-            using StreamReader reader = new StreamReader(pipeServerStream);
+            StreamWriter writer = new StreamWriter(pipeServerStream);
 
-            Console.WriteLine(reader.ReadLine());
+            StreamReader reader = new StreamReader(pipeServerStream);
 
-            writer.WriteLine("Good");
+            string command = reader.ReadLine();
+
+            string commandResult = ProxyMessage.Messages[command].HandlerFactory(Server).Execute();
+
+            writer.WriteLine(commandResult);
             writer.Flush();
 
             pipeServerStream.WaitForPipeDrain();

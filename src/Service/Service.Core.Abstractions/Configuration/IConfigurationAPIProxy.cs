@@ -15,7 +15,7 @@ namespace Service.Core.Abstractions.Configuration
         /// <summary>
         /// Represents the server which will be exposed via this API.
         /// </summary>
-        public IPkcs11Server Server { get; }
+        public IConfigurablePkcs11Server Server { get; }
 
         public void Launch();
 

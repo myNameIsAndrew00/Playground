@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Service.Core;
 using Service.Core.Abstractions.Communication;
+using Service.Core.Abstractions.Configuration;
 using Service.Core.Configuration;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,8 @@ namespace Service.Worker
                     {
                         IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-                        var server = ServerFactory.CreateDefaultServer("127.0.0.1", int.Parse(configuration["Pkcs11Service:Port"]));
-                                    
-                        server = server.SetConfigurationAPI(new ConfigurationAPIProxy(server, configuration["Pkcs11ConfigurationService:Path"]));
+                        var server = ServerFactory.CreateDefaultServer("127.0.0.1", int.Parse(configuration["Pkcs11Service:Port"]))
+                                                  .SetConfigurationAPI( configurableServer => new ConfigurationAPIProxy(configurableServer, configuration["Pkcs11ConfigurationService:Path"]));
 
                         return server;
                     });

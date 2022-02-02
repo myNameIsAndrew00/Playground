@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service.ConfigurationAPI.Models;
 using Service.ConfigurationAPI.Proxy;
+using Service.Core.Configuration.Commands;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,13 +16,19 @@ namespace Service.ConfigurationAPI.Controllers
     [Route("session")]
     public class SessionController : ControllerBase
     {
+        private IMapper mapper;
+
+        public SessionController(IMapper mapper)
+        {
+            this.mapper = mapper;
+        }
 
         [HttpGet]
         public async Task<JsonResult> Get([FromServices] CommunicationChannel communicationChannel)
-        {           
-            string resposne =  await communicationChannel.Send(Guid.NewGuid().ToString());
+        {
+            var sessions = await communicationChannel.Send(ProxyMessage.SessionsRequest);
 
-            return new JsonResult(new { data = resposne });
+            return new JsonResult(new { data = mapper.Map<List<SessionDTO>>(sessions) });
         }
     }
 }

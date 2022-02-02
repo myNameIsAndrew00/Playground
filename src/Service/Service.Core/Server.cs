@@ -24,7 +24,7 @@ namespace Service.Core
     /// <summary>
     /// A class which can handle received messages from pkcs11 clients
     /// </summary>
-    public abstract class Server<DispatchResultType, SessionType> : IPkcs11Server<DispatchResultType, SessionType>
+    public abstract class Server<DispatchResultType, SessionType> : IPkcs11Server<DispatchResultType, SessionType>, IConfigurablePkcs11Server
         where DispatchResultType : IDispatchResult<SessionType>
         where SessionType : ISession
     {
@@ -74,10 +74,14 @@ namespace Service.Core
             if (this.configurationAPI is not null)
                 this.configurationAPI.Stop();
         }
+        public IEnumerable<IReadOnlySession> GetSessions() => this.Resolver.Dispatcher.GetSessions();
 
         public IPkcs11Server SetStorage(ITokenStorage storage) { this.tokenStorage = storage; return this; }
 
-        public IPkcs11Server SetConfigurationAPI(IConfigurationAPIProxy configurationApi) { this.configurationAPI = configurationApi; return this; }
+        public IPkcs11Server SetConfigurationAPI(Func<IConfigurablePkcs11Server, IConfigurationAPIProxy> configurationApiFactory) { 
+            this.configurationAPI = configurationApiFactory(this);
+            return this; 
+        }
 
 
         public IPkcs11Server RegisterModule<ModuleType, ImplementationType>()
@@ -180,7 +184,7 @@ namespace Service.Core
             Debug.WriteLine(exception);
         }
 
-
+      
 
 
         #endregion

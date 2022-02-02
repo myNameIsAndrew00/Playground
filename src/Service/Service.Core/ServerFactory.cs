@@ -18,7 +18,7 @@ namespace Service.Core
     public static class ServerFactory
     {
         /// <summary>
-        /// Creates the default server exposed by library
+        /// Creates the default server exposed by library. This server allows configurations.
         /// </summary>
         /// <param name="address">IP Address used by the server</param>
         /// <param name="port">TCP Port where the server will listen to</param>
