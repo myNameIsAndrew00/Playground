@@ -8,7 +8,7 @@
              xmlns:core="clr-namespace:Configurator.ViewModel.Pages;assembly=Configurator.ViewModel"
              xmlns:config="clr-namespace:Configurator"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="500" d:DesignWidth="800"
              xmlns:converters="clr-namespace:Configurator.Converters"
              xmlns:property="clr-namespace:Configurator.Properties"
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
@@ -24,10 +24,10 @@
             <TextBlock TextAlignment="Center" Margin="0 20 0 5">Connect to the virtual token remotely.</TextBlock>
            
             <TextBox Text="{Binding SelectedConnectionEndpoint}" property:TextBoxIconProperty.Value="Server" Width="250" Tag="Enter service IP or domain name..."></TextBox>
-            <Button Command="{Binding ConnectCommand}" Margin="0 5 0 0" Width="250" >Connect</Button>
+            <Button Visibility="{Binding IsConnecting, Converter={converters:BooleanToVisibilityCollapsedConverter}}" Command="{Binding ConnectCommand}" Margin="0 5 0 0" Width="250" >Connect</Button>
             <TextBlock Text="{Binding ConnectionErrorMessage}"  Margin="0 5 0 0" HorizontalAlignment="Center" Foreground="Red"></TextBlock>
-            
-            <fa:IconBlock Visibility="{Binding IsConnecting, Converter={converters:BooleanToVisibilityHiddenConverter}, ConverterParameter=True}" 
+
+            <fa:IconBlock Visibility="{Binding IsConnecting, Converter={converters:BooleanToVisibilityCollapsedConverter}, ConverterParameter=True}" 
                           Style="{StaticResource RotatingIcon}" 
                           FontSize="20" 
                           Margin="10" 
