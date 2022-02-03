@@ -29,13 +29,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\Pages\Dashboard.xaml.cs">
+    <Compile Update="Views\Pages\Dashboard\Dashboard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Pages\Dashboard.xaml">
+    <Page Update="Views\Pages\Dashboard\Dashboard.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

@@ -24,8 +24,17 @@ namespace Configurator.ViewModel
  
         public async Task ChangePage(ApplicationPages NewPage)
         {
+            // If animation is triggered, return.
+            if (CurrentPageShouldAnimateOut) return;
+
+            // If page is already set, stop the action.
+            if (NewPage == CurrentPage) return;
+
             CurrentPageShouldAnimateOut = true;
             await Task.Delay(800);
+
+            // If new page is connect, disconnect the client from service.
+            if (NewPage == ApplicationPages.Connect) DisconnectClient();
 
             CurrentPage = NewPage;
             CurrentPageShouldAnimateOut = false;
@@ -40,23 +49,39 @@ namespace Configurator.ViewModel
         /// <returns></returns>
         public async Task<bool> InitialiseClient(string endpoint)
         {
-            if (Client != null) Client.Dispose();
+            DisconnectClient();
 
-            Client = new ConfigurationAPIClient(endpoint, "5000", true);
-
-            // Check that client inserted is valid using the ping endpoint
-            var pingResponse = await Client.Get<bool>(Endpoint.Ping);
-
-            if(! (pingResponse?.Data ?? false))
+            try
             {
-                Client.Dispose();
-                Client = null;
+                Client = new ConfigurationAPIClient(endpoint, "5000", true);
 
+                // Check that client inserted is valid using the ping endpoint
+                var pingResponse = await Client.Get<bool>(Endpoint.Ping);
+
+                if (!(pingResponse?.Data ?? false))
+                {
+                    DisconnectClient();
+                    return false;
+                }
+
+                // If client is valid, return true
+                return true;
+            }
+            catch
+            {
+                // Error ocurred, return false
                 return false;
             }
+        }
 
-            // If client is valid, return
-            return true;
+        /// <summary>
+        /// Disconnect client from service.
+        /// </summary>
+        public void DisconnectClient()
+        {
+            if (Client is not null) Client.Dispose();
+
+            Client = null;
         }
 
     }

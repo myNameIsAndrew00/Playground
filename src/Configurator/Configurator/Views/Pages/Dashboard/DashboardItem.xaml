@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="Configurator.Views.Pages.Dashboard.DashboardItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Configurator.Views.Pages.Dashboard"
+             xmlns:converters="clr-namespace:Configurator.Converters"
+             mc:Ignorable="d" 
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             >
+    <Button Style="{StaticResource EmptyButton}" Command="{Binding NavigateCommand}" >
+        <Grid Height="80" Width="210" Margin="3">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter Property="Opacity" Value="0.5"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="1"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Border>
+                <Border.Style>
+                    <Style>
+                        <Setter Property="Border.BorderBrush" Value="Transparent"/>
+                        <Setter Property="Border.BorderThickness" Value="2"></Setter>
+                        <Style.Triggers>
+                            <Trigger Property="Border.IsMouseOver" Value="True">
+                                <Setter Property="Border.BorderBrush" Value="LightGray" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <fa:IconBlock Icon="{Binding Icon,  Converter={converters:StringToIconConverter}}" Margin="0 -10 0 0" FontSize="27"></fa:IconBlock>
+
+                    <Grid Grid.Column="1" Margin="10">
+                        <StackPanel>
+                            <TextBlock FontSize="17" Foreground="Black" Text="{Binding Title}"></TextBlock>
+                            <TextBlock FontSize="12" TextWrapping="Wrap" Margin="0 3 0 0" Text="{Binding Description}"></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Button>
+</UserControl>

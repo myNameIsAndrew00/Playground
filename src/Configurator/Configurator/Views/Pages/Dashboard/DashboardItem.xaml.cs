@@ -1,5 +1,4 @@
-﻿using Configurator.ViewModel.Pages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Configurator.Views.Pages
+namespace Configurator.Views.Pages.Dashboard
 {
     /// <summary>
-    /// Interaction logic for Connect.xaml
+    /// Interaction logic for DashboardItem.xaml
     /// </summary>
-    public partial class Dashboard : BasePage<DashboardViewModel>
+    public partial class DashboardItem : UserControl
     {
-        public Dashboard()
+        public DashboardItem()
         {
             InitializeComponent();
         }

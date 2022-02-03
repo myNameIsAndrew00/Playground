@@ -1,6 +1,4 @@
-﻿using Configurator.ViewModel;
-using Configurator.Views.Pages;
-using Configurator.Views.Pages.Dashboard;
+﻿using FontAwesome.Sharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,19 +8,20 @@ using System.Threading.Tasks;
 
 namespace Configurator.Converters
 {
-    public class PageValueConverter : BaseValueConverter<PageValueConverter>
+    public class StringToIconConverter : BaseValueConverter<StringToIconConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //return a page inherited from BasePage
-            switch ((ApplicationPages)value)
+            string valueString = value as string;
+
+            switch (valueString)
             {
-                case ApplicationPages.Connect:
-                    return new Connect();
-                case ApplicationPages.Dashboard:
-                    return new Dashboard();
-                default:
-                    return null;
+                case "session": return IconChar.Buffer;
+                case "logs": return IconChar.ClipboardList;
+                case "certificate": return IconChar.Certificate;
+                case "disconnect": return IconChar.SignOutAlt;
+
+                default: return null;
             }
         }
 
