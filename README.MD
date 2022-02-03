@@ -1,4 +1,6 @@
-![](docs/Playground.svg =300x300)
+<p align="center">
+  <img width="400" height="400" src="docs/Playground.svg">
+</p>
 
 # Cryptographic Hardware Simulator!
 
