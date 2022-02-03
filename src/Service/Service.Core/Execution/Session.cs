@@ -17,7 +17,8 @@ namespace Service.Core.Execution
     /// </summary>
     public class Session : ISession
     {
-        public Session() { }
+        public Session() { 
+        }
 
         private Dictionary<ulong, IMemoryObject> sessionObjects = new Dictionary<ulong, IMemoryObject>();
 
@@ -36,6 +37,8 @@ namespace Service.Core.Execution
         public IDigestContext RegisteredDigestContext { get; private set; }
 
         public bool Closed { get; private set; } = false;
+
+        public DateTime TimeStamp { get; init; }
 
         public Session(ulong id)
         {

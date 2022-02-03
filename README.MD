@@ -1,3 +1,5 @@
+![](docs/Playground.svg)
+
 # Cryptographic Hardware Simulator!
 
 Cryptographic hardware simulator represents a platform which emulates an virtual ecosystem for a cryptographic hardware which implements PKCS11 standard.  
@@ -15,3 +17,4 @@ Project is organised in 3 interoperable components which operates individually.
 The `Deploy` directory contains scripts used to generate platform libraries and executables.
 
 # Architecture
+ditor online

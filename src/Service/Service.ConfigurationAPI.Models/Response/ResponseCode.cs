@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Configurator.ViewModel
+namespace Service.ConfigurationAPI.Models.Response
 {
-    public enum ApplicationPages
+    public enum ResponseCode
     {
-        Connect,
-        Dashboard
+        Ok
     }
 }

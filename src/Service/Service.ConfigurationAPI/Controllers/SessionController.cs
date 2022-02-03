@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.ConfigurationAPI.Models;
 using Service.ConfigurationAPI.Proxy;
+using Service.ConfigurationAPI.Response;
 using Service.Core.Configuration.Commands;
 using System;
 using System.Collections.Generic;
@@ -24,11 +25,11 @@ namespace Service.ConfigurationAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> Get([FromServices] CommunicationChannel communicationChannel)
+        public async Task<IActionResult> Get([FromServices] CommunicationChannel communicationChannel)
         {
             var sessions = await communicationChannel.Send(ProxyMessage.SessionsRequest);
 
-            return new JsonResult(new { data = mapper.Map<List<SessionDTO>>(sessions) });
+            return this.StandardResponse(mapper.Map<List<SessionDTO>>(sessions));
         }
     }
 }

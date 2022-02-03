@@ -15,11 +15,14 @@ namespace Service.Core.Configuration.Models
         {
             this.Id = session.Id;
             this.Closed = session.Closed;
+            this.TimeStamp = session.TimeStamp;
         }
 
         public ulong Id { get; set; }
 
         public bool Closed { get; set; }
+
+        public DateTime TimeStamp { get; set; }
 
     }
 }

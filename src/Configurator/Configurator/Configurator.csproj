@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\Playground.png" />
+    <None Remove="Resources\Images\Playground.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Configurator.ViewModel\Configurator.ViewModel.csproj" />
   </ItemGroup>
 
@@ -16,6 +21,24 @@
 
   <ItemGroup>
     <PackageReference Include="FontAwesome.Sharp" Version="5.15.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\Playground.png" />
+    <Resource Include="Resources\Images\Playground.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Pages\Dashboard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Pages\Dashboard.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

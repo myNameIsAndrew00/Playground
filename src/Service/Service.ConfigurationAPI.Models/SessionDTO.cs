@@ -10,5 +10,7 @@ namespace Service.ConfigurationAPI.Models
         public ulong Id { get; set; }
 
         public bool Closed { get; set; }
+
+        public DateTime TimeStamp { get; set; }
     }
 }

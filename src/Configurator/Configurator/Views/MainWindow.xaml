@@ -32,8 +32,8 @@
                 </Button>
             </Grid>
             <Grid Grid.Row="1">
-                <UserControl property:ShouldAnimateOutProperty.Value="{Binding ApplicationViewModel.CurrentPageShouldAnimateOut }"
-            Content="{Binding ApplicationViewModel.CurrentPage, Converter={converters:PageValueConverter}}"/>
+                <UserControl property:ShouldAnimateOutProperty.Value="{Binding Application.CurrentPageShouldAnimateOut }"
+            Content="{Binding Application.CurrentPage, Converter={converters:PageValueConverter}}"/>
             </Grid>
         </Grid>
     </Border>

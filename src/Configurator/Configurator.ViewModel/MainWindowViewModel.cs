@@ -9,7 +9,7 @@ namespace Configurator.ViewModel
 {
     public class MainWindowViewModel
     {
-        public static ApplicationViewModel ApplicationViewModel { get; set; } = new ApplicationViewModel();
+        public static ApplicationViewModel Application { get; set; } = new ApplicationViewModel();
 
         public ICommand CloseCommand { get; set; }
     

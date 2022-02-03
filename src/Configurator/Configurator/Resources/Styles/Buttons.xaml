@@ -145,7 +145,7 @@
     </Style>
 
     <Style TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="Gray"/>
+        <Setter Property="Background" Value="DarkSlateGray"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Height" Value="32"/> 
         <Setter Property="Foreground" Value="White"/>

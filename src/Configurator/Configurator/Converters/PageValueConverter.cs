@@ -18,6 +18,8 @@ namespace Configurator.Converters
             {
                 case ApplicationPages.Connect:
                     return new Connect();
+                case ApplicationPages.Dashboard:
+                    return new Dashboard();
                 default:
                     return null;
             }

@@ -12,6 +12,8 @@ namespace Service.Core.Abstractions.Execution
         bool Authenticate(Pkcs11UserType userType, string password);
 
         bool Closed { get; }
+
+        DateTime TimeStamp { get; init; } 
     }
 
     /// <summary>

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Configurator.ViewModel
+namespace Configurator.ViewModel.Pages
 {
-    public enum ApplicationPages
+    public class DashboardViewModel : BaseViewModel
     {
-        Connect,
-        Dashboard
     }
 }

@@ -86,7 +86,7 @@ namespace Service.Core.Infrastructure.Communication
         {
             ulong nextSessionId = Utils.GetNextId();
 
-            SessionType session = new SessionType() { Id = nextSessionId };
+            SessionType session = new SessionType() { Id = nextSessionId, TimeStamp = DateTime.Now };
             sessions.Add(nextSessionId, session);
 
             return session;
