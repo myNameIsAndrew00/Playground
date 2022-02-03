@@ -1,4 +1,4 @@
-![](docs/Playground.svg)
+![](docs/Playground.svg =300x300)
 
 # Cryptographic Hardware Simulator!
 
