@@ -23,6 +23,12 @@ MSVC installer can be downloaded from here [Download Visual Build Tools](https:/
 # Build Output
 After runing `Build.bat`, a directory named `deploy` will be created. It will contain
 
- - [ ] A directory named `Service` with binaries required by service to be installed
- - [ ] A directory named `ConfiguratorAPI` which contains the pkcs11 configuration API (which will be attached to the pkcs11 service)
+ - [ ] A directory named `Service` with binaries required by service to be installed.
+ - [ ] A directory named `ConfigurationAPI` which contains the pkcs11 configuration API (which will be attached to the pkcs11 service).
  - [ ] A directory named `Library` which contains a  `dll` required by pkcs11 clients. In addition to dinamyc library, an import library `lib` is generated.
+ - [ ] A directory named `Configurator` which contains the configuration application for service.
+ 
+# Installing and Unistalling
+To be able to use the platform, it must be installed on your sistem. Run `Install.bat` will create the executables in your `User` directory, from where the service will be executed.
+Service will run as a windows service and configuration API will be run as a child of this process. 
+To unistall the service, run `Unistall.bat`. 

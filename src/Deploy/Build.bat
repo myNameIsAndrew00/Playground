@@ -5,12 +5,15 @@ echo -----------------Build started-----------------
 	echo:
 	set output=.\deploy
 	set serviceOutputPath=.\deploy\Service
-	set serviceConfiguratorOutputPath=.\deploy\ConfiguratorAPI
+	set serviceConfiguratorOutputPath=.\deploy\ConfigurationAPI
 	set libraryOutputPath=.\deploy\Library
+	set configuratorOutputPath=.\deploy\Configurator
+	
 	set ServiceLibraryPath=..\Service\Service.Worker
 	set ServiceConfiguratorAPIPath=..\Service\Service.ConfigurationAPI
 	set LibraryPath=..\Library\Library\sources
-	 
+	set ConfiguratorPath=..\Configurator\Configurator
+	
 	echo Pkcs11 Service output directory: %serviceOutputPath%
 	echo Pkcs11 C++ Library output directory: %libraryOutputPath%
 
@@ -20,7 +23,8 @@ echo -----------------Build started-----------------
 	mkdir %output%
 	mkdir %serviceOutputPath%
 	mkdir %libraryOutputPath%
-
+	mkdir %configuratorOutputPath%
+	
 	echo Successufuly created directories...
 	echo:
 :service
@@ -45,18 +49,28 @@ echo -----------------Build started-----------------
 	echo [2]Building service...
 	dotnet publish %ServiceLibraryPath% --output %serviceOutputPath%
 	
+	:: Step 3: publish configuration API
 	echo [3]Building service configuration API
 	dotnet publish %ServiceConfiguratorAPIPath% --output %serviceConfiguratorOutputPath%
 	
 	echo:
 	echo Service built with success...
 	echo:
+:configurator
+	echo -----------------Building configuration application-----------------
+	
+	:: Step 4: publish configurator
+	echo [4]Building configurator
+	dotnet publish %ConfiguratorPath% --output %configuratorOutputPath%
+	
+	echo Configurator built with success...
+	
 :library  
 	echo -----------------Building library-----------------
 	echo:
 	
-	::Step 3: check cl.exe
-	echo [3]Checking msvc compiler...
+	::Step 5: check cl.exe
+	echo [5]Checking msvc compiler...
 	WHERE cl.exe
 	echo %ERRORLEVEL%
 	
@@ -67,7 +81,7 @@ echo -----------------Build started-----------------
 		goto final
 	)
 
-	echo [4]Building C library...
+	echo [6]Building C library...
 	set sourceFiles="%LibraryPath%\dllmain.cpp"^
  "%LibraryPath%\Bytes.cpp"^
  "%LibraryPath%\BytesReader.cpp"^

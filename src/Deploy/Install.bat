@@ -3,7 +3,7 @@
 echo Checking build...
 
 set ServiceName=.NET Pkcs11 Token Service
-set ServiceConfiguratorInstallerPath=deploy\ConfiguratorAPI
+set ServiceConfiguratorInstallerPath=deploy\ConfigurationAPI
 set ServiceInstallerPath=deploy\Service
 set ServiceInstallDirectory=%USERPROFILE%\NETPkcs11TokenService
 set ServiceConfigurationInstallDirectory=%ServiceInstallDirectory%\ConfiguratorAPI
