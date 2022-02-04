@@ -1,6 +1,7 @@
 ﻿using Configurator.ViewModel;
 using Configurator.Views.Pages;
 using Configurator.Views.Pages.Dashboard;
+using Configurator.Views.Pages.Session;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,16 +15,28 @@ namespace Configurator.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            BasePage page;
+
             //return a page inherited from BasePage
             switch ((ApplicationPages)value)
             {
                 case ApplicationPages.Connect:
-                    return new Connect();
+                    page = new Connect();
+                    break;
                 case ApplicationPages.Dashboard:
-                    return new Dashboard();
+                    page = new Dashboard();
+                    break;
+                case ApplicationPages.Sessions:
+                    page = new Sessions();
+                    break;
                 default:
                     return null;
             }
+
+
+            MainWindowViewModel.Application.CurrentPageContext = (page.DataContext as BaseViewModel);
+
+            return page;
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

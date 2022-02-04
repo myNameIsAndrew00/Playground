@@ -15,7 +15,7 @@ namespace Service.ConfigurationAPI.Client
         [Description("status/ping")]
         Ping,
         [Description("session")]
-        Session
+        Sessions
     }
 
     internal static class EndpointsExtensions

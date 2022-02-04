@@ -10,7 +10,17 @@ namespace Service.ConfigurationAPI.Client
         private HttpClient client;
 
         private Uri baseAddress;
-        
+
+        /// <summary>
+        /// An event which triggers when a request is made.
+        /// </summary>
+        public event Action OnRequestStart;
+
+        /// <summary>
+        /// An event which triggers when a request finish.
+        /// </summary>
+        public event Action OnRequestEnd;
+
          
         public ConfigurationAPIClient(string address, string port, bool ignoreSsl)
         {
@@ -63,6 +73,8 @@ namespace Service.ConfigurationAPI.Client
         {
             try
             {
+                OnRequestStart?.Invoke();
+
                 string endpointAddress = endpoint.GetEndpoint();
 
                 HttpRequestMessage message = new HttpRequestMessage(method, new Uri(baseAddress, endpointAddress));
@@ -70,6 +82,8 @@ namespace Service.ConfigurationAPI.Client
                 var response = await client.SendAsync(message);
 
                 string content = await response.Content.ReadAsStringAsync();
+
+                OnRequestEnd?.Invoke();
 
                 return JsonSerializer.Deserialize<StandardResponse<DTOModel>>(content, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true});
             }

@@ -52,7 +52,7 @@ namespace Configurator.Properties
 
     public class AnimateSlideProperty : AnimateBaseProperty<AnimateSlideProperty>
     {
-        public delegate Task Animation(float seconds = 0.7f, bool keepMargin = true, int width = 0);
+        public delegate Task Animation(float seconds = 0.25f, bool keepMargin = true, int width = 0);
         private static Animation AnimationOut;
         private static Animation AnimationIn;
         private float mSeconds = 0.7f;

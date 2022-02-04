@@ -7,9 +7,8 @@ using System.Windows.Input;
 
 namespace Configurator.ViewModel
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : BaseViewModel
     {
-        public static ApplicationViewModel Application { get; set; } = new ApplicationViewModel();
 
         public ICommand CloseCommand { get; set; }
     

@@ -8,9 +8,22 @@ using System.Threading.Tasks;
 
 namespace Configurator.ViewModel
 {
-    public class ApplicationViewModel : BaseViewModel
-    {  
-        public ApplicationViewModel()
+    /// <summary>
+    /// Main instance of the application
+    /// </summary>
+    public class Application : BaseViewModel
+    {
+        public static Application Instance { get; } = new Application();
+
+
+        /// <summary>
+        /// Represents current number of requests made to server.
+        /// </summary>
+        private int? currentServerRequests = 0;
+        private object serverRequestLock = new object();
+
+
+        private Application()
         {
             /// <summary>
             /// Cofigure client to ignore ssl certificate. Todo: remove this in future releases.
@@ -18,10 +31,18 @@ namespace Configurator.ViewModel
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
-        public bool CurrentPageShouldAnimateOut { get; set; } = false;
+        public bool CurrentPageShouldAnimateOut { get; private set; } = false;
+
+        public bool ServerRequestSent { get; private set; } = false;   
+
 
         public ApplicationPages CurrentPage { get; set; } = ApplicationPages.Connect;
  
+        /// <summary>
+        /// Represents the context (view model) of current page.
+        /// </summary>
+        public BaseViewModel CurrentPageContext { get; set; }
+
         public async Task ChangePage(ApplicationPages NewPage)
         {
             // If animation is triggered, return.
@@ -30,17 +51,26 @@ namespace Configurator.ViewModel
             // If page is already set, stop the action.
             if (NewPage == CurrentPage) return;
 
+            CurrentPageContext = null;
             CurrentPageShouldAnimateOut = true;
-            await Task.Delay(800);
+            
+            await Task.Delay(300);
 
             // If new page is connect, disconnect the client from service.
             if (NewPage == ApplicationPages.Connect) DisconnectClient();
 
             CurrentPage = NewPage;
             CurrentPageShouldAnimateOut = false;
+
+            // Wait until the context is loaded.
+            while (CurrentPageContext == null) ;
+
+            await CurrentPageContext.Initialise();
         }
 
         public ConfigurationAPIClient Client { get; private set; }
+
+       
 
         /// <summary>
         /// Initialise the client used to communicate with the rest api.
@@ -64,6 +94,9 @@ namespace Configurator.ViewModel
                     return false;
                 }
 
+                Client.OnRequestStart += OnRequestStart;
+                Client.OnRequestEnd += OnRequestEnd;
+
                 // If client is valid, return true
                 return true;
             }
@@ -82,6 +115,27 @@ namespace Configurator.ViewModel
             if (Client is not null) Client.Dispose();
 
             Client = null;
+        }
+
+
+        private void OnRequestStart()
+        {
+            lock (serverRequestLock)
+            {
+                currentServerRequests++;
+                ServerRequestSent = true;
+            }
+
+        }
+
+        private void OnRequestEnd()
+        {
+            lock (serverRequestLock)
+            {
+                currentServerRequests--;
+                if (currentServerRequests <= 0)
+                    ServerRequestSent = false;
+            }
         }
 
     }

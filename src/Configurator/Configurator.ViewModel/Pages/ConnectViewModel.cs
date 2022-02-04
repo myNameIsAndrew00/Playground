@@ -48,9 +48,9 @@ namespace Configurator.ViewModel.Pages
                 connectionEndpoint = string.Concat("http://", connectionEndpoint);
 
             // Try to set the client.
-            if (await MainWindowViewModel.Application.InitialiseClient(connectionEndpoint))
+            if (await Application.Instance.InitialiseClient(connectionEndpoint))
             {
-                await MainWindowViewModel.Application.ChangePage(ApplicationPages.Dashboard);
+                await Application.Instance.ChangePage(ApplicationPages.Dashboard);
                 return;
             }
 

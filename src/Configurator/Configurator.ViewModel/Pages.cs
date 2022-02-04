@@ -9,6 +9,7 @@ namespace Configurator.ViewModel
     public enum ApplicationPages
     {
         Connect,
-        Dashboard
+        Dashboard,
+        Sessions
     }
 }

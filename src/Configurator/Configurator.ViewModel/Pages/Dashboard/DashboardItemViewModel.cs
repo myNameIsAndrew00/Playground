@@ -19,7 +19,7 @@ namespace Configurator.ViewModel.Pages.Dashboard
 
         public DashboardItemViewModel(ApplicationPages page)
         {
-            NavigateCommand = new CommandInitiator(async () => await MainWindowViewModel.Application.ChangePage(page));
+            NavigateCommand = new CommandInitiator(async () => await Application.ChangePage(page));
         }
     }
 }

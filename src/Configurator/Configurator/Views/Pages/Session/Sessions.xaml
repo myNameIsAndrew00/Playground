@@ -1,0 +1,48 @@
+﻿<config:BasePage
+             x:TypeArguments="core:SessionsViewModel"
+             x:Class="Configurator.Views.Pages.Session.Sessions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:core="clr-namespace:Configurator.ViewModel.Pages.Session;assembly=Configurator.ViewModel"
+             xmlns:config="clr-namespace:Configurator"
+             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:Configurator.Views.Pages.Session"            
+             xmlns:pages="clr-namespace:Configurator.Views.Pages"
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:converters="clr-namespace:Configurator.Converters"
+             xmlns:property="clr-namespace:Configurator.Properties"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+          >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <pages:Header></pages:Header>
+
+        <Grid Grid.Row="1" Margin="20 5 20 5">
+            <Button Command="{Binding RefreshSessionsCommand}" Style="{StaticResource EmptyButton}"  Padding="3" HorizontalAlignment="Right">
+                <fa:IconBlock Icon="Sync" FontSize="15" ></fa:IconBlock>
+            </Button>
+        </Grid>
+        
+        <Grid Grid.Row="2" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ItemsControl ItemsSource="{Binding Sessions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:SessionsItem Margin="15"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+</config:BasePage>

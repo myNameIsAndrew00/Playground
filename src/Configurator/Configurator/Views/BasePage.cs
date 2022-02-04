@@ -1,5 +1,6 @@
 ﻿using Configurator.Animations;
 using Configurator.Properties;
+using Configurator.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +11,16 @@ using System.Windows.Controls;
 
 namespace Configurator
 {
-    public class BasePage<ViewModel> : UserControl, ICanAnimate
-       where ViewModel : class, new()
+    public class BasePage : UserControl, ICanAnimate
     {
-
         public AnimateSlideProperty.Animation AnimationOut { get; set; }
         public AnimateSlideProperty.Animation AnimationIn { get; set; }
 
         public BasePage()
         {
-            DataContext = new ViewModel();
-            initiliaseAnimations();
+            InitiliaseAnimations();
         }
 
-        public BasePage(ViewModel Model)
-        {
-            DataContext = Model;
-            initiliaseAnimations();
-        }
-
-        private void BasePage_Loaded(object sender, RoutedEventArgs e)
-        {
-            AnimateIn();
-        }
 
         public async void AnimateIn()
         {
@@ -45,9 +33,7 @@ namespace Configurator
         }
 
 
-        #region Private
-
-        private void initiliaseAnimations()
+        protected virtual void InitiliaseAnimations()
         {
             Loaded += BasePage_Loaded;
 
@@ -55,6 +41,31 @@ namespace Configurator
             AnimationOut = this.FadeOut;
         }
 
+
+        #region Private
+
+        private void BasePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            AnimateIn();
+        }
+
         #endregion
+    }
+
+    public class BasePage<ViewModel> : BasePage 
+       where ViewModel : BaseViewModel, new()
+    {
+
+        public BasePage() : base()
+        {
+            DataContext = new ViewModel();
+        }
+
+        public BasePage(ViewModel Model)
+        {
+            DataContext = Model;
+        }
+
+
     }
 }
