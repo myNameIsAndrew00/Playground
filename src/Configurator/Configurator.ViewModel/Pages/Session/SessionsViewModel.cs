@@ -14,7 +14,7 @@ namespace Configurator.ViewModel.Pages.Session
     {
         private Guid? sessionsPollingGuid;
 
-        public const string DESCRIPTION = "View the sessions started on the token";
+        public const string DESCRIPTION = "View the sessions started on the token.";
 
         public const string TITLE = "Sessions";
 

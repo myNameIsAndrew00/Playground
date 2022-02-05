@@ -1,6 +1,7 @@
 ﻿using Configurator.ViewModel;
 using Configurator.Views.Pages;
 using Configurator.Views.Pages.Dashboard;
+using Configurator.Views.Pages.Logging;
 using Configurator.Views.Pages.Session;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,9 @@ namespace Configurator.Converters
                     break;
                 case ApplicationPages.Reconnect:
                     page = new Reconnect();
+                    break;
+                case ApplicationPages.Logs:
+                    page = new Logs();
                     break;
                 default:
                     return null;

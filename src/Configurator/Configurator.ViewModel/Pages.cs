@@ -11,6 +11,7 @@ namespace Configurator.ViewModel
         Connect,
         Reconnect,
         Dashboard,
-        Sessions
+        Sessions,
+        Logs
     }
 }

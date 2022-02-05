@@ -26,7 +26,7 @@ namespace Configurator.ViewModel
         /// </summary>
         private int? currentServerRequests = 0;
         private object serverRequestLock = new object();
-
+        private object changePageLock = new object();
 
         private Application()
         {
@@ -45,7 +45,7 @@ namespace Configurator.ViewModel
 
 
         public ApplicationPages CurrentPage { get; set; } = ApplicationPages.Connect;
- 
+
         /// <summary>
         /// Represents the context (view model) of current page.
         /// </summary>
@@ -53,35 +53,40 @@ namespace Configurator.ViewModel
 
         public async Task ChangePage(ApplicationPages NewPage)
         {
-            // If animation is triggered, return.
-            if (CurrentPageShouldAnimateOut) return;
+            lock (changePageLock)
+            {
+                // If animation is triggered, return.
+             //   if (CurrentPageShouldAnimateOut) return;
 
-            // If page is already set, stop the action.
-            if (NewPage == CurrentPage) return;
+                // If page is already set, stop the action.
+                if (NewPage == CurrentPage) return;
 
-            // Dispose the current context.
-            CurrentPageContext.Dispose();
-            CurrentPageContext = null;
-            
-            CurrentPageShouldAnimateOut = true;
-            
+                // Dispose the current context.
+                CurrentPageContext.Dispose();
+                CurrentPageContext = null;
+
+                CurrentPageShouldAnimateOut = true;
+            }
+
             await Task.Delay(300);
 
             // If new page is connect, disconnect the client from service.
             if (NewPage == ApplicationPages.Connect) DisconnectClient();
 
-            CurrentPage = NewPage;
             CurrentPageShouldAnimateOut = false;
+            CurrentPage = NewPage;
 
             // Wait until the context is loaded by UI.
             while (CurrentPageContext == null) ;
 
+
             await CurrentPageContext.Initialise();
+
         }
 
         public ConfigurationAPIClient Client { get; private set; }
 
-       
+
 
         /// <summary>
         /// Initialise the client used to communicate with the rest api.
@@ -149,7 +154,7 @@ namespace Configurator.ViewModel
         private async void CheckConnection(StandardResponse<bool> pingResponse)
         {
             /* If ping response is null or false, redirect user to disconnect page. */
-            if(pingResponse is null || pingResponse.Data == false)
+            if (pingResponse is null || pingResponse.Data == false)
             {
                 if (ServerDisconnected == true) return;
 
