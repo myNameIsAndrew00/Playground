@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.DefinedTypes;
@@ -15,7 +16,7 @@ namespace Service.Core.Abstractions.Communication
     /// Optionaly, other methods which have names of values contained by ServiceActionCode enum, can be implemented.
     /// If a optional method is called, but it is not implemented by executor, service will return not implemented error code.
     /// </summary>
-    public interface IServiceExecutor<DispatchResultType, SessionType> 
+    public interface IServiceExecutor<DispatchResultType, SessionType> : IAllowLogging
         where DispatchResultType : IDispatchResult<SessionType>
         where SessionType : ISession
     {

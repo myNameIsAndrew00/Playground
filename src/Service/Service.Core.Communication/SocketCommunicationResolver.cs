@@ -1,7 +1,10 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
+using Service.Core.DefinedTypes;
 using Service.Runtime;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
@@ -10,6 +13,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static Service.Core.Abstractions.Logging.IAllowLogging;
 
 namespace Service.Core.Communication.Infrastructure
 {
@@ -22,6 +26,8 @@ namespace Service.Core.Communication.Infrastructure
         where SessionType : ISession
     {
         private bool disposed;
+
+        private ConcurrentBag<LogData> logs;
 
         ///Handles maximum number of bytes which can be read from a client at once before keep them in memory
         private const int RECEIVING_BUFFER_SIZE = 4096;
@@ -38,6 +44,11 @@ namespace Service.Core.Communication.Infrastructure
 
         public IServiceProtocolDispatcher<DispatchResultType, SessionType> Dispatcher { get; }
 
+        public LogSection LogSection => LogSection.COMMUNICATION_RESOLVER;
+
+        public IReadOnlyCollection<LogData> Logs => logs;
+
+
         public event Func<DispatchResultType, IExecutionResult> OnCommunicationCreated;
 
         public event Action<Exception> OnClientConnectionError;
@@ -53,7 +64,12 @@ namespace Service.Core.Communication.Infrastructure
             IPAddress addressObject = IPAddress.Parse(address);
 
             server = new TcpListener(addressObject, port);
+
+            logs = new ConcurrentBag<LogData>();
         }
+
+        public void ClearLogs() => logs.Clear();
+       
 
         public Task Listen(CancellationToken cancellationToken)
         {
@@ -74,6 +90,9 @@ namespace Service.Core.Communication.Infrastructure
                         break;
 
                     TcpClient client = server.AcceptTcpClient();
+
+                    // log the created connection
+                    logs.Add(new LogData("A new connection has been estanblished", null, LogLevel.Info));
 
                     Task.Run(() =>
                     {
@@ -173,8 +192,11 @@ namespace Service.Core.Communication.Infrastructure
 
             this.server.Stop();
             this.disposed = true;
+
+            logs.Add(new LogData("Socket communication resolver is stoping...", null, LogLevel.Info));
         }
 
+      
 
         #endregion
     }

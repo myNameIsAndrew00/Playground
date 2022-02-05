@@ -37,7 +37,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configurat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.ConfigurationAPI.Models", "Service.ConfigurationAPI.Models\Service.ConfigurationAPI.Models.csproj", "{8CDDD1B6-8073-4B17-AD93-11D15644D3AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.ConfigurationAPI.Client", "Service.ConfigurationAPI.Client\Service.ConfigurationAPI.Client.csproj", "{5F0B391D-18C4-45C2-86EC-04D003B2E099}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.ConfigurationAPI.Client", "Service.ConfigurationAPI.Client\Service.ConfigurationAPI.Client.csproj", "{5F0B391D-18C4-45C2-86EC-04D003B2E099}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Core.Logging", "Service.Core.Logging\Service.Core.Logging.csproj", "{F2C10702-47E6-4785-8791-3DE2C5CEDFB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +111,10 @@ Global
 		{5F0B391D-18C4-45C2-86EC-04D003B2E099}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F0B391D-18C4-45C2-86EC-04D003B2E099}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0B391D-18C4-45C2-86EC-04D003B2E099}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2C10702-47E6-4785-8791-3DE2C5CEDFB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2C10702-47E6-4785-8791-3DE2C5CEDFB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2C10702-47E6-4785-8791-3DE2C5CEDFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2C10702-47E6-4785-8791-3DE2C5CEDFB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

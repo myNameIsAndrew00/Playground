@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
@@ -16,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Text;
+using static Service.Core.Abstractions.Logging.IAllowLogging;
 
 namespace Service.Core.Client
 {
@@ -32,14 +34,24 @@ namespace Service.Core.Client
 
         private ITokenStorage tokenStorage;
 
+        private List<LogData> logs;
+
         public TlvServiceExecutor()
         {
+            logs = new List<LogData>();
         }
 
 
 
 
         public IServiceExecutorModelBinder<DispatchResult, Session> ModelBinder => new TlvServiceExecutorModelBinder();
+
+        public LogSection LogSection => LogSection.COMMUNICATION_EXECUTOR;
+
+        public IReadOnlyCollection<LogData> Logs => logs;
+
+        public void ClearLogs() => logs.Clear();
+       
 
         public void SetDispatcherResult(DispatchResult dispatchResult) => this.dispatchResult = dispatchResult;
 
@@ -305,5 +317,7 @@ namespace Service.Core.Client
 
             return new BytesResult(digest, executionResultCode);
         }
+
+    
     }
 }

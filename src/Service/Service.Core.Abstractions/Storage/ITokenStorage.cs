@@ -1,4 +1,5 @@
-﻿using Service.Core.Abstractions.Token;
+﻿using Service.Core.Abstractions.Logging;
+using Service.Core.Abstractions.Token;
 using Service.Core.DefinedTypes;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Service.Core.Abstractions.Storage
     /// <summary>
     /// Represents a class which handles in memory or persistent storage operations
     /// </summary>
-    public interface ITokenStorage : IDataContainerBuilder, IMechanismOptionsBuilder
+    public interface ITokenStorage : IDataContainerBuilder, IMechanismOptionsBuilder, IAllowLogging
     {
         /// <summary>
         /// Use this method to create an in memory object using the given attributes.

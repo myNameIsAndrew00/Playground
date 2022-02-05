@@ -1,5 +1,6 @@
 ﻿using Service.Core.Abstractions.Configuration;
 using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
@@ -29,6 +30,13 @@ namespace Service.Core.Abstractions.Communication
         /// <param name="storage"></param>
         /// <returns></returns>
         IPkcs11Server SetStorage(ITokenStorage storage);
+
+        /// <summary>
+        /// Set the server logging module
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <returns></returns>
+        IPkcs11Server SetLogger(ILogger logger);
 
         /// <summary>
         /// Set the service configuration api

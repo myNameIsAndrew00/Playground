@@ -1,6 +1,7 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Configuration;
 using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
@@ -18,6 +19,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static Service.Core.Abstractions.Logging.IAllowLogging;
 
 namespace Service.Core
 {
@@ -39,6 +41,8 @@ namespace Service.Core
 
         private IConfigurationAPIProxy configurationAPI;
 
+        private ILogger logger;
+
         public IServiceCommunicationResolver<DispatchResultType, SessionType> Resolver { get; }
 
         public abstract IServiceExecutor<DispatchResultType, SessionType> CreateExecutor();
@@ -48,7 +52,7 @@ namespace Service.Core
             this.disposed = false;
             this.Resolver = resolver;
             moduleCollection = new ModuleFactory();
-            
+
             Resolver.OnCommunicationCreated += onCommunicationCreated;
             Resolver.OnClientConnectionError += onClientConnectionError;
             Resolver.OnRequestHandlingError += onRequestHandlingError;
@@ -57,30 +61,50 @@ namespace Service.Core
         public void Start()
         {
             if (disposed) return;
+            
+            // log application is starting
+            this.logger?.Create(LogSection.MAIN_SERVER, new LogData("Starting server...", null, LogLevel.Info));
 
             listenTaskTokenSource = new CancellationTokenSource();
 
             listeningTask = Resolver.Listen(listenTaskTokenSource.Token);
 
+
             if (this.configurationAPI is not null)
+            {
+                // log that configuration api is starting
+                this.logger?.Create(LogSection.MAIN_SERVER, new LogData("Starting configuration API...", null, LogLevel.Info));
                 this.configurationAPI.Launch();
+            }
+
+            // log that server started successufuly
+            this.logger?.Create(LogSection.MAIN_SERVER, new LogData("Server started...", null, LogLevel.Info));
 
         }
 
         public void Stop()
         {
+            this.logger?.Create(LogSection.MAIN_SERVER, new LogData("Server is shuting down...", null, LogLevel.Info));
+
             listenTaskTokenSource.Cancel();
 
             if (this.configurationAPI is not null)
+            {
+                this.logger?.Create(LogSection.MAIN_SERVER, new LogData("Configuration API shutting down", null, LogLevel.Info));
                 this.configurationAPI.Stop();
+            }
         }
+
         public IEnumerable<IReadOnlySession> GetSessions() => this.Resolver.Dispatcher.GetSessions();
 
         public IPkcs11Server SetStorage(ITokenStorage storage) { this.tokenStorage = storage; return this; }
 
-        public IPkcs11Server SetConfigurationAPI(Func<IConfigurablePkcs11Server, IConfigurationAPIProxy> configurationApiFactory) { 
+        public IPkcs11Server SetLogger(ILogger logger) { this.logger = logger; return this; }
+
+        public IPkcs11Server SetConfigurationAPI(Func<IConfigurablePkcs11Server, IConfigurationAPIProxy> configurationApiFactory)
+        {
             this.configurationAPI = configurationApiFactory(this);
-            return this; 
+            return this;
         }
 
 
@@ -133,6 +157,10 @@ namespace Service.Core
 
         private IExecutionResult onCommunicationCreated(DispatchResultType dispatchResult)
         {
+            // log dispatcher logs
+            LogActivity(this.Resolver);
+            LogActivity(this.Resolver.Dispatcher);
+
             // create an instance of the executor
             IServiceExecutor<DispatchResultType, SessionType> executor = CreateExecutor();
 
@@ -170,6 +198,11 @@ namespace Service.Core
             {
                 return executor.GetEmptySessionResult(ExecutionResultCode.GENERAL_ERROR);
             }
+            finally
+            {
+                LogActivity(executor);
+                LogActivity(this.tokenStorage);
+            }
         }
 
         private void onClientConnectionError(Exception exception)
@@ -184,7 +217,17 @@ namespace Service.Core
             Debug.WriteLine(exception);
         }
 
-      
+        /// <summary>
+        /// Logs data using the logger for given logging instance.
+        /// </summary>
+        /// <param name="loggingInstance"></param>
+        private void LogActivity(IAllowLogging loggingInstance)
+        {
+            if (this.logger is not null)
+                logger.Create(loggingInstance.LogSection, loggingInstance.Logs);
+
+            loggingInstance.ClearLogs();
+        }
 
 
         #endregion

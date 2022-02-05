@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Service.Core.Abstractions.Communication
     /// <summary>
     /// Resolve the communication between clients and service
     /// </summary>
-    public interface IServiceCommunicationResolver<DispatchResultType,SessionType> : IDisposable
+    public interface IServiceCommunicationResolver<DispatchResultType,SessionType> : IAllowLogging, IDisposable
         where DispatchResultType : IDispatchResult<SessionType>
         where SessionType : ISession
     {

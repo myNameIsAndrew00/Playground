@@ -1,11 +1,14 @@
 ﻿using Service.Core.Abstractions.Communication;
 using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
 using Service.Core.DefinedTypes;
 using Service.Runtime;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static Service.Core.Abstractions.Logging.IAllowLogging;
 
 namespace Service.Core.Infrastructure.Communication
 {
@@ -20,7 +23,22 @@ namespace Service.Core.Infrastructure.Communication
         where SessionType : ISession, new()
     {
 
-        Dictionary<ulong, SessionType> sessions = new Dictionary<ulong, SessionType>();
+        private ConcurrentBag<LogData> logs;
+        private Dictionary<ulong, SessionType> sessions = new Dictionary<ulong, SessionType>();
+
+        public LogSection LogSection => LogSection.COMMUNICATION_DISPATCHER;
+
+        public IReadOnlyCollection<LogData> Logs => logs;
+
+        public void ClearLogs()
+        {
+            logs.Clear();
+        }
+
+        public AlphaProtocolDispatcher()
+        {
+            logs = new ConcurrentBag<LogData>();
+        }
 
         public IEnumerable<IReadOnlySession> GetSessions() => sessions.Values.Select(session => session as IReadOnlySession).ToList();
 

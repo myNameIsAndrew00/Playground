@@ -1,4 +1,5 @@
-﻿using Service.Core.Abstractions.Storage;
+﻿using Service.Core.Abstractions.Logging;
+using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.DefinedTypes;
@@ -6,10 +7,12 @@ using Service.Core.Storage.Mechanism;
 using Service.Core.Storage.Memory;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Service.Core.Abstractions.Logging.IAllowLogging;
 
 namespace Service.Core.Storage
 {
@@ -18,6 +21,19 @@ namespace Service.Core.Storage
     /// </summary>
     public class TokenStorage : ITokenStorage
     {
+        private ConcurrentBag<LogData> logs;
+
+        public LogSection LogSection => LogSection.STORAGE;
+
+        public IReadOnlyCollection<IAllowLogging.LogData> Logs => logs;
+
+        public TokenStorage()
+        {
+            logs = new ConcurrentBag<LogData>();
+        }
+
+        public void ClearLogs() => logs.Clear();
+       
         public IDataContainer CreateDataContainer(ulong type, byte[] bytes, Type enumType)
         {
             Type containerType = enumType == null ? typeof(DataContainer) : typeof(DataContainer<>).MakeGenericType(enumType);
@@ -65,5 +81,6 @@ namespace Service.Core.Storage
         {
             return new MechanismOptions(dataContainer);
         }
+
     }
 }

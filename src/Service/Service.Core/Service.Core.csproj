@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Service.Core.Abstractions\Service.Core.Abstractions.csproj" />
     <ProjectReference Include="..\Service.Core.Communication\Service.Core.Communication.csproj" />
     <ProjectReference Include="..\Service.Core.DefinedTypes\Service.Core.DefinedTypes.csproj" />
+    <ProjectReference Include="..\Service.Core.Logging\Service.Core.Logging.csproj" />
     <ProjectReference Include="..\Service.Core.Storage\Service.Core.Storage.csproj" />
     <ProjectReference Include="..\Service.Core.Token.Encryption\Service.Core.Token.Encryption.csproj" />
     <ProjectReference Include="..\Service.Core.Token.Hashing\Service.Core.Token.Hashing.csproj" />

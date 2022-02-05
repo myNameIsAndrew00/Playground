@@ -3,6 +3,7 @@ using Service.Core.Client;
 using Service.Core.Communication.Infrastructure;
 using Service.Core.Execution;
 using Service.Core.Infrastructure.Communication;
+using Service.Core.Logging;
 using Service.Core.Storage;
 using Service.Core.Token.Encryption;
 using Service.Core.Token.Encryption.AES;
@@ -35,6 +36,7 @@ namespace Service.Core
         {
             IPkcs11Server result = CreateSocketServer<TlvServiceExecutor>(address, port)
                 .SetStorage(new TokenStorage())
+                .SetLogger(new Logger())
                 .RegisterEncryptionModule(options =>
                 {
                     return new EncryptionModule(options)
