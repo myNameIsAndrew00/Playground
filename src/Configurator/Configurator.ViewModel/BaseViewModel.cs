@@ -11,7 +11,7 @@ namespace Configurator.ViewModel
     /// <summary>
     /// A base class for view models.
     /// </summary>
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
         public static Application Application { get; set; } = Application.Instance;
 
@@ -35,6 +35,16 @@ namespace Configurator.ViewModel
         {
             return Task.FromResult(0);
         }
+
+        public virtual void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Maintain a reference to the synchronization context to allow observable collections to be changed in view models.
+        /// </summary>
+        protected SynchronizationContext UIContext = SynchronizationContext.Current;
     }
 
     public class CommandInitiator : ICommand

@@ -1,4 +1,5 @@
 ﻿using Service.ConfigurationAPI.Client;
+using Service.ConfigurationAPI.Models.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,10 @@ namespace Configurator.ViewModel
     {
         public static Application Instance { get; } = new Application();
 
+        /// <summary>
+        /// Frequency of connectivity check, in secoonds.
+        /// </summary>
+        private const int CONNECTIVITY_CHECK_FREQUENCY = 3;
 
         /// <summary>
         /// Represents current number of requests made to server.
@@ -33,7 +38,10 @@ namespace Configurator.ViewModel
 
         public bool CurrentPageShouldAnimateOut { get; private set; } = false;
 
-        public bool ServerRequestSent { get; private set; } = false;   
+        public bool ServerRequestSent { get; private set; } = false;
+
+        public bool ServerDisconnected { get; private set; } = true;
+
 
 
         public ApplicationPages CurrentPage { get; set; } = ApplicationPages.Connect;
@@ -51,7 +59,10 @@ namespace Configurator.ViewModel
             // If page is already set, stop the action.
             if (NewPage == CurrentPage) return;
 
+            // Dispose the current context.
+            CurrentPageContext.Dispose();
             CurrentPageContext = null;
+            
             CurrentPageShouldAnimateOut = true;
             
             await Task.Delay(300);
@@ -62,7 +73,7 @@ namespace Configurator.ViewModel
             CurrentPage = NewPage;
             CurrentPageShouldAnimateOut = false;
 
-            // Wait until the context is loaded.
+            // Wait until the context is loaded by UI.
             while (CurrentPageContext == null) ;
 
             await CurrentPageContext.Initialise();
@@ -97,6 +108,15 @@ namespace Configurator.ViewModel
                 Client.OnRequestStart += OnRequestStart;
                 Client.OnRequestEnd += OnRequestEnd;
 
+                ServerDisconnected = false;
+
+                // Begin a long polling operation which makes requests on ping endpoint which will check the connection with server.
+                Client.StartLongPoll<bool>(
+                    endpoint: Endpoint.Ping,
+                    method: HttpMethod.Get,
+                    callback: CheckConnection,
+                    frequency: CONNECTIVITY_CHECK_FREQUENCY);
+
                 // If client is valid, return true
                 return true;
             }
@@ -112,11 +132,45 @@ namespace Configurator.ViewModel
         /// </summary>
         public void DisconnectClient()
         {
+            /* Mannualy set disconnected flag to true, to prevent disconnecting page to trigger */
+            ServerDisconnected = true;
+
             if (Client is not null) Client.Dispose();
 
             Client = null;
         }
 
+        #region Private
+
+        /// <summary>
+        /// Check the connection with server.
+        /// </summary>
+        /// <param name="pingResponse"></param>
+        private async void CheckConnection(StandardResponse<bool> pingResponse)
+        {
+            /* If ping response is null or false, redirect user to disconnect page. */
+            if(pingResponse is null || pingResponse.Data == false)
+            {
+                if (ServerDisconnected == true) return;
+
+                ServerDisconnected = true;
+
+                await ChangePage(ApplicationPages.Reconnect);
+
+                return;
+            }
+
+            /* If server was disconnected and ping is responding, return user to dashboard. */
+            if (ServerDisconnected)
+            {
+                ServerDisconnected = false;
+
+                await ChangePage(ApplicationPages.Dashboard);
+
+                return;
+            }
+
+        }
 
         private void OnRequestStart()
         {
@@ -138,5 +192,6 @@ namespace Configurator.ViewModel
             }
         }
 
+        #endregion
     }
 }

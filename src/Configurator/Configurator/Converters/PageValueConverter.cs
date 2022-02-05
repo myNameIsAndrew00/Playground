@@ -29,12 +29,15 @@ namespace Configurator.Converters
                 case ApplicationPages.Sessions:
                     page = new Sessions();
                     break;
+                case ApplicationPages.Reconnect:
+                    page = new Reconnect();
+                    break;
                 default:
                     return null;
             }
 
 
-            MainWindowViewModel.Application.CurrentPageContext = (page.DataContext as BaseViewModel);
+            Application.Instance.CurrentPageContext = (page.DataContext as BaseViewModel);
 
             return page;
         }

@@ -12,6 +12,8 @@ namespace Configurator.ViewModel.Pages.Session
 {
     public class SessionsViewModel : BaseViewModel
     {
+        private Guid? sessionsPollingGuid;
+
         public const string DESCRIPTION = "View the sessions started on the token";
 
         public const string TITLE = "Sessions";
@@ -31,14 +33,29 @@ namespace Configurator.ViewModel.Pages.Session
 
         public SessionsViewModel()
         {
+
             Sessions = new ObservableCollection<SessionItemViewModel>();
 
             RefreshSessionsCommand = new CommandInitiator(async () => await SynchroniseSessions());
+
+            sessionsPollingGuid = Application.Client.StartLongPoll<List<SessionDTO>>(
+                endpoint: Endpoint.Sessions,
+                method: HttpMethod.Get,
+                callback: (sessionsResponse) => ReloadSessions(sessionsResponse.Data)
+                );
         }
 
         public override async Task Initialise()
         {
             await SynchroniseSessions();
+        }
+
+        public override void Dispose()
+        {
+            if (sessionsPollingGuid is not null)
+                Application.Client.CancelLongPolling(sessionsPollingGuid.Value);
+
+            base.Dispose();
         }
 
         #region Private
@@ -47,15 +64,26 @@ namespace Configurator.ViewModel.Pages.Session
         {
             var sessionsResponse = await Application.Instance.Client.Get<List<SessionDTO>>(Endpoint.Sessions);
 
-            Sessions.Clear();
-
-            if (sessionsResponse is not null)
-                foreach (var sessionResponse in sessionsResponse.Data)
-                {
-                    Sessions.Add(new SessionItemViewModel(sessionResponse));
-                } 
+            ReloadSessions(sessionsResponse.Data);
 
             await base.Initialise();
+        }
+
+        private void ReloadSessions(List<SessionDTO> sessionDTOs)
+        {
+            lock (Sessions)
+            {
+                UIContext.Send(_ =>
+               {
+                   Sessions.Clear();
+
+                   if (sessionDTOs is not null)
+                       foreach (var sessionResponse in sessionDTOs)
+                       {
+                           Sessions.Add(new SessionItemViewModel(sessionResponse));
+                       }
+               }, null);
+            }
         }
 
         #endregion
