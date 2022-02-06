@@ -13,6 +13,8 @@ namespace Configurator.ViewModel
     /// </summary>
     public abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
+        protected string DATETIME_FORMAT = "dd.MM.yyyy hh:mm:ss";
+
         public static Application Application { get; set; } = Application.Instance;
 
 

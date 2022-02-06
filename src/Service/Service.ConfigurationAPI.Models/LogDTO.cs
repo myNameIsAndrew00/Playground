@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Core.DefinedTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,9 @@ namespace Service.ConfigurationAPI.Models
 
         public DateTime TimeStamp { get; set; }
 
-        public string LogSection { get; set; }
+        public LogSection LogSection { get; set; }
 
-        public string LogLevel { get; set; }
+        public LogLevel LogLevel { get; set; }
 
         public string Data { get; set; }
     }

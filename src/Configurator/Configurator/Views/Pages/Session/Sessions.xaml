@@ -26,7 +26,7 @@
         </Grid.ColumnDefinitions>
         <pages:Header></pages:Header>
 
-        <Grid Grid.Row="1" Margin="20 5 20 5">
+        <Grid Grid.Row="1" Margin="20 5 20 0">
             <Button Command="{Binding RefreshSessionsCommand}" Style="{StaticResource EmptyButton}"  Padding="3" HorizontalAlignment="Right">
                 <fa:IconBlock Icon="Sync" FontSize="15" ></fa:IconBlock>
             </Button>
@@ -36,13 +36,16 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ItemsControl ItemsSource="{Binding Sessions}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <local:SessionsItem Margin="15"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+
+            <ScrollViewer VerticalAlignment="Top">
+                <ItemsControl ItemsSource="{Binding Sessions}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:SessionsItem Margin="15"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </config:BasePage>

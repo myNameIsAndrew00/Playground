@@ -9,7 +9,6 @@ namespace Configurator.ViewModel.Pages.Session
 {
     public class SessionItemViewModel : BaseViewModel
     {
-        private string DATETIME_FORMAT = "dd.MM.yyyy hh:mm:ss";
        
         public SessionItemViewModel(SessionDTO sessionDTO)
         {

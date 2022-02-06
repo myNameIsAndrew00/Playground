@@ -17,7 +17,8 @@
           >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> 
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -25,17 +26,28 @@
         </Grid.ColumnDefinitions>
         <pages:Header></pages:Header>
 
+        <Grid Grid.Row="1" Margin="20 5 20 0">
+            <Button Command="{Binding RefreshLogsCommand}" Style="{StaticResource EmptyButton}"  Padding="3" HorizontalAlignment="Right">
+                <fa:IconBlock Icon="Sync" FontSize="15" ></fa:IconBlock>
+            </Button>
+        </Grid>
+
+
         <Grid Grid.Row="2" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ItemsControl ItemsSource="{Binding LogsData}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <local:LogsItem Margin="15"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+
+            <ScrollViewer VerticalAlignment="Top">
+                <ItemsControl ItemsSource="{Binding LogsData}">
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:LogsItem Margin="15 2 15 2"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </config:BasePage>

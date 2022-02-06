@@ -14,7 +14,7 @@ namespace Configurator.ViewModel.Pages.Session
     {
         private Guid? sessionsPollingGuid;
 
-        public const string DESCRIPTION = "View the sessions started on the token.";
+        public const string DESCRIPTION = "View which sessions started on the token.";
 
         public const string TITLE = "Sessions";
 
@@ -48,6 +48,8 @@ namespace Configurator.ViewModel.Pages.Session
         public override async Task Initialise()
         {
             await SynchroniseSessions();
+
+            await base.Initialise();
         }
 
         public override void Dispose()
@@ -65,8 +67,6 @@ namespace Configurator.ViewModel.Pages.Session
             var sessionsResponse = await Application.Instance.Client.Get<List<SessionDTO>>(Endpoint.Sessions);
 
             ReloadSessions(sessionsResponse.Data);
-
-            await base.Initialise();
         }
 
         private void ReloadSessions(List<SessionDTO> sessionDTOs)

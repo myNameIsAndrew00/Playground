@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Logging;
+using Service.Core.DefinedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,8 @@ namespace Service.Core.Configuration.Models
         {
             this.Message = log.Message;
             this.TimeStamp = log.TimeStamp;
-            this.LogLevel = log.LogLevel.ToString();
-            this.LogSection = log.Section.ToString();
+            this.LogLevel = log.LogLevel;
+            this.LogSection = log.Section;
             this.Data = log.Data;
         }
 
@@ -24,9 +25,9 @@ namespace Service.Core.Configuration.Models
 
         public DateTime TimeStamp { get; set; }
 
-        public string LogSection { get; set; }
+        public LogSection LogSection { get; set; }
 
-        public string LogLevel { get; set; }
+        public LogLevel LogLevel { get; set; }
 
         public string Data { get; set; }
     }

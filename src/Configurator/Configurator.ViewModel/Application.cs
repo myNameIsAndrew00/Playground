@@ -58,8 +58,8 @@ namespace Configurator.ViewModel
                 // If animation is triggered, return.
              //   if (CurrentPageShouldAnimateOut) return;
 
-                // If page is already set, stop the action.
-                if (NewPage == CurrentPage) return;
+                // If page is already set or page chaning ocurred, stop the action.
+                if (NewPage == CurrentPage || CurrentPageContext is null) return;
 
                 // Dispose the current context.
                 CurrentPageContext.Dispose();

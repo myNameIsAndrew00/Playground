@@ -163,7 +163,10 @@ namespace Service.ConfigurationAPI.Client
                 if (triggerEvents)
                     OnRequestEnd?.Invoke();
 
-                return JsonSerializer.Deserialize<StandardResponse<DTOModel>>(content, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                return JsonSerializer.Deserialize<StandardResponse<DTOModel>>(content, new JsonSerializerOptions() { 
+                    PropertyNameCaseInsensitive = true,
+                    Converters ={ new JsonStringEnumConverter() } 
+                });
             }
             catch
             {
