@@ -12,6 +12,10 @@ namespace Service.Core.Abstractions.Logging
 
         public LogSection Section { get; }
 
+        public LogLevel LogLevel { get; }
+
         public string Data { get; }
+
+        public string Message { get; }
     }
 }

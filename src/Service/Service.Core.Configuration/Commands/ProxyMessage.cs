@@ -25,14 +25,19 @@ namespace Service.Core.Configuration.Commands
             handlersFactory: pkcs11Server => new SessionsRequestMessageHandler(pkcs11Server) 
          );
 
-
+        public static ProxyMessage<List<LogDAO>> LogsRequest = new ProxyMessage<List<LogDAO>>(
+            name: "__LOG_REQUEST",
+            handlersFactory: pkcs11Server => new LogRequestMessageHandler(pkcs11Server)
+        );
+        
         #endregion
 
         static ProxyMessage()
         {
             Messages = new Dictionary<string, ProxyMessage>()
             {
-                [SessionsRequest.Name] = SessionsRequest
+                [SessionsRequest.Name] = SessionsRequest,
+                [LogsRequest.Name] = LogsRequest
             };
         }
 

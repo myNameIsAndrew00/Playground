@@ -1,4 +1,5 @@
 ﻿using Service.Core.Abstractions.Execution;
+using Service.Core.Abstractions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,15 @@ namespace Service.Core.Abstractions.Configuration
     public interface IConfigurablePkcs11Server
     {
         /// <summary>
-        /// Get server sessions
+        /// Get server sessions.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<IReadOnlySession> GetSessions();
+
+        /// <summary>
+        /// Get server logs.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ILogMessage> GetLogs();
     }
 }

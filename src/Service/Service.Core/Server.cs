@@ -61,7 +61,7 @@ namespace Service.Core
         public void Start()
         {
             if (disposed) return;
-            
+
             // log application is starting
             this.logger?.Create(LogSection.MAIN_SERVER, new LogData("Starting server...", null, LogLevel.Info));
 
@@ -96,6 +96,8 @@ namespace Service.Core
         }
 
         public IEnumerable<IReadOnlySession> GetSessions() => this.Resolver.Dispatcher.GetSessions();
+
+        public IEnumerable<ILogMessage> GetLogs() => this.logger.GetMessages(300);
 
         public IPkcs11Server SetStorage(ITokenStorage storage) { this.tokenStorage = storage; return this; }
 
@@ -147,6 +149,9 @@ namespace Service.Core
 
             if (this.configurationAPI is not null)
                 this.configurationAPI.Dispose();
+
+            if (this.logger is not null)
+                this.logger.Dispose();
 
             disposed = true;
         }

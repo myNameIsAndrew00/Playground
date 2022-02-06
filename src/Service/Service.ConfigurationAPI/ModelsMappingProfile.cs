@@ -17,6 +17,7 @@ namespace Service.ConfigurationAPI
         public ModelsMappingProfile()
         {
             CreateMap<SessionDAO, SessionDTO>();
+            CreateMap<LogDAO, LogDTO>();
         }
     }
 }

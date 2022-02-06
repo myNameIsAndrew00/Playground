@@ -36,7 +36,7 @@ namespace Service.Core
         {
             IPkcs11Server result = CreateSocketServer<TlvServiceExecutor>(address, port)
                 .SetStorage(new TokenStorage())
-                .SetLogger(new Logger())
+                .SetLogger(new SqliteLogger())
                 .RegisterEncryptionModule(options =>
                 {
                     return new EncryptionModule(options)
