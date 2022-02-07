@@ -41,6 +41,8 @@ namespace Service.Core.Token.Encryption
             }
         }
 
+        public IUnsecuredMemoryObject Unsecure() => MemoryObject?.Unsecure();
+
         /// <summary>
         /// IV which may be used for block encryption/decryption.
         /// </summary>
@@ -53,5 +55,6 @@ namespace Service.Core.Token.Encryption
         /// </summary>
         public byte[] UnprocessedData { get; set; }
 
+        
     }
 }

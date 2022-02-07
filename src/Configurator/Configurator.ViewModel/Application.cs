@@ -56,7 +56,7 @@ namespace Configurator.ViewModel
             lock (changePageLock)
             {
                 // If animation is triggered, return.
-             //   if (CurrentPageShouldAnimateOut) return;
+                if (CurrentPageShouldAnimateOut) return;
 
                 // If page is already set or page chaning ocurred, stop the action.
                 if (NewPage == CurrentPage || CurrentPageContext is null) return;

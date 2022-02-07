@@ -18,7 +18,11 @@ namespace Service.Core.Abstractions.Storage
 
         ulong Id { get; }
 
-        IEnumerable<IDataContainer<Pkcs11Attribute>> Attributes { get; set; }
+        /// <summary>
+        /// Unsecure and returns all attributes contained by this memory object.
+        /// </summary>
+        /// <returns></returns>
+        IUnsecuredMemoryObject Unsecure();
 
         IDataContainer<Pkcs11Attribute> this[Pkcs11Attribute type] { get;  }
 

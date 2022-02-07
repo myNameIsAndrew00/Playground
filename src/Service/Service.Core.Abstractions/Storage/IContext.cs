@@ -17,14 +17,6 @@ namespace Service.Core.Abstractions.Storage
         /// </summary>
         public IMemoryObject MemoryObject { get; }
 
-
-        IEnumerable<IDataContainer<Pkcs11Attribute>> IMemoryObject.Attributes
-        {
-            get => MemoryObject.Attributes;
-            set => MemoryObject.Attributes = value;
-        }
-
-
         void IMemoryObject.SetId(ulong id) => MemoryObject.SetId(id);
                
         ulong IMemoryObject.Id => MemoryObject.Id;

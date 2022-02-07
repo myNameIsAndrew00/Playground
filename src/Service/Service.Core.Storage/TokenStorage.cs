@@ -72,6 +72,12 @@ namespace Service.Core.Storage
             return MemoryObjectsBuilder.Instance.Get(attributes, out createdObject, out code);
         }
 
+        public bool CreateTokenObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out ITokenObject tokenObject, out ExecutionResultCode code)
+        {
+            //todo: implement
+            throw new NotImplementedException();
+        }
+
         public IAesMechanismOptions GetAes(IDataContainer<Pkcs11Mechanism> dataContainer)
         {
             return new AesMechanismOptions(dataContainer);

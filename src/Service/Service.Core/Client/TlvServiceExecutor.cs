@@ -108,6 +108,7 @@ namespace Service.Core.Client
         {
             if (attributes == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
 
+            // for now, only memory objects can be created and stored.
             if (!tokenStorage.CreateInMemoryObject(attributes, out IMemoryObject @object, out ExecutionResultCode creationResultCode))
             {
                 return new BytesResult(creationResultCode);

@@ -25,6 +25,9 @@ namespace Service.Core.Token.Hashing
 
         public IMemoryObject MemoryObject => null;
 
+        public IUnsecuredMemoryObject Unsecure() => null;
+
         public bool LengthRequest { get; set; }
+
     }
 }

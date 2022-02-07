@@ -22,5 +22,8 @@ namespace Service.Core.Abstractions.Storage
         /// <param name="code">Result code. Ok code is returned if object was created with success</param>
         /// <returns>A boolean which is true if object was created with success, false otherwise</returns>
         bool CreateInMemoryObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out IMemoryObject createdObject, out ExecutionResultCode code);
+
+
+        bool CreateTokenObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out ITokenObject tokenObject, out ExecutionResultCode code);
     }
 }

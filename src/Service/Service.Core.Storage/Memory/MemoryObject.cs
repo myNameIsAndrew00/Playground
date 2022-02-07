@@ -13,28 +13,32 @@ namespace Service.Core.Storage.Memory
     /// </summary>
     internal class MemoryObject : IMemoryObject
     {
+        //todo: this should be encrypted or stored in a secure manner
+        private IEnumerable<IDataContainer<Pkcs11Attribute>> attributes;
+
         internal MemoryObject() { }
 
         internal MemoryObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes)
         {
-            this.Attributes = attributes;
+            this.attributes = attributes;
         }
 
         public virtual void SetId(ulong id) => this.Id = id;
 
         public virtual ulong Id { get; private set; }
-
-        public virtual IEnumerable<IDataContainer<Pkcs11Attribute>> Attributes { get; set; }
-
+        
         public virtual void Dispose()
         {
         }
+
+        //todo: implement unsecure method properly.
+        public IUnsecuredMemoryObject Unsecure() => new UnsecuredMemoryObject(attributes);
 
         public virtual IDataContainer<Pkcs11Attribute> this[Pkcs11Attribute type]
         {
             get
             {
-                return Attributes?.Where(attribute => attribute.Type == type).FirstOrDefault();
+                return attributes?.Where(attribute => attribute.Type == type).FirstOrDefault();
             }
         }
     }
