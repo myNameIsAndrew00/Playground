@@ -2,9 +2,9 @@
   <img width="400" height="400" src="docs/Playground.svg">
 </p>
 
-# Cryptographic Hardware Simulator!
+# Welcome to playground!
 
-Cryptographic hardware simulator represents a platform which emulates an virtual ecosystem for a cryptographic hardware which implements PKCS11 standard.  
+Cryptographic hardware simulator represents a proof of concept platform which emulates an virtual ecosystem for a cryptographic hardware which implements PKCS11 standard.  
 > Technologies stack used for deployment: Windows, .NET 6, MSVC
 
 # Platform structure
