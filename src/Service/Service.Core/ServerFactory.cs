@@ -63,8 +63,7 @@ namespace Service.Core
                         .SetMechanism(new SHA512MechanismCommand())
                         as HashingModule;
                  })
-                .RegisterSigningModule(opt => new SigningModule());
-            
+                .RegisterSigningModule(opt => new SigningModule()); 
 
             return result;
         }

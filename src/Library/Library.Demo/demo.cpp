@@ -33,7 +33,7 @@ int main() {
 	};
 
 	CK_ULONG slotsCount;
-	char encryptData[] = "Ana are mere si pere si de toate balbal blbdla al ";
+	char encryptData[] = "This data will be encrypted";
 
 	// ---------------- PKCS11 DEMO below ----------------
 
