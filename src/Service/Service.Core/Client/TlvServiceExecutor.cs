@@ -5,6 +5,7 @@ using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.Abstractions.Token.Hashing;
+using Service.Core.Abstractions.Token.Signing;
 using Service.Core.Communication.Infrastructure;
 using Service.Core.DefinedTypes;
 using Service.Core.Execution;
@@ -51,7 +52,7 @@ namespace Service.Core.Client
         public IReadOnlyCollection<LogData> Logs => logs;
 
         public void ClearLogs() => logs.Clear();
-       
+
 
         public void SetDispatcherResult(DispatchResult dispatchResult) => this.dispatchResult = dispatchResult;
 
@@ -312,13 +313,122 @@ namespace Service.Core.Client
             IHashingModule hashingHandler = moduleCollection.GetHashingModule(context);
 
             byte[] digest = hashingHandler.HashFinalise(out ExecutionResultCode executionResultCode);
-        
-            if(!lengthRequest)
+
+            if (!lengthRequest)
                 this.dispatchResult.Session.ResetRegisteredDigestContext();
 
             return new BytesResult(digest, executionResultCode);
         }
 
-    
+        public IExecutionResult GenerateKeyPair(IDataContainer<Pkcs11Mechanism> mechanism, IEnumerable<IDataContainer<Pkcs11Attribute>> publicKeyAttributes, IEnumerable<IDataContainer<Pkcs11Attribute>> privateKeyAttributes)
+        {
+            if (publicKeyAttributes is null || privateKeyAttributes is null)
+                return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+
+            // create keys in memory
+            if (!tokenStorage.CreateKeys(
+                publicKeyAttributes,
+                privateKeyAttributes,
+                this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
+                out IMemoryObject publicKey,
+                out IMemoryObject privateKey,
+                out ExecutionResultCode resultCode
+                ))
+                return new BytesResult(resultCode);
+
+            // for now, only register them in this session
+            ulong privateKeyHandlerId = this.dispatchResult.Session.AddSesionObject(publicKey);
+            ulong publicKeyHandlerId = this.dispatchResult.Session.AddSesionObject(privateKey);
+
+            // return handlers for private and public key
+            return new BytesResult(privateKeyHandlerId.GetBytes()
+                           .Concat(publicKeyHandlerId.GetBytes()), ExecutionResultCode.OK);
+        }
+
+        public IExecutionResult SignInit(ulong privateKeyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
+        {
+            IMemoryObject keyHandler = this.dispatchResult.Session.GetSessionObject(privateKeyIdentifier);
+
+            if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+
+            ISigningModule signingModule = moduleCollection.GetSigningModule(null);
+
+            keyHandler = signingModule.Initialise(
+                privateKey: keyHandler,
+                mechanism: this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
+                out ExecutionResultCode executionResultCode);
+
+            if (keyHandler is not null)
+                this.dispatchResult.Session.UpdateAndRegisterSesionObject(privateKeyIdentifier, keyHandler as ISigningContext);
+
+            return new BytesResult(executionResultCode);
+        }
+
+        public IExecutionResult Sign(bool lengthRequest, IDataContainer dataToSign)
+        {
+            ISigningContext context = this.dispatchResult.Session.RegisteredSigningContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
+
+            ISigningModule signingModule = moduleCollection.GetSigningModule(context);
+
+            byte[] signedData = signingModule.Sign(
+                signingData: dataToSign.Value,
+                isPartOperation: false,
+                out ExecutionResultCode executionResultCode);
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredSigningContext();
+
+            return new BytesResult(signedData, executionResultCode);
+        }
+
+        public IExecutionResult SignUpdate(IDataContainer dataToSign)
+        {
+            ISigningContext context = this.dispatchResult.Session.RegisteredSigningContext;
+
+            ISigningModule signingModule = moduleCollection.GetSigningModule(context);
+
+            byte[] signedData = signingModule.Sign(
+                signingData: dataToSign.Value,
+                isPartOperation: true,
+                out ExecutionResultCode executionResultCode);
+
+            return new BytesResult(signedData, executionResultCode);
+        }
+
+        public IExecutionResult SignFinal(bool lengthRequest)
+        {
+            ISigningContext context = this.dispatchResult.Session.RegisteredSigningContext;
+
+            ISigningModule signingModule = moduleCollection.GetSigningModule(context);
+
+            byte[] signedData = signingModule.SignFinalise(out ExecutionResultCode executionResultCode);
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredSigningContext();
+
+            return new BytesResult(signedData, executionResultCode);
+        }
+
+        public IExecutionResult VerifyInit(ulong publicKeyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IExecutionResult Verify(bool lengthRequest, IDataContainer dataToVerify)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IExecutionResult VerifyUpdate(IDataContainer dataToVerify)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IExecutionResult VerifyFinal(bool lengthRequest)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

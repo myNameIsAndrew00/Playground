@@ -14,7 +14,7 @@ namespace Service.Core.Storage.Memory
     internal class MemoryObject : IMemoryObject
     {
         //todo: this should be encrypted or stored in a secure manner
-        private IEnumerable<IDataContainer<Pkcs11Attribute>> attributes;
+        protected IEnumerable<IDataContainer<Pkcs11Attribute>> attributes;
 
         internal MemoryObject() { }
 
@@ -32,7 +32,7 @@ namespace Service.Core.Storage.Memory
         }
 
         //todo: implement unsecure method properly.
-        public IUnsecuredMemoryObject Unsecure() => new UnsecuredMemoryObject(attributes);
+        public virtual IUnsecuredMemoryObject Unsecure() => new UnsecuredMemoryObject(attributes);
 
         public virtual IDataContainer<Pkcs11Attribute> this[Pkcs11Attribute type]
         {

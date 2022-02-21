@@ -2,11 +2,13 @@
 using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.Abstractions.Token.Hashing;
+using Service.Core.Abstractions.Token.Signing;
 using Service.Core.DefinedTypes;
 using Service.Core.Storage.Memory;
 using Service.Core.Token.Encryption;
 using Service.Runtime;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,7 +22,7 @@ namespace Service.Core.Execution
         public Session() { 
         }
 
-        private Dictionary<ulong, IMemoryObject> sessionObjects = new Dictionary<ulong, IMemoryObject>();
+        private ConcurrentDictionary<ulong, IMemoryObject> sessionObjects = new ConcurrentDictionary<ulong, IMemoryObject>();
 
         public ulong Id { get; init; }
     
@@ -35,6 +37,8 @@ namespace Service.Core.Execution
         public IKeyContext RegisteredDecryptionContext { get; private set; }
 
         public IDigestContext RegisteredDigestContext { get; private set; }
+        
+        public ISigningContext RegisteredSigningContext { get; private set; }
 
         public bool Closed { get; private set; } = false;
 
@@ -85,7 +89,7 @@ namespace Service.Core.Execution
 
             ulong nextId = Utils.GetNextId();
 
-            this.sessionObjects.Add(nextId, pkcs11Object);
+            this.sessionObjects.TryAdd(nextId, pkcs11Object);
 
             pkcs11Object.SetId(nextId);
 
@@ -140,12 +144,41 @@ namespace Service.Core.Execution
             return context;
         }
 
-        public void ResetRegisteredEncryptionContext() => RegisteredEncryptionContext = null;
+        /// <summary>
+        /// Reset registered encryption context and unwrap the context object to memory object.
+        /// </summary>
+        public void ResetRegisteredEncryptionContext()
+        {
+            unwrapMemoryObject(RegisteredEncryptionContext.Id); 
+            RegisteredEncryptionContext = null;
+        }
 
-        public void ResetRegisteredDecryptionContext() => RegisteredDecryptionContext = null;
+        /// <summary>
+        /// Reset registered dencryption context and unwrap the context object to memory object.
+        /// </summary>
+        public void ResetRegisteredDecryptionContext()
+        {
+            unwrapMemoryObject(RegisteredDecryptionContext.Id);
+            RegisteredDecryptionContext = null;
+        }
 
-        public void ResetRegisteredDigestContext() => RegisteredDigestContext = null;
+        /// <summary>
+        /// Reset registered digest context and unwrap the context object to memory object.
+        /// </summary>
+        public void ResetRegisteredDigestContext()
+        {
+            unwrapMemoryObject(RegisteredDigestContext.Id);
+            RegisteredDigestContext = null;
+        }
 
+        /// <summary>
+        /// Reset registered signing context and unwrap the context object to memory object.
+        /// </summary>
+        public void ResetRegisteredSigningContext()
+        {
+            unwrapMemoryObject(RegisteredSigningContext.Id);
+            RegisteredSigningContext = null;
+        }
 
         public void Dispose()
         {
@@ -183,6 +216,20 @@ namespace Service.Core.Execution
             {
                 RegisteredDigestContext = digestContext;
             }
+
+            if(objectHandler is ISigningContext signingContext)
+            {
+                RegisteredSigningContext = signingContext;
+            }
+        }
+
+        private void unwrapMemoryObject(ulong identifier)
+        {
+            IContext contextObject = sessionObjects[identifier] as IContext;
+
+            if (contextObject is null) return;
+
+            sessionObjects.TryUpdate(identifier, contextObject.MemoryObject, contextObject);
         }
 
         #endregion

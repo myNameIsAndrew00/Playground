@@ -3,6 +3,7 @@ using Service.Core.Abstractions.Storage;
 using Service.Core.Abstractions.Token;
 using Service.Core.Abstractions.Token.Encryption;
 using Service.Core.DefinedTypes;
+using Service.Core.Storage.KeyGeneration;
 using Service.Core.Storage.Mechanism;
 using Service.Core.Storage.Memory;
 using System;
@@ -21,6 +22,7 @@ namespace Service.Core.Storage
     /// </summary>
     public class TokenStorage : ITokenStorage
     {
+
         private ConcurrentBag<LogData> logs;
 
         public LogSection LogSection => LogSection.STORAGE;
@@ -72,6 +74,35 @@ namespace Service.Core.Storage
             return MemoryObjectsBuilder.Instance.Get(attributes, out createdObject, out code);
         }
 
+        public bool CreateKeys(
+            IEnumerable<IDataContainer<Pkcs11Attribute>> publicKeyAttributes, 
+            IEnumerable<IDataContainer<Pkcs11Attribute>> privateKeyAttributes, 
+            IMechanismOptions mechanism, 
+            out IMemoryObject createdPublicKey, 
+            out IMemoryObject createdPrivateKey, 
+            out ExecutionResultCode code)
+        {
+            createdPublicKey = null;
+            createdPrivateKey = null;
+
+            //todo: handle persistance and key compliance
+
+            var keyGenerator = new KeyGenerator(publicKeyAttributes, privateKeyAttributes);
+
+            // Initialise and validate the mechanism and initialise attributes
+            if (!keyGenerator.Initialise(mechanism.Data.Type, out code))
+                return false;
+
+            keyGenerator.Generate(out MemoryObject privateKey, out MemoryObject publicKey, out code);
+
+            createdPrivateKey = privateKey;
+            createdPublicKey = publicKey;
+
+            return code == ExecutionResultCode.OK;
+        }
+
+
+
         public bool CreateTokenObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out ITokenObject tokenObject, out ExecutionResultCode code)
         {
             //todo: implement
@@ -87,6 +118,6 @@ namespace Service.Core.Storage
         {
             return new MechanismOptions(dataContainer);
         }
-
+ 
     }
 }

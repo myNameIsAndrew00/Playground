@@ -25,5 +25,23 @@ namespace Service.Core.Abstractions.Storage
 
 
         bool CreateTokenObject(IEnumerable<IDataContainer<Pkcs11Attribute>> attributes, out ITokenObject tokenObject, out ExecutionResultCode code);
+
+        /// <summary>
+        /// Generate a pair of private/public keys using mechanism specified.
+        /// </summary>
+        /// <param name="publickKeyAttributes">Attributes which will be used to generate public key.</param>
+        /// <param name="privateKeyAttributes">Attributes which will be used to generate private key.</param>
+        /// <param name="mechanism">Mechanism which specifies to algorithm used to generate.</param>
+        /// <param name="createdPublicKey">Public key object.</param>
+        /// <param name="createdPrivateKey">Private key object.</param>
+        /// <param name="code">Execution result code. Ok code is returned if keypair was created with success.</param>
+        /// <returns>A boolean which is true if keypair was created with success, false otherwise</returns>
+        bool CreateKeys(
+            IEnumerable<IDataContainer<Pkcs11Attribute>> publickKeyAttributes,
+            IEnumerable<IDataContainer<Pkcs11Attribute>> privateKeyAttributes,
+            IMechanismOptions mechanism,
+            out IMemoryObject createdPublicKey,
+            out IMemoryObject createdPrivateKey,
+            out ExecutionResultCode code);
     }
 }

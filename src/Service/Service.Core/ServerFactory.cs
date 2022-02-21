@@ -10,6 +10,7 @@ using Service.Core.Token.Encryption.AES;
 using Service.Core.Token.Hashing;
 using Service.Core.Token.Hashing.SHA;
 using Service.Core.Token.Signing;
+using Service.Core.Token.Signing.RSA;
 
 namespace Service.Core
 {
@@ -63,7 +64,11 @@ namespace Service.Core
                         .SetMechanism(new SHA512MechanismCommand())
                         as HashingModule;
                  })
-                .RegisterSigningModule(opt => new SigningModule()); 
+                .RegisterSigningModule(options => {
+                    return new SigningModule(options)
+                        .SetMechanism(new RSASigningMechanismCommand())
+                        as SigningModule;
+                 }); 
 
             return result;
         }

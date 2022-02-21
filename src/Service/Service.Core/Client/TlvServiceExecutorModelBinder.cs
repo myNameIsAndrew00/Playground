@@ -18,7 +18,7 @@ namespace Service.Core.Client
     /// <summary>
     /// Use this class to bind parameters to a service executor method.
     /// Model binder will fill bind only value types and IDataContainer in the order passed to the method.
-    /// A single collection of data containers can be parsed by this binder.
+    /// Multiple collection of data containers can be parsed by this binder (condition is that the collection bytes to have an byte of value max(ulong) as terminator).
     /// </summary>
     public class TlvServiceExecutorModelBinder : IServiceExecutorModelBinder<DispatchResult, Session>
     {
@@ -192,7 +192,14 @@ namespace Service.Core.Client
                 List<TlvStructure> result = new List<TlvStructure>();
 
                 while (cursor < bytes.Count())
-                    result.Add(parseContainer(bytes, ref cursor));
+                {
+                    var container = parseContainer(bytes, ref cursor);
+
+                    // if container failed to be parsed or is end of parsing, stop the collection parsing
+                    if (container is null) break;
+                    
+                    result.Add(container);
+                }
 
                 output = result;
                 return cursor;
@@ -211,6 +218,11 @@ namespace Service.Core.Client
         { 
             // parse the type.
             ulong dataType = bytes.Skip(cursor).ToULong();
+
+            // if data type is max(ulong), that means that the container can not be parsed.
+            // stop the parsing and return null
+            if (dataType == ulong.MaxValue) return null;
+
             cursor += sizeof(ulong);
 
             // parse the value.

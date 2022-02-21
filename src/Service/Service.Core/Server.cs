@@ -141,6 +141,12 @@ namespace Service.Core
             return this;
         }
 
+        public IPkcs11Server RegisterVerifyingModule<VerifyingModuleType>(Func<IContext, VerifyingModuleType> implementationFactory = null) where VerifyingModuleType : IVerifyModule
+        {
+            moduleCollection.RegisterModule(typeof(IVerifyModule), typeof(VerifyingModuleType), (builderParameter) => implementationFactory(builderParameter as IContext));
+            return this;
+        }
+
         public void Dispose()
         {
             if (disposed) return;
@@ -180,7 +186,7 @@ namespace Service.Core
                 if (!dispatchResult.SessionCheckPassed)
                     return executor.GetEmptySessionResult(ExecutionResultCode.SESSION_HANDLE_INVALID);
 
-                //if the dispatcher doesn't closed the session in current request and the session is already closed
+                //if the dispatcher doesn't close the session in current request and the session is already closed
                 if (!dispatchResult.ClosedSession && dispatchResult.Session.Closed)
                     return executor.GetEmptySessionResult(ExecutionResultCode.SESSION_CLOSED);
 
@@ -234,6 +240,7 @@ namespace Service.Core
             loggingInstance.ClearLogs();
         }
 
+     
 
         #endregion
     }

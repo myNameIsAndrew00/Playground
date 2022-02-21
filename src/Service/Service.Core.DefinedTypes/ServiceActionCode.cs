@@ -69,6 +69,43 @@ namespace Service.Core.DefinedTypes
         /// <summary>
         /// Use this code to trigger service digest update
         /// </summary>
-        DigestUpdate = 0x10
+        DigestUpdate = 0x10,
+        /// <summary>
+        /// Use this code to trigger service to generate key pair
+        /// </summary>
+        GenerateKeyPair = 0x11,
+        /// <summary>
+        /// Use this code to trigger service to initialise sign
+        /// </summary>
+        SignInit = 0x12,
+        /// <summary>
+        /// Use this code to trigger service to sign data
+        /// </summary>
+        Sign = 0x13,
+        /// <summary>
+        /// Use this code to trigger service to sign data in multiple parts
+        /// </summary>
+        SignUpdate = 0x14,
+        /// <summary>
+        /// Use this code to trigger service to finalise multipart signing
+        /// </summary>
+        SignFinal = 0x15,
+        /// <summary>
+        /// Use this code to trigger service to initialise verifying
+        /// </summary>
+        VerifyInit = 0x16,
+        /// <summary>
+        /// Use this code to trigger service to verify data
+        /// </summary>
+        Verify = 0x17,
+        /// <summary>
+        /// Use this code to trigger service to verify data in multiple parts
+        /// </summary>
+        VerifyUpdate = 0x18,
+        /// <summary>
+        /// Use this code to trigger service to finalise multipart verifying
+        /// </summary>
+        VerifyFinal = 0x19
+
     }
 }

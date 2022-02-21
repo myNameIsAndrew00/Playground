@@ -49,7 +49,7 @@ namespace Service.Core.Abstractions.Communication
         /// Register an module to the server which may be used by executor to handle the request invoked.
         /// </summary>
         /// <typeparam name="ModuleType"></typeparam>
-        /// <returns>Returns and updated version of this instance</returns>
+        /// <returns>Returns an updated version of this instance</returns>
         IPkcs11Server RegisterModule<ModuleType, ImplementationType>()
             where ModuleType : ITokenModule
             where ImplementationType : ITokenModule;
@@ -57,31 +57,37 @@ namespace Service.Core.Abstractions.Communication
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle encryption operations.
         /// </summary>
-        /// <returns>Returns and updated version of this instance</returns>
+        /// <returns>Returns an updated version of this instance</returns>
         IPkcs11Server RegisterEncryptionModule<EncryptionModuleType>(Func<IContext, EncryptionModuleType> implementationFactory = null)
             where EncryptionModuleType : IEncryptionModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle encryption operations.
         /// </summary>
-        /// <returns>Returns and updated version of this instance</returns>
+        /// <returns>Returns an updated version of this instance</returns>
         IPkcs11Server RegisterDecryptionModule<DecryptionModuleType>(Func<IContext, DecryptionModuleType> implementationFactory = null)
             where DecryptionModuleType : IDecryptionModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle hashing operations.
         /// </summary>
-        /// <returns>Returns and updated version of this instance</returns>
+        /// <returns>Returns an updated version of this instance</returns>
         IPkcs11Server RegisterHashingModule<HashingModuleType>(Func<IContext, HashingModuleType> implementationFactory = null)
             where HashingModuleType : IHashingModule;
 
         /// <summary>
         /// Register an encryption module to the server which may be used by executor to handle signing operations.
         /// </summary>
-        /// <returns>Returns and updated version of this instance</returns>
+        /// <returns>Returns an updated version of this instance</returns>
         IPkcs11Server RegisterSigningModule<SigningModuleType>(Func<IContext, SigningModuleType> implementationFactory = null)
             where SigningModuleType : ISigningModule;
 
+        /// <summary>
+        /// Register an verifying module to the server which may be used by executor to handle signed data verifying operations.
+        /// </summary>
+        /// <returns>Returns an updated version of this intance.</returns>
+        IPkcs11Server RegisterVerifyingModule<VerifyingModuleType>(Func<IContext, VerifyingModuleType> implementationFactory = null)
+            where VerifyingModuleType : IVerifyModule;
     }
 
     /// <summary>

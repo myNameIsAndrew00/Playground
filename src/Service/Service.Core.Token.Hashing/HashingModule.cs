@@ -13,7 +13,7 @@ namespace Service.Core.Token.Hashing
     /// <summary>
     /// Default implementation for hashing handler interface
     /// </summary>
-    public class HashingModule : IHashingModule, IAllowMechanism
+    public class HashingModule : IHashingModule
     {
         // this dictionary contains the mechanisms allowed for this module.
         private Dictionary<Pkcs11Mechanism, IMechanismCommand> storedMechanisms;

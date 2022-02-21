@@ -47,6 +47,9 @@ namespace Service.Core.Infrastructure.Communication
             bool sessionClosed = false;
             ServiceActionCode requestedAction = (ServiceActionCode)inputBytes[0];
 
+            //log the requested action
+            logs.Add(new LogData($"Dispatched following action: {requestedAction}", null, LogLevel.Info));
+
             int payloadOffset = 1;
 
             handleCommandByte(requestedAction,
