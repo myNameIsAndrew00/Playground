@@ -48,5 +48,12 @@ namespace Service.Core.Abstractions.Token
         /// <param name="context">Context used to initialise the modul</param>
         /// <returns></returns>
         IDecryptionModule GetDecryptionModule(IMemoryObject context);
+
+        /// <summary>
+        /// Get the verify module from the collection
+        /// </summary>
+        /// <param name="context">Context used to initialise the modul</param>
+        /// <returns></returns>
+        IVerifyModule GetVerifyModule(IMemoryObject context);
     }
 }

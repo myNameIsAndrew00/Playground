@@ -44,7 +44,7 @@ namespace Service.Core
                         .SetMechanism(new AESECBEncryptMechanismCommand())
                         .SetMechanism(new AESCBCEncryptMechanismCommand())
                         .SetMechanism(new AESCFBEncryptMechanismCommand())
-                        .SetMechanism(new AESOFBEncryptMechanismCommand())
+                        .SetMechanism(new AESOFBEncryptMechanismCommand()) 
                         as EncryptionModule;
                 })
                 .RegisterDecryptionModule(options =>

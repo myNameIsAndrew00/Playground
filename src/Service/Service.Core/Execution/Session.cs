@@ -39,7 +39,9 @@ namespace Service.Core.Execution
         public IDigestContext RegisteredDigestContext { get; private set; }
         
         public ISigningContext RegisteredSigningContext { get; private set; }
-
+        
+        public IVerifyContext RegisteredVerifyContext { get; private set; }
+        
         public bool Closed { get; private set; } = false;
 
         public DateTime TimeStamp { get; init; }
@@ -180,6 +182,15 @@ namespace Service.Core.Execution
             RegisteredSigningContext = null;
         }
 
+        /// <summary>
+        /// Reset registered verify context and unwrap the context object to memory object.
+        /// </summary>
+        public void ResetRegisteredVerifyContext()
+        {
+            unwrapMemoryObject(RegisteredVerifyContext.Id);
+            RegisteredVerifyContext = null;
+        }
+
         public void Dispose()
         {
             foreach (var @object in sessionObjects)
@@ -220,6 +231,11 @@ namespace Service.Core.Execution
             if(objectHandler is ISigningContext signingContext)
             {
                 RegisteredSigningContext = signingContext;
+            }
+
+            if(objectHandler is IVerifyContext verifyContext)
+            {
+                RegisteredVerifyContext = verifyContext;
             }
         }
 

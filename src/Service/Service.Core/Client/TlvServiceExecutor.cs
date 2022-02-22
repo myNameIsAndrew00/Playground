@@ -413,22 +413,70 @@ namespace Service.Core.Client
 
         public IExecutionResult VerifyInit(ulong publicKeyIdentifier, IDataContainer<Pkcs11Mechanism> mechanism)
         {
-            throw new NotImplementedException();
+            IMemoryObject keyHandler = this.dispatchResult.Session.GetSessionObject(publicKeyIdentifier);
+
+            if (keyHandler == null || mechanism == null) return new BytesResult(ExecutionResultCode.ARGUMENTS_BAD);
+
+            IVerifyModule signingModule = moduleCollection.GetVerifyModule(null);
+
+            keyHandler = signingModule.Initialise(
+                publicKey: keyHandler,
+                mechanism: this.ModelBinder.CreateMechanismModel(mechanism, tokenStorage),
+                out ExecutionResultCode executionResultCode);
+
+            if (keyHandler is not null)
+                this.dispatchResult.Session.UpdateAndRegisterSesionObject(publicKeyIdentifier, keyHandler as IVerifyContext);
+
+            return new BytesResult(executionResultCode);
         }
 
-        public IExecutionResult Verify(bool lengthRequest, IDataContainer dataToVerify)
+        public IExecutionResult Verify(bool lengthRequest, IDataContainer dataToVerify, IDataContainer signedData)
         {
-            throw new NotImplementedException();
+            IVerifyContext context = this.dispatchResult.Session.RegisteredVerifyContext;
+
+            if (context is not null) context.LengthRequest = lengthRequest;
+
+            IVerifyModule verifyModule = moduleCollection.GetVerifyModule(context);
+
+            bool dataIsValid = verifyModule.Verify(
+                verifyingData: dataToVerify.Value,
+                signedData: signedData.Value,
+                isPartOperation: false,
+                out ExecutionResultCode executionResultCode);
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredVerifyContext();
+
+            return new BytesResult(new[] { Convert.ToByte(dataIsValid) }, executionResultCode);
         }
 
         public IExecutionResult VerifyUpdate(IDataContainer dataToVerify)
         {
-            throw new NotImplementedException();
+            IVerifyContext context = this.dispatchResult.Session.RegisteredVerifyContext;
+
+            IVerifyModule verifyModule = moduleCollection.GetVerifyModule(context);
+
+            bool dataIsValid = verifyModule.Verify(
+                 verifyingData: dataToVerify.Value,
+                 signedData: null,
+                 isPartOperation: true,
+                 out ExecutionResultCode executionResultCode);
+
+            return new BytesResult(new[] { Convert.ToByte(dataIsValid) }, executionResultCode);
         }
 
-        public IExecutionResult VerifyFinal(bool lengthRequest)
+        public IExecutionResult VerifyFinal(bool lengthRequest, IDataContainer signedData)
         {
-            throw new NotImplementedException();
+            IVerifyContext context = this.dispatchResult.Session.RegisteredVerifyContext;
+
+            IVerifyModule signingModule = moduleCollection.GetVerifyModule(context);
+
+            bool dataIsValid = signingModule.VerifyFinalise(signedData.Value, out ExecutionResultCode executionResultCode);
+
+            if (!lengthRequest)
+                this.dispatchResult.Session.ResetRegisteredVerifyContext();
+
+            return new BytesResult(new[] { Convert.ToByte(dataIsValid) }, executionResultCode);
         }
     }
 }

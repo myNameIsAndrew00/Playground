@@ -11,6 +11,6 @@ namespace Service.Core.Abstractions.Token.Signing
     {
         public bool LengthRequest { get; set; }
 
-        public byte[] UnprocessedData { get; set; }
+        public byte[] VerifyData { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Service.Core.Abstractions.Token.Signing
         /// <param name="mechanism">Mechanism specified for signing</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if handler was initialised with success</param>
         /// <returns>An object representing the context which can be used to do verifying</returns>
-        ISigningContext Initialise<MechanismContainer>(IMemoryObject publicKey, MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
+        IVerifyContext Initialise<MechanismContainer>(IMemoryObject publicKey, MechanismContainer mechanism, out ExecutionResultCode executionResultCode)
             where MechanismContainer : IMechanismOptions;
 
         /// <summary>
@@ -27,13 +27,13 @@ namespace Service.Core.Abstractions.Token.Signing
         /// <param name="isPartOperation">A boolean which specify if the operation will be succeed by further calls</param>
         /// <param name="executionResultCode">Result code. Ok code is returned if verifying was done with success</param>
         /// <returns>Result of the verifying process</returns>
-        byte[] Verify(byte[] verifyingData, bool isPartOperation, out ExecutionResultCode executionResultCode);
+        bool Verify(byte[] verifyingData, byte[] signedData, bool isPartOperation, out ExecutionResultCode executionResultCode);
 
         /// <summary>
         /// Use this method to finalise verifying. This method will return the final data verified.
         /// </summary>
         /// <param name="executionResultCode">Result code. Ok code is returned if verifying was done with success.</param>
         /// <returns>Result of the verifying process</returns>
-        byte[] VerifyFinalise(out ExecutionResultCode executionResultCode);
+        bool VerifyFinalise(byte[] signedData, out ExecutionResultCode executionResultCode);
     }
 }
