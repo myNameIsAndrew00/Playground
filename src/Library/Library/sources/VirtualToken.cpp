@@ -127,6 +127,69 @@ DigestFinalResult Abstractions::VirtualToken::DigestFinal(const unsigned long lo
 	//todo: handle cases or do client side validations
 	return this->serviceProxy->DigestFinal(sessionId, digestLengthRequest);
 }
+
+GenerateKeyPairResult Abstractions::VirtualToken::GenerateKeyPair(const unsigned long long sessionId, const CK_MECHANISM* mechanism, CK_ATTRIBUTE* publicKeyAttributes, const int publicKeyLength, CK_ATTRIBUTE* privateKeyAttributes, const int privateKeyLength) const
+{
+	Infrastructure::TlvParser parser;
+
+	std::list<TlvStructure> publicTemplateStructure = parser.ParsePkcs11Attributes(publicKeyAttributes, publicKeyLength);
+	std::list<TlvStructure> privateTemplateStructure = parser.ParsePkcs11Attributes(privateKeyAttributes, privateKeyLength);
+
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->GenerateKeyPair(
+		sessionId,
+		TlvStructure((unsigned long long)mechanism->mechanism, (const unsigned char*)mechanism->pParameter, mechanism->ulParameterLen),
+		publicTemplateStructure,
+		privateTemplateStructure);
+}
+
+SignInitResult Abstractions::VirtualToken::SignInit(const unsigned long long sessionId, const unsigned long long privateKeyId, const CK_MECHANISM* mechanism) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->SignInit(sessionId, privateKeyId, TlvStructure((unsigned long long)mechanism->mechanism, (const unsigned char*)mechanism->pParameter, mechanism->ulParameterLen));
+}
+
+SignResult Abstractions::VirtualToken::Sign(const unsigned long long sessionId, const unsigned char* dataToSign, const int length, bool requestLength) const
+{	
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->Sign(sessionId, TlvStructure(0, dataToSign, length), requestLength);
+}
+
+SignUpdateResult Abstractions::VirtualToken::SignUpdate(const unsigned long long sessionId, const unsigned char* dataToSign, const int length) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->SignUpdate(sessionId, TlvStructure(0, dataToSign, length));
+}
+
+SignFinalResult Abstractions::VirtualToken::SignFinal(const unsigned long long sessionId, bool lengthRequest) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->SignFinal(sessionId, lengthRequest);
+}
+
+VerifyInitResult Abstractions::VirtualToken::VerifyInit(const unsigned long long sessionId, const unsigned long long publicKeyId, const CK_MECHANISM* mechanism) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->VerifyInit(sessionId, publicKeyId, TlvStructure((unsigned long long)mechanism->mechanism, (const unsigned char*)mechanism->pParameter, mechanism->ulParameterLen));
+}
+
+VerifyResult Abstractions::VirtualToken::Verify(const unsigned long long sessionId, const unsigned char* dataToVerify, const int dataLength, const unsigned char* signedData, const int signedDataLength) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->Verify(sessionId, TlvStructure(0, dataToVerify, dataLength), TlvStructure(0, signedData, signedDataLength));
+}
+
+VerifyUpdateResult Abstractions::VirtualToken::VerifyUpdate(const unsigned long long sessionId, const unsigned char* dataToVerify, const int dataLength) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->VerifyUpdate(sessionId, TlvStructure(0, dataToVerify, dataLength));
+}
+
+VerifyFinalResult Abstractions::VirtualToken::VerifyFinal(const unsigned long long sessionId, const unsigned char* signedData, const int signedDataLength) const
+{
+	//todo: handle cases or do client side validations
+	return this->serviceProxy->VerifyFinal(sessionId, TlvStructure(0, signedData, signedDataLength));
+}
  
 
 

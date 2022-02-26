@@ -41,6 +41,8 @@ namespace Service.Core.Token
         public IHashingModule GetHashingModule(IMemoryObject objectHandler) => getModule<IHashingModule, IMemoryObject>(objectHandler);
 
         public ISigningModule GetSigningModule(IMemoryObject objectHandler) => getModule<ISigningModule, IMemoryObject>(objectHandler);
+        
+        public IVerifyModule GetVerifyModule(IMemoryObject objectHandler) => getModule<IVerifyModule, IMemoryObject>(objectHandler);
 
         public ModuleType GetModule<ModuleType>() where ModuleType : class, ITokenModule => getModule<ModuleType, object>(null);
 
@@ -60,6 +62,6 @@ namespace Service.Core.Token
             return null;
         }
 
-   
+       
     }
 }

@@ -256,6 +256,132 @@ DigestFinalResult Abstractions::ServiceProxy::DigestFinal(const Id sessionId, bo
 			sessionId
 		);
 }
+
+GenerateKeyPairResult Abstractions::ServiceProxy::GenerateKeyPair(const Id sessionId, const TlvStructure& mechanism, const std::list<TlvStructure>& publicKeyAttributes, const std::list<TlvStructure>& privateKeyAttributes)
+{
+	return this->InvokeServer<GenerateKeyPairResult>(
+			ServiceActionCode::GenerateKeyPair,
+			[mechanism, publicKeyAttributes, privateKeyAttributes]() {
+				return Bytes(mechanism).Append(publicKeyAttributes).AppendListBreak().Append(privateKeyAttributes);
+			},
+			[](auto reader, auto code) {
+				return GenerateKeyPairResult((ReturnCode)code, std::pair<unsigned long long, unsigned long long>( reader->PeekLong(), reader->PeekLong() ));
+			},
+			sessionId
+		);
+}
+
+SignInitResult Abstractions::ServiceProxy::SignInit(const Id sessionId, const Id privateKeyId, const TlvStructure& mechanism)
+{
+	return this->InvokeServer<SignInitResult>(
+			ServiceActionCode::SignInit,
+			[privateKeyId, mechanism]() {
+				return Bytes(privateKeyId).Append(mechanism);
+			},
+			[](auto reader, auto code) {
+				return SignInitResult((ReturnCode)code, true);
+			},
+			sessionId
+		);
+}
+
+SignResult Abstractions::ServiceProxy::Sign(const Id sessionId, const TlvStructure& dataToSign, bool requestLength)
+{
+	return this->InvokeServer<SignResult>(
+			ServiceActionCode::Sign,
+			[requestLength, dataToSign]() {
+				return Bytes(requestLength).Append(dataToSign);
+			},
+			[](auto reader, auto code) {
+				return SignResult((ReturnCode)code, reader->PeekBytes());
+			},
+			sessionId
+		);
+}
+
+SignUpdateResult Abstractions::ServiceProxy::SignUpdate(const Id sessionId, const TlvStructure& dataToSign)
+{
+	return this->InvokeServer<SignUpdateResult>(
+			ServiceActionCode::SignUpdate,
+			[dataToSign]() {
+				return Bytes(dataToSign);
+			},
+			[](auto reader, auto code) {
+				return SignUpdateResult((ReturnCode)code, true);
+			},
+			sessionId
+		);
+}
+
+SignFinalResult Abstractions::ServiceProxy::SignFinal(const Id sessionId, bool lengthRequest)
+{
+	return this->InvokeServer<SignFinalResult>(
+			ServiceActionCode::SignFinal,
+			[lengthRequest]() {
+				return Bytes(lengthRequest);
+			},
+			[](auto reader, auto code) {
+				return SignFinalResult((ReturnCode)code, reader->PeekBytes());
+			},
+			sessionId
+		);
+}
+
+VerifyInitResult Abstractions::ServiceProxy::VerifyInit(const Id sessionId, const Id publicKeyId, const TlvStructure& mechanism)
+{
+	return this->InvokeServer<VerifyInitResult>(
+		ServiceActionCode::VerifyInit,
+		[publicKeyId, mechanism]() {
+			return Bytes(publicKeyId).Append(mechanism);
+		},
+		[](auto reader, auto code) {
+			return VerifyInitResult((ReturnCode)code, true);
+		},
+			sessionId
+		);
+}
+
+VerifyResult Abstractions::ServiceProxy::Verify(const Id sessionId, const TlvStructure& dataToVerify, const TlvStructure& signedData)
+{
+	return this->InvokeServer<VerifyResult>(
+			ServiceActionCode::Verify,
+			[dataToVerify, signedData]() {
+				return Bytes(dataToVerify).Append(signedData);
+			},
+			[](auto reader, auto code) {
+				return VerifyResult((ReturnCode)code, reader->PeekBool());
+			},
+			sessionId
+		);
+}
+
+VerifyUpdateResult Abstractions::ServiceProxy::VerifyUpdate(const Id sessionId, const TlvStructure& dataToVerify)
+{
+	return this->InvokeServer<VerifyUpdateResult>(
+			ServiceActionCode::VerifyUpdate,
+			[dataToVerify]() {
+				return Bytes(dataToVerify);
+			},
+			[](auto reader, auto code) {
+				return VerifyUpdateResult((ReturnCode)code, true);
+			},
+			sessionId
+		);
+}
+
+VerifyFinalResult Abstractions::ServiceProxy::VerifyFinal(const Id sessionId, const TlvStructure& signedData)
+{
+	return this->InvokeServer<VerifyFinalResult>(
+			ServiceActionCode::VerifyFinal,
+			[signedData]() {
+				return Bytes(signedData);
+			},
+			[](auto reader, auto code) {
+				return VerifyFinalResult((ReturnCode)code, reader->PeekBool());
+			},
+			sessionId
+		);
+}
  
 
 

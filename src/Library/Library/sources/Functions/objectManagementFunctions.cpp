@@ -52,6 +52,28 @@ CK_DEFINE_FUNCTION(CK_RV, C_CreateObject)(CK_SESSION_HANDLE sessionHandle, CK_AT
 	return (CK_RV)createObjectResult.GetCode();
 }
 
+CK_DEFINE_FUNCTION(CK_RV, C_GenerateKeyPair)(
+	CK_SESSION_HANDLE hSession,
+	CK_MECHANISM_PTR pMechanism,
+	CK_ATTRIBUTE_PTR pPublicKeyTemplate,
+	CK_ULONG ulPublicKeyAttributeCount,
+	CK_ATTRIBUTE_PTR pPrivateKeyTemplate,
+	CK_ULONG ulPrivateKeyAttributeCount,
+	CK_OBJECT_HANDLE_PTR phPublicKey,
+	CK_OBJECT_HANDLE_PTR phPrivateKey
+	)
+{
+	if(nullptr == pMechanism || nullptr == pPublicKeyTemplate || nullptr == pPrivateKeyTemplate || nullptr == phPublicKey || nullptr == phPrivateKey)
+		return CKR_ARGUMENTS_BAD;
+
+	auto generateKeyPairResult = Token->GenerateKeyPair(hSession, pMechanism, pPublicKeyTemplate, ulPublicKeyAttributeCount, pPrivateKeyTemplate, ulPrivateKeyAttributeCount);
+
+	*phPrivateKey = generateKeyPairResult.GetValue().first;
+	*phPublicKey = generateKeyPairResult.GetValue().second;
+
+	return (CK_RV)generateKeyPairResult.GetCode();
+}
+
 CK_DEFINE_FUNCTION(CK_RV, C_CopyObject)(CK_SESSION_HANDLE, CK_OBJECT_HANDLE, CK_ATTRIBUTE_PTR, CK_ULONG, CK_OBJECT_HANDLE_PTR)
 {
 	return CKR_FUNCTION_NOT_SUPPORTED;

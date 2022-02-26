@@ -219,11 +219,11 @@ namespace Service.Core.Client
             // parse the type.
             ulong dataType = bytes.Skip(cursor).ToULong();
 
+            cursor += sizeof(ulong);
+
             // if data type is max(ulong), that means that the container can not be parsed.
             // stop the parsing and return null
             if (dataType == ulong.MaxValue) return null;
-
-            cursor += sizeof(ulong);
 
             // parse the value.
             uint dataLength = bytes.Skip(cursor).ToUInt32();

@@ -10,19 +10,25 @@ namespace Abstractions {
 		BytesReader operator=(const BytesReader&) = delete;
 
 		/// <summary>
-		/// Get a char from reader and move to cursor to the next bytes available
+		/// Get a bool from reader and move curosr to the next bytes available
+		/// </summary>
+		/// <returns></returns>
+		bool PeekBool();
+
+		/// <summary>
+		/// Get a char from reader and move cursor to the next bytes available
 		/// </summary>
 		/// <returns>Char peeked from buffer</returns>
 		char PeekChar();
 
 		/// <summary>
-		/// Get a int from reader and move to cursor to the next bytes available
+		/// Get a int from reader and move cursor to the next bytes available
 		/// </summary>
 		/// <returns>Integer peeked from buffer</returns>
 		int PeekInt();
 
 		/// <summary>
-		/// Get a long from reader and move to cursor to the next bytes available
+		/// Get a long from reader and move cursor to the next bytes available
 		/// </summary>
 		/// <returns>Long peeked from buffer</returns>
 		long long PeekLong();
@@ -34,7 +40,7 @@ namespace Abstractions {
 		Bytes PeekBytes();
 
 		/// <summary>	 	
-		/// Get length bytes from reader and move to cursor to the next bytes available
+		/// Get length bytes from reader and move cursor to the next bytes available
 		/// <summary>
 		/// <param name="length">Number of bytes taken</param>
 		/// <returns>Bytes peeked from buffer</returns>

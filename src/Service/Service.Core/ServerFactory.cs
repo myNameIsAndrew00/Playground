@@ -38,8 +38,7 @@ namespace Service.Core
             IPkcs11Server result = CreateSocketServer<TlvServiceExecutor>(address, port)
                 .SetStorage(new TokenStorage())
                 .SetLogger(new SqliteLogger())
-                .RegisterEncryptionModule(options =>
-                {
+                .RegisterEncryptionModule(options => {
                     return new EncryptionModule(options)
                         .SetMechanism(new AESECBEncryptMechanismCommand())
                         .SetMechanism(new AESCBCEncryptMechanismCommand())
@@ -47,8 +46,7 @@ namespace Service.Core
                         .SetMechanism(new AESOFBEncryptMechanismCommand()) 
                         as EncryptionModule;
                 })
-                .RegisterDecryptionModule(options =>
-                {
+                .RegisterDecryptionModule(options => {
                     return new DecryptionModule(options)
                         .SetMechanism(new AESECBDecryptMechanismCommand())
                         .SetMechanism(new AESCBCDecryptMechanismCommand())
@@ -68,7 +66,13 @@ namespace Service.Core
                     return new SigningModule(options)
                         .SetMechanism(new RSASigningMechanismCommand())
                         as SigningModule;
-                 }); 
+                 })
+                .RegisterVerifyingModule(options => {
+                    return new VerifyModule(options)
+                        .SetMechanism(new RSAVerifyingMechanismCommand())
+                        as VerifyModule;
+                });
+                
 
             return result;
         }

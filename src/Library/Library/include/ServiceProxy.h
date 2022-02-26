@@ -148,6 +148,84 @@ namespace Abstractions {
 		/// <returns>An object containing the result of the process. Hashed data will be returned.</returns>
 		DigestFinalResult DigestFinal(const Id sessionId, bool lengthRequest);
 
+		/// <summary>
+		/// Triggers key pair generations on server.
+		/// </summary>
+		/// <param name="sessionId"></param>
+		/// <param name="mechanism"></param>
+		/// <param name="publicKeyAttributes"></param>
+		/// <param name="privateKeyAttributes"></param>
+		/// <returns>Bytes representing handlers for the created keys.</returns>
+		GenerateKeyPairResult GenerateKeyPair(const Id sessionId, const TlvStructure& mechanism, const std::list<TlvStructure>& publicKeyAttributes, const std::list<TlvStructure>& privateKeyAttributes);
+
+		/// <summary>
+		/// Trigger sign initialisation method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which will contain the initialised mechanism</param>
+		/// <param name="privateKeyId">Id of the private key which will be used</param>
+		/// <param name="mechanism">Mechanism used for signing</param>
+		/// <returns>An object containing the result of the process.</returns>
+		SignInitResult SignInit(const Id sessionId, const Id privateKeyId, const TlvStructure& mechanism);
+
+		/// <summary>
+		/// Trigger sign method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised sign object</param>
+		/// <param name="dataToSign">Data which will be signed. Type field of the tlv structure will be ignored.</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive signed data length</param>
+		/// <returns>An object containing the result of the process. Signed data will be returned.</returns>
+		SignResult Sign(const Id sessionId, const TlvStructure& dataToSign, bool requestLength);
+		 
+		/// <summary>
+		/// Trigger sign update method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised sign object</param>
+		/// <param name="dataToSign">Data which will be signed. Type field of the tlv structure will be ignored.</param>
+		/// <returns>An object containing the result of the process.</returns>
+		SignUpdateResult SignUpdate(const Id sessionId,const TlvStructure& dataToSign);
+
+		/// <summary>
+		/// Trigger sign final method ont the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised sign object</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive signed data length</param>
+		/// <returns>An object containing the result of the process. Signed data will be returned.</returns>
+		SignFinalResult SignFinal(const Id sessionId, bool lengthRequest);
+
+		/// <summary>
+		/// Trigger verify initialisation method on the server.
+		/// </summary>
+		/// <param name="publicKeyId">Id of the private key which will be used</param>
+		/// <param name="sessionId">Id of the session which will contain the initialised mechanism</param>
+		/// <param name="mechanism">Mechanism used for verify</param>
+		/// <returns>An object containing the result of the process.</returns>
+		VerifyInitResult VerifyInit(const Id sessionId, const Id publicKeyId, const TlvStructure& mechanism);
+
+		/// <summary>
+		/// Trigger verify method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised verify object</param>
+		/// <param name="dataToVerify">Data which will be verified. Type field of the tlv structure will be ignored.</param>
+		/// <param name="signedData">Signed data which will be verified. Type field of the tlv structure will be ignored.</param>
+		/// <param name="requestLength">A boolean which specify if request is made to receive hashed data length</param>
+		/// <returns>A boolean which specifies if signature is valid or not.</returns>
+		VerifyResult Verify(const Id sessionId, const TlvStructure& dataToVerify, const TlvStructure& signedData);
+
+		/// <summary>
+		/// Trigger digest update method on the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised digest object</param>
+		/// <param name="dataToVerify">Data which will be verified. Type field of the tlv structure will be ignored.</param>
+		/// <returns>An boolean representing the result of the process.</returns>
+		VerifyUpdateResult VerifyUpdate(const Id sessionId, const TlvStructure& dataToVerify);
+
+		/// <summary>
+		/// Trigger digest finall method ont the server.
+		/// </summary>
+		/// <param name="sessionId">Id of the session which contains the initialised digest object</param> 
+		/// <returns>A boolean which specifies if signature is valid or not.</returns>
+		VerifyFinalResult VerifyFinal(const Id sessionId, const TlvStructure& signedData);
+
 	private:
 		bool communicationInitialised;
 

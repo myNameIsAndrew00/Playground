@@ -66,4 +66,13 @@ namespace Abstractions {
 	using DigestResult = TokenActionResult<Bytes>;
 	using DigestUpdateResult = TokenActionResult<bool>;
 	using DigestFinalResult = TokenActionResult<Bytes>;
+	using SignInitResult = TokenActionResult<bool>;
+	using SignResult = TokenActionResult<Bytes>;
+	using SignUpdateResult = TokenActionResult<bool>;
+	using SignFinalResult = TokenActionResult<Bytes>;
+	using VerifyInitResult = TokenActionResult<bool>;
+	using VerifyResult = TokenActionResult<bool>;
+	using VerifyUpdateResult = TokenActionResult<bool>;
+	using VerifyFinalResult = TokenActionResult<bool>;
+	using GenerateKeyPairResult = TokenActionResult<std::pair<unsigned long long, unsigned long long>>;
 }

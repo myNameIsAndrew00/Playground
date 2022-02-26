@@ -139,6 +139,11 @@ Bytes& Bytes::Append(const long long int64) {
 	return *this;
 }
 
+Bytes& Abstractions::Bytes::AppendListBreak()
+{
+	return this->Append((const long long)ULLONG_MAX);
+}
+
 Bytes::~Bytes()
 {
 	if (this->byteArray != nullptr) delete this->byteArray;

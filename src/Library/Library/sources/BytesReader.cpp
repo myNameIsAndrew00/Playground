@@ -12,6 +12,13 @@ Abstractions::BytesReader::BytesReader(BytesReader&& bytesReader) noexcept
     this->bytes = std::move(bytesReader.bytes);
 }
 
+bool Abstractions::BytesReader::PeekBool()
+{
+    const bool* valuePointer = this->peekType<bool>();
+
+    return *valuePointer;
+}
+
 char Abstractions::BytesReader::PeekChar()
 {
     const char* valuePointer = this->peekType<char>();

@@ -12,11 +12,11 @@ namespace Service.Core.Token.Signing.RSA
 {
     public class RSAVerifyingMechanismCommand : IMechanismCommand
     {
-        public Pkcs11Mechanism MechanismType => Pkcs11Mechanism.RSA_PKCS_OAEP;
+        public Pkcs11Mechanism MechanismType => Pkcs11Mechanism.RSA_PKCS;
 
         public void InitialiseContext(IContext contextObject, IMechanismOptions options, out ExecutionResultCode resultCode)
         {
-            var verifyContext = contextObject as SigningContext;
+            var verifyContext = contextObject as VerifyContext;
 
             // try to unsecure the context key to validate that it is a valid rsa key.
             try
@@ -28,6 +28,8 @@ namespace Service.Core.Token.Signing.RSA
             catch (Exception exception)
             {
                 resultCode = ExecutionResultCode.KEY_TYPE_INCONSISTENT;
+
+                return;
             }
 
             resultCode = ExecutionResultCode.OK;

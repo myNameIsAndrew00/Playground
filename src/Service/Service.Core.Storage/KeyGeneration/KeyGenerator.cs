@@ -35,7 +35,7 @@ namespace Service.Core.Storage.KeyGeneration
             }
 
             // for now, only modulus length is used from attribues
-            modulusLength = publicKeyAttributes.Where(attribute => attribute.Type == Pkcs11Attribute.MODULUS_BITS).FirstOrDefault()?.Value.ToULong() ?? 1024;
+            modulusLength = publicKeyAttributes.Where(attribute => attribute.Type == Pkcs11Attribute.MODULUS_BITS).FirstOrDefault()?.Value.ToUInt32() ?? 1024;
 
             resultCode = ExecutionResultCode.OK;
 

@@ -17,6 +17,15 @@ namespace Abstractions {
 		DigestInit = 0x0D,
 		Digest = 0x0E,
 		DigestFinal = 0x0F,
-		DigestUpdate = 0x10
+		DigestUpdate = 0x10,
+        GenerateKeyPair = 0x11,
+        SignInit = 0x12,
+        Sign = 0x13,
+        SignUpdate = 0x14,
+        SignFinal = 0x15,
+        VerifyInit = 0x16,
+        Verify = 0x17,
+        VerifyUpdate = 0x18,
+        VerifyFinal = 0x19
 	};
 }

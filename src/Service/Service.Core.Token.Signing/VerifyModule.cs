@@ -19,6 +19,12 @@ namespace Service.Core.Token.Signing
 
         public IVerifyContext VerifyContext => Context as VerifyContext;
 
+        public VerifyModule(IContext context)
+        {
+            this.storedMechanisms = new Dictionary<Pkcs11Mechanism, IMechanismCommand>();
+            this.Context = context;
+        }
+
 
         public IVerifyContext Initialise<MechanismContainer>(IMemoryObject publicKey, MechanismContainer mechanism, out ExecutionResultCode executionResultCode) where MechanismContainer : IMechanismOptions
         {
@@ -62,7 +68,8 @@ namespace Service.Core.Token.Signing
             }
 
             // Execute the request using the context mechanism.
-            return Convert.ToBoolean(storedMechanisms[((VerifyContext)VerifyContext).Mechanism].Execute(VerifyContext, signedData, out executionResultCode));
+            byte[] checkResult = storedMechanisms[((VerifyContext)VerifyContext).Mechanism].Execute(VerifyContext, signedData, out executionResultCode);
+            return Convert.ToBoolean(checkResult[0]);
         }
 
         public bool VerifyFinalise(byte[] signatureData, out ExecutionResultCode executionResultCode)

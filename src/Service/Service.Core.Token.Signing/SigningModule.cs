@@ -23,6 +23,7 @@ namespace Service.Core.Token.Signing
 
         public SigningModule(IContext context)
         {
+            this.storedMechanisms = new Dictionary<Pkcs11Mechanism, IMechanismCommand>();
             this.Context = context;
         }
 

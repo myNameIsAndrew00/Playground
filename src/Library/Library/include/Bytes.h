@@ -38,6 +38,7 @@ namespace Abstractions {
 		Bytes& Append(const char);
 		Bytes& Append(const int);
 		Bytes& Append(const long long);
+		Bytes& AppendListBreak();
 
 		const unsigned char* GetBytes() const;
 

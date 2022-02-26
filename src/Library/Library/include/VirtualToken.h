@@ -31,7 +31,15 @@ namespace Abstractions {
 		DigestResult Digest(const unsigned long long sessionId, const unsigned char* data, const int length, bool digestLengthRequest) const override;
 		DigestUpdateResult DigestUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const override;
 		DigestFinalResult DigestFinal(const unsigned long long sessionId, bool digestLengthRequest) const override;
-		
+		GenerateKeyPairResult GenerateKeyPair(const  unsigned long long  sessionId, const CK_MECHANISM* mechanism, CK_ATTRIBUTE* publicKeyAttributes, const int publicKeyLength, CK_ATTRIBUTE* privateKeyAttributes, const int privateKeyLength) const override;
+		SignInitResult SignInit(const  unsigned long long  sessionId, const unsigned long long privateKeyId, const CK_MECHANISM* mechanism) const override;
+		SignResult Sign(const  unsigned long long  sessionId, const unsigned char* dataToSign, const int length, bool requestLength) const override;
+		SignUpdateResult SignUpdate(const  unsigned long long  sessionId, const unsigned char* dataToSign, const int length) const override;
+		SignFinalResult SignFinal(const  unsigned long long  sessionId, bool lengthRequest) const override;
+		VerifyInitResult VerifyInit(const  unsigned long long  sessionId, const unsigned long long publicKeyId, const CK_MECHANISM* mechanism) const override;
+		VerifyResult Verify(const  unsigned long long  sessionId, const unsigned char* dataToVerify, const int dataLength, const unsigned char* signedData, const int signedDataLength) const override;
+		VerifyUpdateResult VerifyUpdate(const  unsigned long long  sessionId, const unsigned char* dataToVerify, const int dataLength) const override;
+		VerifyFinalResult VerifyFinal(const  unsigned long long  sessionId, const unsigned char* signedData, const int signedDataLength) const override;
 		~VirtualToken();
 	private:
 

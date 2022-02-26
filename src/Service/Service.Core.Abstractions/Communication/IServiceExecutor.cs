@@ -220,7 +220,7 @@ namespace Service.Core.Abstractions.Communication
         /// <param name="lengthRequest"></param>
         /// <param name="dataToVerify"></param>
         /// <returns></returns>
-        IExecutionResult Verify(bool lengthRequest, IDataContainer dataToVerify, IDataContainer signedData);
+        IExecutionResult Verify(IDataContainer dataToVerify, IDataContainer signedData);
 
         /// <summary>
         /// Function associated with PKCS11 verify update.
@@ -234,7 +234,7 @@ namespace Service.Core.Abstractions.Communication
         /// </summary>
         /// <param name="lengthRequest"></param>
         /// <returns></returns>
-        IExecutionResult VerifyFinal(bool lengthRequest, IDataContainer signedData);
+        IExecutionResult VerifyFinal(IDataContainer signedData);
 
         #endregion
 

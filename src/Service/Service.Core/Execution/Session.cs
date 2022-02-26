@@ -169,7 +169,7 @@ namespace Service.Core.Execution
         /// </summary>
         public void ResetRegisteredDigestContext()
         {
-            unwrapMemoryObject(RegisteredDigestContext.Id);
+            // no memory object should be unwraped now.
             RegisteredDigestContext = null;
         }
 

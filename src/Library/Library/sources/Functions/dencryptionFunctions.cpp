@@ -77,28 +77,29 @@ CK_DEFINE_FUNCTION(CK_RV, C_DecryptUpdate)(CK_SESSION_HANDLE hSession, CK_BYTE_P
 	if (nullptr == pPart || ulEncryptedPartLen == 0)
 		return CKR_ARGUMENTS_BAD;
 
-	auto encrypResult = Token->DecryptUpdate(hSession, pPart, ulEncryptedPartLen, nullptr == pEncryptedPart);
+	auto decryptResult = Token->DecryptUpdate(hSession, pPart, ulEncryptedPartLen, nullptr == pEncryptedPart);
 
-	*pulPartLen = encrypResult.GetValue().GetLength();
+	*pulPartLen = decryptResult.GetValue().GetLength();
 
 	if (nullptr != pPart) {
-		memcpy(pPart, encrypResult.GetValue().GetBytes(), *pulPartLen);
+		memcpy(pPart, decryptResult.GetValue().GetBytes(), *pulPartLen);
 	}
 
-	return (CK_RV)encrypResult.GetCode();
+	return (CK_RV)decryptResult.GetCode();
 }
 
 CK_DEFINE_FUNCTION(CK_RV, C_DecryptFinal)(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pLastPart, CK_ULONG_PTR pulLastPartLen)
 {
-	auto encrypResult = Token->DecryptFinal(hSession, nullptr == pLastPart);
+	auto decryptResult = Token->DecryptFinal(hSession, nullptr == pLastPart);
+	
+	auto resultCode = (CK_RV)decryptResult.GetCode();
+	*pulLastPartLen = decryptResult.GetValue().GetLength();
 
-	*pulLastPartLen = encrypResult.GetValue().GetLength();
-
-	if (nullptr != pLastPart) {
-		memcpy(pLastPart, encrypResult.GetValue().GetBytes(), *pulLastPartLen);
+	if (nullptr != pLastPart && resultCode == CKR_OK) {
+		memcpy(pLastPart, decryptResult.GetValue().GetBytes(), *pulLastPartLen);
 	}
 
-	return (CK_RV)encrypResult.GetCode();
+	return (CK_RV)decryptResult.GetCode();
 }
 
 CK_DEFINE_FUNCTION(CK_RV, C_Decrypt)(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pEncryptedData, CK_ULONG ulEncryptedDataLen, CK_BYTE_PTR pData, CK_ULONG_PTR pulDataLen)
@@ -106,13 +107,14 @@ CK_DEFINE_FUNCTION(CK_RV, C_Decrypt)(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pEn
 	if (nullptr == pEncryptedData || ulEncryptedDataLen == 0)
 		return CKR_ARGUMENTS_BAD;
 
-	auto encrypResult = Token->DecryptUpdate(hSession, pEncryptedData, ulEncryptedDataLen, nullptr == pEncryptedData);
+	auto decryptResult = Token->Decrypt(hSession, pEncryptedData, ulEncryptedDataLen, nullptr == pData);
+	auto resultCode = (CK_RV)decryptResult.GetCode();
 
-	*pulDataLen = encrypResult.GetValue().GetLength();
+	*pulDataLen = decryptResult.GetValue().GetLength();
 
-	if (nullptr != pData) {
-		memcpy(pData, encrypResult.GetValue().GetBytes(), *pulDataLen);
+	if (nullptr != pData && resultCode == CKR_OK) {
+		memcpy(pData, decryptResult.GetValue().GetBytes(), *pulDataLen);
 	}
 
-	return (CK_RV)encrypResult.GetCode();
+	return (CK_RV)decryptResult.GetCode();
 }

@@ -430,11 +430,10 @@ namespace Service.Core.Client
             return new BytesResult(executionResultCode);
         }
 
-        public IExecutionResult Verify(bool lengthRequest, IDataContainer dataToVerify, IDataContainer signedData)
+        public IExecutionResult Verify(IDataContainer dataToVerify, IDataContainer signedData)
         {
             IVerifyContext context = this.dispatchResult.Session.RegisteredVerifyContext;
 
-            if (context is not null) context.LengthRequest = lengthRequest;
 
             IVerifyModule verifyModule = moduleCollection.GetVerifyModule(context);
 
@@ -444,8 +443,7 @@ namespace Service.Core.Client
                 isPartOperation: false,
                 out ExecutionResultCode executionResultCode);
 
-            if (!lengthRequest)
-                this.dispatchResult.Session.ResetRegisteredVerifyContext();
+            this.dispatchResult.Session.ResetRegisteredVerifyContext();
 
             return new BytesResult(new[] { Convert.ToByte(dataIsValid) }, executionResultCode);
         }
@@ -465,16 +463,15 @@ namespace Service.Core.Client
             return new BytesResult(new[] { Convert.ToByte(dataIsValid) }, executionResultCode);
         }
 
-        public IExecutionResult VerifyFinal(bool lengthRequest, IDataContainer signedData)
+        public IExecutionResult VerifyFinal(IDataContainer signedData)
         {
             IVerifyContext context = this.dispatchResult.Session.RegisteredVerifyContext;
 
-            IVerifyModule signingModule = moduleCollection.GetVerifyModule(context);
+            IVerifyModule verifyModule = moduleCollection.GetVerifyModule(context);
 
-            bool dataIsValid = signingModule.VerifyFinalise(signedData.Value, out ExecutionResultCode executionResultCode);
+            bool dataIsValid = verifyModule.VerifyFinalise(signedData.Value, out ExecutionResultCode executionResultCode);
 
-            if (!lengthRequest)
-                this.dispatchResult.Session.ResetRegisteredVerifyContext();
+            this.dispatchResult.Session.ResetRegisteredVerifyContext();
 
             return new BytesResult(new[] { Convert.ToByte(dataIsValid) }, executionResultCode);
         }

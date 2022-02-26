@@ -39,7 +39,15 @@ namespace Abstractions {
 		virtual DigestResult Digest(const unsigned long long sessionId, const unsigned char* data, const int length, bool digestLengthRequest) const = 0;
 		virtual DigestUpdateResult DigestUpdate(const unsigned long long sessionId, const unsigned char* data, const int length) const = 0;
 		virtual DigestFinalResult DigestFinal(const unsigned long long sessionId, bool digestLengthRequest) const = 0;
-
+		virtual	GenerateKeyPairResult GenerateKeyPair(const  unsigned long long  sessionId, const CK_MECHANISM* mechanism, CK_ATTRIBUTE* publicKeyAttributes, const int publicKeyLength, CK_ATTRIBUTE* privateKeyAttributes, const int privateKeyLength) const = 0;
+		virtual SignInitResult SignInit(const  unsigned long long  sessionId, const unsigned long long privateKeyId, const CK_MECHANISM* mechanism) const = 0;
+		virtual SignResult Sign(const  unsigned long long  sessionId, const unsigned char* dataToSign, const int length, bool requestLength) const = 0;
+		virtual SignUpdateResult SignUpdate(const  unsigned long long  sessionId, const unsigned char* dataToSign, const int length) const = 0;
+		virtual SignFinalResult SignFinal(const  unsigned long long  sessionId, bool lengthRequest) const = 0;
+		virtual VerifyInitResult VerifyInit(const  unsigned long long  sessionId, const unsigned long long publicKeyId, const CK_MECHANISM* mechanism) const = 0;
+		virtual VerifyResult Verify(const  unsigned long long  sessionId, const unsigned char* dataToVerify, const int dataLength, const unsigned char* signedData, const int signedDataLength) const = 0;
+		virtual VerifyUpdateResult VerifyUpdate(const  unsigned long long  sessionId, const unsigned char* dataToVerify, const int dataLength) const = 0;
+		virtual VerifyFinalResult VerifyFinal(const  unsigned long long  sessionId, const unsigned char* signedData, const int signedDataLength) const = 0;
 		virtual ~IPkcs11Token() { }
 	};
 	 

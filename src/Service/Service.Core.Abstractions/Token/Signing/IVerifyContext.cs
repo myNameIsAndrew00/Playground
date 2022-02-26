@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace Service.Core.Abstractions.Token.Signing
 {
     public interface IVerifyContext : IContext
-    {
-        public bool LengthRequest { get; set; }
+    { 
 
         public byte[] VerifyData { get; set; }
     }
